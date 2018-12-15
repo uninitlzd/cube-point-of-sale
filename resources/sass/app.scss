@@ -1,0 +1,124 @@
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i,900|Roboto:400,400i,700,700i,900");
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    min-height: 100%;
+    margin: 0px;
+}
+
+[v-cloak] {
+    display:none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'PT Sans', sans-serif;
+}
+
+p, span, a, li {
+    font-family: 'Roboto', sans-serif;
+}
+
+#main-top-nav {
+    p {
+        font-size: 1em !important;
+    }
+}
+
+p {
+    font-size: 0.85em;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.scrollbar-component .el-scrollbar__view {
+    height: 100%;
+}
+
+.scrollbar-component .el-scrollbar__wrap {
+    overflow-x: auto;
+}
+
+.image-fit-cover {
+    object-fit: cover;
+}
+
+.el-form-item__label {
+    line-height: 0px !important;
+}
+
+.el-form-item {
+    margin-bottom: 30px !important;
+}
+
+#main-top-nav {
+    min-height: 60px;
+    position: relative;
+    width: 100%;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+#main-side-nav {
+    height: 100vh;
+    & .el-menu {
+        width: 100%;
+    }
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+a i:hover {
+    cursor: pointer;
+}
+
+a {
+    line-height: 0 !important;
+}
+
+.el-menu-item a {
+    color: #303133 !important;
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+#main-side-nav {
+    & .el-menu-item {
+        font-size: 14px;
+        color: #303133;
+        padding: 0 0 !important;
+        cursor: pointer;
+        -webkit-transition: border-color .3s,background-color .3s,color .3s;
+        transition: border-color .3s,background-color .3s,color .3s;
+        box-sizing: border-box;
+
+        & a {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+    }
+}
+
+.font-weight-black {
+    font-weight: 900 !important;
+}
