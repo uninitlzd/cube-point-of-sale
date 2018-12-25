@@ -20,8 +20,8 @@ const mutations = {
     },
 
     [types.LOGOUT](state) {
+        deleteState()
         state.logged = false
-        state.user = null
     },
 
     [types.INIT_AUTH](state) {

@@ -6,7 +6,7 @@
                         v-cloak>
                     <el-col :md="12" :sm="24" :sm-offset="0" class="align-self-center mx-auto ">
                         <section class="pl-4 pt-4 text-center">
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <i class="material-icons text-primary" style="font-size: 6em">store</i>
                                 <h4 class="mb-0">Atur Nama Bisnis Anda</h4>
                                 <small class="text-black-50"><i>contoh: Kedai Kopi Medan, Toko Bakmi Sederhana</i>
@@ -16,15 +16,15 @@
                                      @keydown="form.errors.clear($event.target.name)"
                                      :rules=rules
                                      :model=form
-                                     label-position="top">
+                                     label-position="left">
                                 <el-row :gutter=10>
                                     <el-col :md=8 :sm="24">
-                                        <el-form-item prop="name">
+                                        <el-form-item prop="name" label="Nama Usaha">
                                             <el-input size="medium" placeholder="Name" v-model="form.name" class="align-middle"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :md=8 :sm="24">
-                                        <el-form-item prop="type">
+                                        <el-form-item prop="type" label="Jenis Usaha">
                                             <el-select v-model="form.type" placeholder="Business Type" class="w-100 align-middle"
                                                        size="medium">
                                                 <el-option
@@ -37,8 +37,8 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :md="8" :sm="24">
-                                        <el-form-item prop="tax">
-                                            <el-input size="medium" placeholder="PPn" v-model="form.tax">
+                                        <el-form-item prop="tax" label="Presentase PPn">
+                                            <el-input label="Presentase PPn" size="medium" placeholder="PPn" v-model="form.tax">
                                                 <template slot="append">%</template>
                                             </el-input>
                                         </el-form-item>
@@ -65,8 +65,12 @@
                                 <i class="material-icons text-primary" style="font-size: 6em">store</i>
                                 <h4 class="mb-4">{{ shop.shop.name }}</h4>
                                 <small><i></i></small>
-                                <el-button type="primary" icon="el-icon-edit" @click="toEditPage">Edit Merchant Info
-                                </el-button>
+                                <ul class="list-inline">
+                                    <li class="list-inline-item">
+                                        <el-button type="primary" icon="el-icon-edit" @click="toEditPage">Ubah Info Bisnis
+                                        </el-button>
+                                    </li>
+                                </ul>
                             </div>
                         </section>
                     </el-col>

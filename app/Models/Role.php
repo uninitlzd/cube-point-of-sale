@@ -8,12 +8,14 @@ class Role extends Model
 {
     const OWNER = 'owner';
     const CASHIER = 'cashier';
+    const OUTLET_SUPERVISOR = 'outlet_supervisor';
     const TYPE = [
         self::OWNER => 1,
-        self::CASHIER => 2
+        self::CASHIER => 2,
+        self::OUTLET_SUPERVISOR => 3
     ];
 
-    public static $availableRoles = [self::OWNER => 1, self::CASHIER => 2];
+    public static $availableRoles = [self::OWNER => 1, self::CASHIER => 2, self::OUTLET_SUPERVISOR];
 
     /**
      * @return array

@@ -4,24 +4,29 @@
             <el-scrollbar class="h-100 scrollbar-component">
                 <el-row class="ml-5 mt-4 mr-4">
                     <el-col :md="23" :xs="24" class="py-4">
-                        <h2 class="mb-3">Bahan-bahan</h2>
+                        <h2 class="mb-3">Karyawan</h2>
                         <el-breadcrumb separator="/" class="mb-5">
-                            <el-breadcrumb-item to="/material">Manajemen Bahan-bahan</el-breadcrumb-item>
+                            <el-breadcrumb-item to="/employee">Manajemen Karyawan</el-breadcrumb-item>
                         </el-breadcrumb>
                         <el-card class="box-card mr-5">
                             <div slot="header" class="clearfix">
                                 <el-row :gutter="10">
                                     <el-col :span="6">
-                                        <el-input placeholder="Cari Bahan-bahan" class="mr-4" prefix-icon="el-icon-search"
+                                        <el-input placeholder="Cari Karyawan" class="mr-4" prefix-icon="el-icon-search"
                                                   v-model="filters[0].value"></el-input>
+                                    </el-col>
+                                    <el-col :span="18" class="text-right">
+                                        <el-button type="primary" icon="el-icon-plus" round size="medium"
+                                                   @click="toCreatePage">Karyawan Baru
+                                        </el-button>
                                     </el-col>
                                 </el-row>
                             </div>
-                            <data-tables :data="materials"
+                            <data-tables :data="employees"
                                          :pagination-props="{background: true, pageSizes: [5, 10, 15] }"
                                          :filters="filters"
                                          :action-col="actions"
-                                         :total="materials.length">
+                                         :total="employees.length">
                                 <el-table-column v-for="title in titles" :prop="title.prop" :label="title.label"
                                                  :key="title.label">
                                 </el-table-column>
@@ -55,23 +60,20 @@
         label: "ID"
     }, {
         prop: "name",
-        label: "Nama Bahan"
+        label: "Name"
     }, {
-        prop: "quantity",
-        label: "Kuantitas"
+        prop: "address",
+        label: "Address"
     }, {
-        prop: "unit",
-        label: "Unit"
-    }, {
-        prop: "purchase_date",
-        label: "Tanggal Belanja"
+        prop: "phone",
+        label: "Phone"
     }]
 
     export default {
-        name: "Material",
+        name: "Employee",
         components: {DashboardShell},
         created() {
-            this.$store.dispatch('material/fetchMaterials')
+            this.$store.dispatch('employee/fetchEmployees')
         },
         data() {
             return {
@@ -95,12 +97,12 @@
                             size: 'small'
                         },
                         handler: row => {
-                            router.push('/material/' + row.id)
+                            router.push('/employee/' + row.id)
                         },
                         label: 'Edit'
                     }, {
                         handler: row => {
-                            this.deleteMaterial(row.id)
+                            this.deleteEmployee(row.id)
                         },
                         label: 'delete'
                     }]
@@ -109,10 +111,10 @@
         },
         methods: {
             toCreatePage() {
-                this.$router.push('/material/new')
+                this.$router.push('/employee/new')
             },
-            deleteMaterial(index) {
-                store.dispatch('material/deleteMaterial', index)
+            deleteEmployee(index) {
+                store.dispatch('employee/deleteEmployee', index)
                     .then(() => {
                         this.$message.success('Delete Succeed!')
                     }).catch(error => {
@@ -122,7 +124,7 @@
         },
         computed: {
             ...mapState({
-                materials: state => state.material.materials
+                employees: state => state.employee.employees
             })
         }
     }

@@ -2,27 +2,31 @@
     <dashboard-shell>
         <el-col :span="24" class="pr-0">
             <el-scrollbar class="h-100 scrollbar-component">
-                <el-row type="flex">
-                    <el-col :span="23" class="px-4 py-4">
-                        <h2 class="mb-3">Category</h2>
+                <el-row class="ml-5 mt-4 mr-4">
+                    <el-col :md="23" :xs="24" class="py-4">
+                        <h2 class="mb-3">Kategori</h2>
                         <el-breadcrumb separator="/" class="mb-5">
-                            <el-breadcrumb-item>Category Management</el-breadcrumb-item>
-                            <el-breadcrumb-item>Category list</el-breadcrumb-item>
+                            <el-breadcrumb-item to="/category">Manajemen Kategori</el-breadcrumb-item>
                         </el-breadcrumb>
-                        <el-card class="box-card">
+                        <el-card class="box-card mr-5">
                             <div slot="header" class="clearfix">
                                 <el-row :gutter="10">
                                     <el-col :span="6">
-                                        <el-input placeholder="Search Content" class="mr-4" prefix-icon="el-icon-search"
+                                        <el-input placeholder="Cari Kategori" class="mr-4" prefix-icon="el-icon-search"
                                                   v-model="filters[0].value"></el-input>
                                     </el-col>
                                     <el-col :span="18" class="text-right">
-                                        <el-button type="primary" icon="el-icon-plus" round size="medium" @click="toCreatePage">New Category</el-button>
+                                        <el-button type="primary" icon="el-icon-plus" round size="medium"
+                                                   @click="toCreatePage">Kategori Baru
+                                        </el-button>
                                     </el-col>
                                 </el-row>
                             </div>
-                            <data-tables :data="data" :pagination-props="{background: true, pageSizes: [5, 10, 15] }"
-                                         :filters="filters" :total="data.length">
+                            <data-tables :data="categories"
+                                         :pagination-props="{background: true, pageSizes: [5, 10, 15] }"
+                                         :filters="filters"
+                                         :action-col="actions"
+                                         :total="categories.length">
                                 <el-table-column v-for="title in titles" :prop="title.prop" :label="title.label"
                                                  :key="title.label">
                                 </el-table-column>
@@ -38,33 +42,29 @@
 <script>
     import DashboardShell from "../DashboardShell";
     import {mapState} from 'vuex'
+    import router from '../../router'
+    import store from '../../store'
 
-    var data, titles
+    let data;
 
     data = [
         {
             id: 1,
-            name: 'One',
-            address: 'Gang'
+            name: 'Oke',
+            address: 'Oce'
         }
     ]
 
-    titles = [{
-        prop: "id",
-        label: "ID"
-    }, {
+    const titles = [{
         prop: "name",
         label: "Name"
-    }, {
-        prop: "address",
-        label: "Address"
     }]
 
     export default {
         name: "Category",
         components: {DashboardShell},
         created() {
-
+            this.$store.dispatch('category/fetchCategories')
         },
         data() {
             return {
@@ -75,15 +75,48 @@
                         prop: 'name',
                         value: ''
                     }
-                ]
+                ],
+                actions: {
+                    label: 'Action',
+                    props: {
+                        align: 'center',
+                    },
+                    buttons: [{
+                        props: {
+                            type: 'primary',
+                            icon: 'el-icon-edit',
+                            size: 'small'
+                        },
+                        handler: row => {
+                            router.push('/category/' + row.id)
+                        },
+                        label: 'Edit'
+                    }, {
+                        handler: row => {
+                            this.deleteCategory(row.id)
+                        },
+                        label: 'delete'
+                    }]
+                }
             }
         },
         methods: {
             toCreatePage() {
-                this.$router.push('/outlet/new')
+                this.$router.push('/category/new')
+            },
+            deleteCategory(index) {
+                store.dispatch('category/deleteCategory', index)
+                    .then(() => {
+                        this.$message.success('Delete Succeed!')
+                    }).catch(error => {
+                    this.$message.error('Delete Failed!')
+                })
             }
         },
         computed: {
+            ...mapState({
+                categories: state => state.category.categories
+            })
         }
     }
 </script>

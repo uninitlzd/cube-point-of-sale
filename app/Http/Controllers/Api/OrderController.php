@@ -8,6 +8,7 @@ use App\Http\Resources\OrderResource;
 use App\Models\Member;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\ProductStock;
 use App\Models\TransactionType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -85,6 +86,15 @@ class OrderController extends Controller
         $newOrder = tap($order)->save();
 
         foreach ($orderDetails as $detail) {
+            $productStock = ProductStock::where('shop_outlet_id', $order->shop_outlet_id)
+                                ->where('product_id', $detail['product_id'])
+                                ->first();
+
+            if ($productStock->product->stockable && $productStock->number_of_stock != 0)
+                $productStock->number_of_stock = $productStock->number_of_stock - $detail['quantity']; //Todo: Create servic
+
+            $productStock->save();
+
             $order->details()->save(new OrderDetail($detail));
         }
 

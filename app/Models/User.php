@@ -82,12 +82,12 @@ class User extends Authenticatable implements JWTSubject
      */
     public function hasRole($role)
     {
-        return !is_null($this->roles->where('name', $role)->first()) ? true : false;
+        return !is_null($this->roles->where('name', $role)->first());
     }
 
     public function hasAnyRole($roles)
     {
-        return !is_null($this->roles->whereIn('name', $roles)->first()) ? true : false;
+        return !is_null($this->roles->whereIn('name', $roles)->first());
     }
 
     public function isOwner()

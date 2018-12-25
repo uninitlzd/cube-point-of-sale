@@ -20,5 +20,6 @@ mix.js('resources/js/app.js', 'public/js')
         'vue', 'vue-axios', 'vue-data-tables', 'vue-router', 'vuebar', 'vuex', 'vue-offline', 'vuex-persist',
         'element-ui',
         'lodash',
-        'popper.js'
-    ]);
+        'popper.js',
+    ])
+    .browserSync('cube-pos-spa.test');

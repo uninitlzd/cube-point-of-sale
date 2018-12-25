@@ -6,6 +6,7 @@ use App\Helpers\Money;
 use App\Models\Member;
 use App\Models\Order;
 use App\Models\TransactionType;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -25,10 +26,11 @@ class OrderResource extends JsonResource
             'member_id' => $this->member_id,
             'customer_name' => $this->customer_name,
             'order_details' => OrderDetailResource::collection($this->whenLoaded('details')),
-            'order_total' => $this->order_total,
-            'tax' => $this->tax,
-            'total' => $this->total,
-            'paid' => $this->paid
+            'order_total' => Money::format($this->order_total),
+            'tax' => Money::format($this->tax),
+            'total' => Money::format($this->total),
+            'paid' => Money::format($this->paid),
+            'created_at' => Carbon::parse($this->created_at)->toFormattedDateString()
         ];
     }
 }

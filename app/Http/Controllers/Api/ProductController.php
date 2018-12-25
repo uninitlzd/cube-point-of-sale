@@ -27,7 +27,8 @@ class ProductController extends Controller
         $products = Product::where('shop_id', $this->user->shop->id);
 
         $result = QueryBuilder::for($products)
-            ->allowedFilters(Filter::custom('discounted', FiltersDiscountedProduct::class))
+            ->allowedIncludes('stocks')
+            ->allowedFilters('name', Filter::custom('discounted', FiltersDiscountedProduct::class))
             ->get();
 
         return ProductResource::collection($result->load('discounts'));
@@ -35,7 +36,14 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        return new ProductResource($product);
+        $product = Product::where('id', $product->id);
+
+        $result = QueryBuilder::for($product)
+            ->allowedIncludes('stocks')
+            ->allowedFilters(Filter::custom('discounted', FiltersDiscountedProduct::class))
+            ->first();
+
+        return new ProductResource($result->load('discounts'));
     }
 
     public function store(StoreProductRequest $request)

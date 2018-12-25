@@ -17,6 +17,12 @@ const mapStateForCache = (state) => {
         },
         outlet: {
             outlets: state.outlet.outlets
+        },
+        category: {
+            categories: state.category.categories
+        },
+        product: {
+            products: state.product.products
         }
     }
 };

@@ -29,7 +29,7 @@ class ProductResource extends JsonResource
             'image' => $this->image,
             'hasDiscount' => ($this->hasDiscount()),
             'discounts' => DiscountResource::collection($this->whenLoaded('discounts')),
-            'stock' => new ProductStockResource($this->whenLoaded('stock'))
+            'stock' => ProductStockResource::collection($this->whenLoaded('stocks'))
         ];
     }
 }

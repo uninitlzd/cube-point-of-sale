@@ -12,7 +12,7 @@
                             <div slot="header" class="clearfix">
                                 <el-row :gutter="10">
                                     <el-col :span="6">
-                                        <el-input placeholder="Search Content" class="mr-4" prefix-icon="el-icon-search"
+                                        <el-input placeholder="Search Outlet" class="mr-4" prefix-icon="el-icon-search"
                                                   v-model="filters[0].value"></el-input>
                                     </el-col>
                                     <el-col :span="18" class="text-right">

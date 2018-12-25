@@ -8,13 +8,14 @@ import ForgotPassword from '../components/ForgotPassword.vue'
 import Dashboard from '../components/Dashboard.vue'
 import { getState } from '../store/plugins/storage';
 
-
 import category from "./category";
 import product from "./product";
 import outlet from "./outlet";
 import order from "./order";
 import material from "./material";
 import report from "./report";
+import employee from "./employee";
+import member from "./member";
 
 const router = new VueRouter({
     routes: [
@@ -63,6 +64,8 @@ const router = new VueRouter({
         ...order,
         ...material,
         ...report,
+        ...employee,
+        ...member,
         {
             path: '*',
             redirect: '/'

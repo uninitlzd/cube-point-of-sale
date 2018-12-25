@@ -45,6 +45,8 @@ Route::group(['middleware' => 'auth.jwt'], function () {
 
     Route::get('report/selling/', 'IncomeReportingController@sellingReport');
     Route::get('report/selling/summary', 'IncomeReportingController@sellingReportSummary');
+    Route::get('report/selling/outlet', 'IncomeReportingController@sellingReportPerOutlet');
+    Route::get('report/selling/outlet/summary', 'IncomeReportingController@sellingReportPerOutletSummary');
 
     Route::get('tes', function () {
         return Money::round(53620);

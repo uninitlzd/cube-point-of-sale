@@ -14,26 +14,35 @@
                             <i class="material-icons text-center mr-3" @click="isCollapsed = !isCollapsed">
                                 menu
                             </i>
-                            <p class="mb-0"><span class="font-weight-black">Cube</span> Pos</p>
+                            <p class="mb-0"><span class="font-weight-black">GenBI</span> PoS</p>
                         </div>
                     </li>
                 </ul>
             </el-col>
             <el-col :span=12>
-                <el-dropdown class="h-100 d-flex align-self-center">
-                    <ul class="list-inline d-flex flex-row ml-auto h-100 justify-content-end el-dropdown-link pr-3">
-                        <li class="list-inline-item my-auto rounded-circle overflow-hidden mr-3" style="width: 30px;">
-                            <img
-                                src="/images/avatar.jpg" alt="" class="w-100 image-fit-cover"></li>
-                        <li class="list-inline-item my-auto">Alfredo Eka</li>
-                        <li class="list-inline-item my-auto"><i class="el-icon-arrow-down el-icon--right"></i></li>
-                    </ul>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>Settings</el-dropdown-item>
-                        <line></line>
-                        <el-dropdown-item divided @click.native="logout">Logout</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
+                <ul class="list-inline d-flex h-100 justify-content-end">
+                    <li class="list-inline-item my-auto">
+                        <el-button size="small" type="primary" plain round >
+                            <i class="material-icons mr-2 align-middle" style="font-size: 11pt; margin-bottom: 1px">store</i>Tampilan Kasir
+                        </el-button>
+                    </li>
+                    <li class="list-inline-item">
+                        <el-dropdown class="h-100 d-flex align-self-center">
+                            <ul class="list-inline d-flex flex-row ml-auto h-100 justify-content-end el-dropdown-link pr-3">
+                                <li class="list-inline-item my-auto rounded-circle overflow-hidden mr-3" style="width: 30px;">
+                                    <img
+                                        src="/images/avatar.jpg" alt="" class="w-100 image-fit-cover"></li>
+                                <li class="list-inline-item my-auto">Alfredo Eka</li>
+                                <li class="list-inline-item my-auto"><i class="el-icon-arrow-down el-icon--right"></i></li>
+                            </ul>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>Pengaturan</el-dropdown-item>
+                                <line></line>
+                                <el-dropdown-item divided @click.native="logout">Keluar</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </li>
+                </ul>
             </el-col>
         </el-row>
         <el-row type="flex" class="flex-fill mx-0 ">
@@ -44,19 +53,19 @@
                              active-text-color="#007bff"
                              :router=true>
                         <template v-if="shop != null">
-                            <el-menu-item index="1" route="/outlet">
+                            <el-menu-item index="1" route="/outlet" data-toggle="tooltip" title="Outlet">
                                 <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
                                     store
                                 </i>
                                 <span class="align-self-center">Outlets</span>
                             </el-menu-item>
-                            <el-menu-item index="2" route="/category">
+                            <el-menu-item index="2" route="/category" data-toggle="tooltip" title="Kategori">
                                 <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
-                                    bookmarks
+                                    category
                                 </i>
                                 <span class="align-self-center">Categories</span>
                             </el-menu-item>
-                            <el-menu-item index="3" route="/product">
+                            <el-menu-item index="3" route="/product" data-toggle="tooltip" title="Produk">
                                 <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
                                     view_module
                                 </i>
@@ -80,19 +89,25 @@
                                 </i>
                                 <span class="align-self-center">Insight</span>
                             </el-menu-item>
-                            <el-menu-item index="7" route="/report">
+                            <el-menu-item index="7" route="/employee">
                                 <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
                                     supervisor_account
                                 </i>
                                 <span class="align-self-center">Employee</span>
                             </el-menu-item>
-                            <el-menu-item index="7" route="/report">
+                            <el-menu-item index="8" route="/member">
                                 <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
                                     card_membership
                                 </i>
                                 <span class="align-self-center">Membership</span>
                             </el-menu-item>
-                            <el-menu-item index="8" route="/report">
+                            <el-menu-item index="9" route="/member">
+                                <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
+                                    local_offer
+                                </i>
+                                <span class="align-self-center">Discount</span>
+                            </el-menu-item>
+                            <el-menu-item index="10" route="/report">
                                 <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
                                     settings
                                 </i>

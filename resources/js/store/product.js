@@ -1,50 +1,83 @@
-import router from '../router'
-
 import axios from 'axios'
 
 const types = {
-    INDEX: 'INDEX',
-    SHOW: 'SHOW',
-    CREATE: 'CREATE',
-    EDIT: 'EDIT',
-    DELETE: 'DELETE',
-    SET_TOTAL: 'SET_TOTAL'
+    FETCH_PRODUCT: 'FETCH_PRODUCT',
+    ADD_PRODUCT: 'ADD_PRODUCT',
+    EDIT_PRODUCT: 'EDIT_PRODUCT',
+    DELETE_PRODUCT: 'DELETE_PRODUCT'
 }
 
 const state = {
     products: [],
-    total: 0
 }
 
 const getters = {
-    products: state => state.products
+    getProducts: state => state.products,
+    getById: state => index => state.products.filter(product => product.id === index)
 }
 
 const mutations = {
-    [types.INDEX](state, payload) {
-        state.products = payload
+    [types.FETCH_PRODUCT](state, products) {
+        state.products = products
     },
-    [types.SET_TOTAL] (state, payload) {
-        state.total = payload
+
+    [types.ADD_PRODUCT](state, product) {
+        state.products.unshift(product)
+    },
+
+    [types.EDIT_PRODUCT](state, {index, product}) {
+        state.products[index] = product
+    },
+
+    // Delete Product From State by id
+    [types.EDIT_PRODUCT](state, index) {
+        state.products = state.products.filter(product => product.id !== index)
     }
 }
 
 const actions = {
-    getProducts({commit}, payload) {
-        axios.get('/api/product', {
-                params: {
-                    ...payload
-                }
+    async addProduct({commit}, form) {
+        let data = await form.post('/api/product')
+            .then(data => {
+                return data
             })
-            .then(r => r.data)
-            .then(products => {
-                commit(types.INDEX, products.data)
-                commit(types.SET_TOTAL, products.meta.total)
-            });
+
+        commit(types.ADD_PRODUCT, data)
+    },
+
+    async updateProduct({commit}, {form, index}) {
+        let product = await form.put('/api/product/' + index)
+            .then(product => {
+                return product
+            })
+
+        commit(types.EDIT_PRODUCT, {index, product})
+    },
+
+    deleteProduct({commit}, index) {
+        axios.delete('/api/product/' + index)
+            .then(product => {
+                return product
+            })
+
+        commit(types.EDIT_PRODUCT, index)
+    },
+
+    async fetchProducts({commit}) {
+        let data = await axios.get('/api/product')
+            .then(response => {
+
+                return response.data
+            })
+
+        console.log(data)
+
+        commit(types.FETCH_PRODUCT, data)
     }
 }
 
 export default {
+    namespaced: true,
     state,
     mutations,
     getters,

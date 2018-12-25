@@ -8,6 +8,11 @@ import auth from './auth'
 import product from './product'
 import shop from './shop'
 import outlet from './outlet'
+import category from './category'
+import order from './order'
+import material from './material'
+import employee from './employee'
+import member from './member'
 
 import cache from './plugins/cache'
 import sync from './plugins/sync'
@@ -35,7 +40,12 @@ export default new Vuex.Store({
         user,
         product,
         shop,
-        outlet
+        outlet,
+        category,
+        order,
+        material,
+        employee,
+        member
     },
     plugins: [cache, sync]
 })

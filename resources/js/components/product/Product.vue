@@ -2,31 +2,35 @@
     <dashboard-shell>
         <el-col :span="24" class="pr-0">
             <el-scrollbar class="h-100 scrollbar-component">
-                <el-row type="flex">
-                    <el-col :span="23" class="px-4 py-4">
-                        <h2 class="mb-3">Product</h2>
+                <el-row class="ml-5 mt-4 mr-4">
+                    <el-col :md="23" :xs="24" class="py-4">
+                        <h2 class="mb-3">Produk</h2>
                         <el-breadcrumb separator="/" class="mb-5">
-                            <el-breadcrumb-item to="/product">Product Management</el-breadcrumb-item>
-                            <el-breadcrumb-item>Product list</el-breadcrumb-item>
+                            <el-breadcrumb-item to="/product">Manajemen Produk</el-breadcrumb-item>
                         </el-breadcrumb>
-                        <el-card class="box-card">
+                        <el-card class="box-card mr-5">
                             <div slot="header" class="clearfix">
                                 <el-row :gutter="10">
                                     <el-col :span="6">
-                                        <el-input placeholder="Search Content" class="mr-4" prefix-icon="el-icon-search"
+                                        <el-input placeholder="Cari Produk" class="mr-4" prefix-icon="el-icon-search"
                                                   v-model="filters[0].value"></el-input>
                                     </el-col>
                                     <el-col :span="18" class="text-right">
-                                        <el-button type="primary" icon="el-icon-plus" round>New Product</el-button>
+                                        <el-button type="primary" icon="el-icon-plus" round size="medium"
+                                                   @click="toCreatePage">Produk Baru
+                                        </el-button>
                                     </el-col>
                                 </el-row>
                             </div>
-                            <data-tables-server :data="products" class="" :pagination-props="{background: true, pageSizes: [5, 10, 15] }"
-                                                :filters="filters" :total="total" @query-change="loadData">
+                            <data-tables :data="products"
+                                         :pagination-props="{background: true, pageSizes: [5, 10, 15] }"
+                                         :filters="filters"
+                                         :action-col="actions"
+                                         :total="products.length">
                                 <el-table-column v-for="title in titles" :prop="title.prop" :label="title.label"
                                                  :key="title.label">
                                 </el-table-column>
-                            </data-tables-server>
+                            </data-tables>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -38,50 +42,89 @@
 <script>
     import DashboardShell from "../DashboardShell";
     import {mapState} from 'vuex'
+    import router from '../../router'
+    import store from '../../store'
 
-    var data, titles
+    let data;
 
-    titles = [{
+    data = [
+        {
+            id: 1,
+            name: 'Oke',
+            address: 'Oce'
+        }
+    ]
+
+    const titles = [{
         prop: "id",
         label: "ID"
     }, {
         prop: "name",
         label: "Name"
     }, {
-        prop: "price",
-        label: "Price"
+        prop: "address",
+        label: "Address"
     }, {
-        prop: "quantity",
-        label: "Quantity"
+        prop: "phone",
+        label: "Phone"
     }]
 
     export default {
         name: "Product",
         components: {DashboardShell},
         created() {
-            this.$store.dispatch('getProducts')
+            this.$store.dispatch('product/fetchProducts')
         },
         data() {
             return {
-                data: [],
+                data,
                 titles,
                 filters: [
                     {
                         prop: 'name',
                         value: ''
                     }
-                ]
+                ],
+                actions: {
+                    label: 'Action',
+                    props: {
+                        align: 'center',
+                    },
+                    buttons: [{
+                        props: {
+                            type: 'primary',
+                            icon: 'el-icon-edit',
+                            size: 'small'
+                        },
+                        handler: row => {
+                            router.push('/product/' + row.id)
+                        },
+                        label: 'Edit'
+                    }, {
+                        handler: row => {
+                            this.deleteProduct(row.id)
+                        },
+                        label: 'delete'
+                    }]
+                }
             }
         },
         methods: {
-            async loadData(queryInfo) {
-                this.$store.dispatch('getProducts', queryInfo)
+            toCreatePage() {
+                this.$router.push('/product/new')
+            },
+            deleteProduct(index) {
+                store.dispatch('product/deleteProduct', index)
+                    .then(() => {
+                        this.$message.success('Delete Succeed!')
+                    }).catch(error => {
+                    this.$message.error('Delete Failed!')
+                })
             }
         },
         computed: {
             ...mapState({
-                products: state => state.product.products,
-                total: state => state.product.total
+                products: state => state.product.products
             })
         }
     }
