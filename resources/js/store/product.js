@@ -26,17 +26,18 @@ const mutations = {
     },
 
     [types.EDIT_PRODUCT](state, {index, product}) {
-        state.products[index] = product
+        state.products[state.products.findIndex(product => product.id)] = product
     },
 
     // Delete Product From State by id
-    [types.EDIT_PRODUCT](state, index) {
+    [types.DELETE_PRODUCT](state, index) {
         state.products = state.products.filter(product => product.id !== index)
     }
 }
 
 const actions = {
     async addProduct({commit}, form) {
+        console.log(form)
         let data = await form.post('/api/product')
             .then(data => {
                 return data

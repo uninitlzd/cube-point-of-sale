@@ -88,18 +88,13 @@
                     buttons: [{
                         props: {
                             type: 'primary',
-                            icon: 'el-icon-edit',
+                            icon: 'el-icon-view',
                             size: 'small'
                         },
                         handler: row => {
-                            router.push('/order/' + row.id)
+                            this.$message.info('oke')
                         },
-                        label: 'Edit'
-                    }, {
-                        handler: row => {
-                            this.deleteOrder(row.id)
-                        },
-                        label: 'delete'
+                        label: 'Detail Transaksi'
                     }]
                 }
             }

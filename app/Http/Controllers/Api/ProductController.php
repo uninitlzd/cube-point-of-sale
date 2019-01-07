@@ -10,6 +10,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Intervention\Image\Image;
 use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -43,15 +44,17 @@ class ProductController extends Controller
             ->allowedFilters(Filter::custom('discounted', FiltersDiscountedProduct::class))
             ->first();
 
+        return $result;
+
         return new ProductResource($result->load('discounts'));
     }
 
-    public function store(StoreProductRequest $request)
+    public function store(Request $request)
     {
         $shop = $this->user->shop;
         $product = new Product($request->all());
         $product->fill([
-            'image' => FileHelper::saveImage($request->file('image'), 500, '/images/products/', time())
+            'image' => FileHelper::saveBase64Image($request->image, 500, '/images/products/')
         ]);
 
         $product = $shop->products()->save($product);

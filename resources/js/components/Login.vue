@@ -10,11 +10,11 @@
                     <el-form @submit.prevent="login" @keydown="form.errors.clear($event.target.name)"
                              label-position="top" :rules=rules ref="form" :model="form">
                         <el-form-item label="Email" prop="email" :error=formError>
-                            <el-input size="medium" placeholder="Email" v-model="form.email"></el-input>
+                            <el-input size="medium" placeholder="Email" v-model="form.email" v-on:keyup.enter="login"></el-input>
                         </el-form-item>
                         <el-form-item label="Kata Sandi">
                             <el-input type="password" size="medium" placeholder="Kata Sandi"
-                                      v-model="form.password"></el-input>
+                                      v-model="form.password" v-on:keyup.enter="login"></el-input>
                         </el-form-item>
                         <el-row type="flex">
                             <el-col :span="12">

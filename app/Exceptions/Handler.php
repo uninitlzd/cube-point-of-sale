@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -58,6 +59,13 @@ class Handler extends ExceptionHandler
         }
 
         if ($request->wantsJson() && ($exception instanceof AuthorizationException)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Access denied!'
+            ], 401);
+        }
+
+        if ($request->wantsJson() && ($exception instanceof UnauthorizedHttpException)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Access denied!'

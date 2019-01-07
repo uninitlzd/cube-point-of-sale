@@ -26,11 +26,11 @@ const mutations = {
     },
 
     [types.EDIT_OUTLET](state, {index, outlet}) {
-        state.outlets[index] = outlet
+        state.outlets[state.outlets.findIndex(outlet => outlet.id)] = outlet
     },
 
     // Delete Outlet From State by id
-    [types.EDIT_OUTLET](state, index) {
+    [types.DELETE_OUTLET](state, index) {
         state.outlets = state.outlets.filter(outlet => outlet.id !== index)
     }
 }
@@ -63,7 +63,7 @@ const actions = {
                 return outlet
             })
 
-        commit(types.EDIT_OUTLET, index)
+        commit(types.DELETE_OUTLET, index)
     },
 
     async fetchOutlets({commit}) {

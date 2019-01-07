@@ -28,6 +28,14 @@ class FileHelper
         self::uploadImage($img, $fileName, $path);
         return $path.$fileName;
     }
+
+    public static function saveBase64Image($file, $maxWidth = 150, $path = null) {
+        $fileName = time();
+        $img = self::makeImage($file);
+        $img = self::resizeImage($img, $maxWidth);
+        self::uploadImage($img, $fileName, $path);
+        return $path.$fileName;
+    }
     /**
      * Get uploaded file's name.
      *
@@ -48,7 +56,7 @@ class FileHelper
      *
      * @return \Intervention\Image\Image
      */
-    protected static function makeImage(UploadedFile $file)
+    protected static function makeImage($file)
     {
         return Image::make($file);
     }

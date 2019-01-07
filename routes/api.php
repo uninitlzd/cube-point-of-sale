@@ -22,7 +22,7 @@ Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
-    Route::get('logout', 'AuthController@logout');
+    Route::post('logout', 'AuthController@logout');
 
     Route::resource('user', 'UserController');
     Route::get('shop', 'ShopController@index');

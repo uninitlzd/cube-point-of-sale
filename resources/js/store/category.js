@@ -26,11 +26,11 @@ const mutations = {
     },
 
     [types.EDIT_CATEGORY](state, {index, category}) {
-        state.categories[index] = category
+        state.categories[state.categories.findIndex(category => category.id)] = category
     },
 
     // Delete Category From State by id
-    [types.EDIT_CATEGORY](state, index) {
+    [types.DELETE_CATEGORY](state, index) {
         state.categories = state.categories.filter(category => category.id !== index)
     }
 }
@@ -60,7 +60,7 @@ const actions = {
                 return category
             })
 
-        commit(types.EDIT_CATEGORY, index)
+        commit(types.DELETE_CATEGORY, index)
     },
 
     async fetchCategories({commit}) {

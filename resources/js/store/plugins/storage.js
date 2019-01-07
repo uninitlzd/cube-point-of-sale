@@ -23,6 +23,9 @@ const mapStateForCache = (state) => {
         },
         product: {
             products: state.product.products
+        },
+        material: {
+            materials: state.material.materials
         }
     }
 };

@@ -21,6 +21,7 @@ Vue.component('Navbar', Navbar)
 
 locale.use(lang)
 window.axios = axios
+
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + window.localStorage.token
 

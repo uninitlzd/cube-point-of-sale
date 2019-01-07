@@ -26,11 +26,11 @@ const mutations = {
     },
 
     [types.EDIT_MATERIAL](state, {index, material}) {
-        state.materials[index] = material
+        state.materials[state.materials.findIndex(material => material.id)] = material
     },
 
     // Delete Material From State by id
-    [types.EDIT_MATERIAL](state, index) {
+    [types.DELETE_MATERIAL](state, index) {
         state.materials = state.materials.filter(material => material.id !== index)
     }
 }
@@ -60,7 +60,7 @@ const actions = {
                 return material
             })
 
-        commit(types.EDIT_MATERIAL, index)
+        commit(types.DELETE_MATERIAL, index)
     },
 
     async fetchMaterials({commit}) {

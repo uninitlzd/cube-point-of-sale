@@ -21,5 +21,5 @@ mix.js('resources/js/app.js', 'public/js')
         'element-ui',
         'lodash',
         'popper.js',
+        'accounting-js'
     ])
-    .browserSync('cube-pos-spa.test');

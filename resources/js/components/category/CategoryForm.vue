@@ -7,7 +7,7 @@
                         <h2 class="mb-3" v-if="editMode">{{ form.name }}</h2>
                         <h2 class="mb-3" v-else>Kategori</h2>
                         <el-breadcrumb separator="/" class="mb-5">
-                            <el-breadcrumb-item to="/outlet">Manajemen Kategori</el-breadcrumb-item>
+                            <el-breadcrumb-item to="/category">Manajemen Kategori</el-breadcrumb-item>
                             <el-breadcrumb-item to=link v-if=editMode>Form Kategori - Edit</el-breadcrumb-item>
                             <el-breadcrumb-item to=link v-else>Form Kategori</el-breadcrumb-item>
                         </el-breadcrumb>
@@ -59,11 +59,9 @@
         created() {
             if (this.$route.params.id !== 'new') {
                 this.editMode = true
-                let outlet = this.getById(parseInt(this.$route.params.id))[0]
+                let category = this.getById(parseInt(this.$route.params.id))[0]
                 this.form = new Form({
-                    name: outlet.name,
-                    address: outlet.address,
-                    phone: outlet.phone
+                    name: category.name
                 })
             }
         },
@@ -77,12 +75,6 @@
                     name: [
                         {required: true, message: 'Please input name', trigger: 'blur'},
                     ],
-                    address: [
-                        {required: true, message: 'Please input address', trigger: 'blur'},
-                    ],
-                    phone: [
-                        {required: true, message: 'Please input phone', trigger: 'blur'},
-                    ],
                 },
                 isLoading: false,
             }
@@ -90,9 +82,10 @@
         methods: {
             submit() {
                 this.isLoading = true
-                this.$store.dispatch('outlet/addOutlet', this.form).then(response => {
+                this.$store.dispatch('category/addCategory', this.form).then(response => {
                     this.isLoading = false
-                    this.$message.success('Outlet Created!')
+                    this.$message.success('Category Created!')
+                    router.push({name: 'category.index'})
                 }).catch(error => {
                     this.isLoading = false
                     this.$message.error('Save Failed!')
@@ -101,12 +94,13 @@
 
             update() {
                 this.isLoading = true
-                this.$store.dispatch('outlet/updateOutlet', {
+                this.$store.dispatch('category/updateCategory', {
                     index: this.$route.params.id,
                     form: this.form
                 }).then(response => {
                     this.isLoading = false
-                    this.$message.success('Outlet Updated!')
+                    this.$message.success('Category Updated!')
+                    router.push({name: 'category.index'})
                 }).catch(error => {
                     this.isLoading = false
                     this.$message.error('Save Failed!')
@@ -118,7 +112,7 @@
                 return this.form.incompleted() || this.isLoading
             },
             ...mapGetters({
-                getById: 'outlet/getById'
+                getById: 'category/getById'
             })
         },
     }

@@ -11,7 +11,7 @@
         },
         mounted() {
             this.$on('offline', () => {
-                this.$alert('This is a message', 'Title')
+                this.$alert('Please check your internet connection', 'You are offline!')
             })
         }
     }

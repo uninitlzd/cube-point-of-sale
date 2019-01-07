@@ -4,7 +4,7 @@ import CategoryForm from '../components/category/CategoryForm'
 const category = [
     {
         path: '/category',
-        name: 'Category Index',
+        name: 'category.index',
         component: Category,
         meta: {
             auth:true,
@@ -13,20 +13,20 @@ const category = [
     },
     {
         path: '/category/:id',
-        name: 'Category Form',
+        name: 'category.edit',
         component: CategoryForm,
         meta: {
             auth: true,
-            menuIndex: "1"
+            menuIndex: "2"
         }
     },
     {
         path: '/category/new',
-        name: 'Category New Form',
+        name: 'category.new',
         component: CategoryForm,
         meta: {
             auth: true,
-            menuIndex: "1"
+            menuIndex: "2"
         }
     }
 ]

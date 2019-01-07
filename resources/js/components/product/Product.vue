@@ -29,6 +29,20 @@
                                          :total="products.length">
                                 <el-table-column v-for="title in titles" :prop="title.prop" :label="title.label"
                                                  :key="title.label">
+                                    <template slot-scope="scope">
+                                        <div v-if="['purchase_price', 'selling_price'].includes(title.prop)">
+                                            <span v-if="title.prop === 'selling_price'">
+                                                <span v-if="(scope.row['has_discount'])">Rp{{ scope.row['original_selling_price'] }}</span>
+                                                <span v-else>Rp{{ scope.row['selling_price'] }}</span>
+                                            </span>
+                                            <span v-else>
+                                                <span>Rp{{ scope.row[title.prop] }}</span>
+                                            </span>
+                                        </div>
+                                        <div v-else>
+                                            <span>{{ scope.row[title.prop] }}</span>
+                                        </div>
+                                    </template>
                                 </el-table-column>
                             </data-tables>
                         </el-card>
@@ -56,17 +70,14 @@
     ]
 
     const titles = [{
-        prop: "id",
-        label: "ID"
-    }, {
         prop: "name",
-        label: "Name"
+        label: "Nama"
     }, {
-        prop: "address",
-        label: "Address"
+        prop: "purchase_price",
+        label: "Harga Beli"
     }, {
-        prop: "phone",
-        label: "Phone"
+        prop: "selling_price",
+        label: "Harga Jual"
     }]
 
     export default {

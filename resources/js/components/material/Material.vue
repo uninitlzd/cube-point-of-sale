@@ -12,8 +12,13 @@
                             <div slot="header" class="clearfix">
                                 <el-row :gutter="10">
                                     <el-col :span="6">
-                                        <el-input placeholder="Cari Bahan-bahan" class="mr-4" prefix-icon="el-icon-search"
+                                        <el-input placeholder="Cari Produk" class="mr-4" prefix-icon="el-icon-search"
                                                   v-model="filters[0].value"></el-input>
+                                    </el-col>
+                                    <el-col :span="18" class="text-right">
+                                        <el-button type="primary" icon="el-icon-plus" round size="medium"
+                                                   @click="toCreatePage">Bahan Baru
+                                        </el-button>
                                     </el-col>
                                 </el-row>
                             </div>

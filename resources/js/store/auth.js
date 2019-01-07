@@ -30,7 +30,8 @@ const mutations = {
 }
 
 const getters = {
-    isLogged: state => state.logged
+    isLogged: state => state.logged,
+    getUser: state => state.user,
 }
 
 const actions = {
@@ -63,8 +64,14 @@ const actions = {
         router.push({name: 'Dashboard'})
     },
 
-    logout({commit}) {
+    async logout({commit}) {
         commit(types.LOGOUT)
+
+        //Todo: check internet connection
+        //If have internet connection
+        axios.post('/api/logout', {
+            token: window.localStorage.getItem('token')
+        })
 
         delete axios.defaults.headers.common['Authorization']
         deleteState().then(() => {

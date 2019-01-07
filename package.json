@@ -22,6 +22,7 @@
         "vue": "^2.5.17"
     },
     "dependencies": {
+        "accounting-js": "^1.1.1",
         "element-ui": "^2.4.11",
         "localforage": "^1.7.3",
         "vue-axios": "^2.1.4",

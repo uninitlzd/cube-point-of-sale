@@ -4,7 +4,7 @@ import ProductForm from '../components/Product/ProductForm'
 const product = [
     {
         path: '/product',
-        name: 'Product Index',
+        name: 'product.index',
         component: Product,
         meta: {
             auth:true,
@@ -13,11 +13,11 @@ const product = [
     },
     {
         path: '/product/:id',
-        name: 'Product Form',
+        name: 'product.form',
         component: ProductForm,
         meta: {
             auth: true,
-            menuIndex: "1"
+            menuIndex: "3"
         }
     },
     {
@@ -26,7 +26,7 @@ const product = [
         component: ProductForm,
         meta: {
             auth: true,
-            menuIndex: "1"
+            menuIndex: "3"
         }
     }
 ]
