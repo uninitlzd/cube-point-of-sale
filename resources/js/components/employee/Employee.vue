@@ -56,17 +56,11 @@
     ]
 
     const titles = [{
-        prop: "id",
-        label: "ID"
-    }, {
         prop: "name",
         label: "Name"
     }, {
-        prop: "address",
-        label: "Address"
-    }, {
-        prop: "phone",
-        label: "Phone"
+        prop: "email",
+        label: "Email"
     }]
 
     export default {

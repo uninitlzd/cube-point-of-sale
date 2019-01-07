@@ -26,11 +26,11 @@ const mutations = {
     },
 
     [types.EDIT_EMPLOYEE](state, {index, employee}) {
-        state.employees[index] = employee
+        state.employees[state.employees.findIndex(employee => employee.id)] = employee
     },
 
     // Delete Employee From State by id
-    [types.EDIT_EMPLOYEE](state, index) {
+    [types.DELETE_EMPLOYEE](state, index) {
         state.employees = state.employees.filter(employee => employee.id !== index)
     }
 }
@@ -60,7 +60,7 @@ const actions = {
                 return employee
             })
 
-        commit(types.EDIT_EMPLOYEE, index)
+        commit(types.DELETE_EMPLOYEE, index)
     },
 
     async fetchEmployees({commit}) {
@@ -70,9 +70,22 @@ const actions = {
                 return response.data
             })
 
-        console.log(data)
-
         commit(types.FETCH_EMPLOYEE, data)
+    },
+
+    async getById({commit}, id) {
+        let data = await axios.get(`/api/employee/${id}`)
+            .then(response => {
+                if (state.employees.findIndex(employee => employee.id) === -1) {
+
+                    state.employees.push(response.data)
+                }
+                return response.data
+            }).catch(() => {
+                return state.employees.findIndex(employee => employee.id)
+            })
+
+        return data
     }
 }
 

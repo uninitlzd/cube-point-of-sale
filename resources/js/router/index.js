@@ -18,6 +18,7 @@ import employee from "./employee";
 import member from "./member";
 
 const router = new VueRouter({
+    // mode: 'history',
     routes: [
         {
             path: '/',

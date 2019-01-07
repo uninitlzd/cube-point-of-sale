@@ -31,6 +31,8 @@
         "vue-router": "^3.0.2",
         "vuebar": "^0.0.20",
         "vuex": "^3.0.1",
-        "vuex-persist": "^2.0.0"
+        "vuex-persist": "^2.0.0",
+        "workbox-sw": "^3.6.3",
+        "workbox-webpack-plugin": "^3.6.3"
     }
 }

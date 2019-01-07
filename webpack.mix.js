@@ -1,4 +1,6 @@
 const mix = require('laravel-mix');
+const workboxPlugin = require('workbox-webpack-plugin')
+
 
 /*
  |--------------------------------------------------------------------------
@@ -22,4 +24,16 @@ mix.js('resources/js/app.js', 'public/js')
         'lodash',
         'popper.js',
         'accounting-js'
-    ])
+    ]).webpackConfig({
+    plugins: [
+        new workboxPlugin.InjectManifest({
+            swSrc: 'public/sw-offline.js', // more control over the caching
+            swDest: 'sw.js', // the service-worker file name
+            importsDirectory: 'service-worker', // have a dedicated folder for sw files,
+            maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+            templatedUrls: {
+                '/': 'resources/views/main.blade.php',
+            }
+        })
+    ]
+})

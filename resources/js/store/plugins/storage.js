@@ -26,6 +26,9 @@ const mapStateForCache = (state) => {
         },
         material: {
             materials: state.material.materials
+        },
+        employee: {
+            employees: state.employee.employees
         }
     }
 };

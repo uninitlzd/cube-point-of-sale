@@ -4,7 +4,7 @@ import EmployeeForm from '../components/Employee/EmployeeForm'
 const employee = [
     {
         path: '/employee',
-        name: 'Employee Index',
+        name: 'employee.index',
         component: Employee,
         meta: {
             auth:true,
@@ -13,7 +13,7 @@ const employee = [
     },
     {
         path: '/employee/:id',
-        name: 'Employee Form',
+        name: 'employee.edit',
         component: EmployeeForm,
         meta: {
             auth: true,
@@ -22,7 +22,7 @@ const employee = [
     },
     {
         path: '/employee/new',
-        name: 'Employee New Form',
+        name: 'employee.create',
         component: EmployeeForm,
         meta: {
             auth: true,
