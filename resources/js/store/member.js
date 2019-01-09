@@ -13,7 +13,7 @@ const state = {
 
 const getters = {
     getMembers: state => state.members,
-    getById: state => index => state.members.filter(member => member.id === index)
+    getById: state => index => state.members.filter(member => member.id === index)[0]
 }
 
 const mutations = {
@@ -26,11 +26,11 @@ const mutations = {
     },
 
     [types.EDIT_MEMBER](state, {index, member}) {
-        state.members[index] = member
+        state.outlets[state.outlets.findIndex(outlet => outlet.id)] = outlet
     },
 
     // Delete Member From State by id
-    [types.EDIT_MEMBER](state, index) {
+    [types.DELETE_MEMBER](state, index) {
         state.members = state.members.filter(member => member.id !== index)
     }
 }
@@ -69,9 +69,6 @@ const actions = {
 
                 return response.data
             })
-
-        console.log(data)
-
         commit(types.FETCH_MEMBER, data)
     }
 }

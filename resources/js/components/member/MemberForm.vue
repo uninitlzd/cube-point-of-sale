@@ -5,21 +5,42 @@
                 <el-row class="ml-5 mt-4 mr-4">
                     <el-col :span="23" class="py-4">
                         <h2 class="mb-3" v-if="editMode">{{ form.name }}</h2>
-                        <h2 class="mb-3" v-else>Produk</h2>
+                        <h2 class="mb-3" v-else>Member</h2>
                         <el-breadcrumb separator="/" class="mb-5">
-                            <el-breadcrumb-item to="/outlet">Manajemen Produk</el-breadcrumb-item>
-                            <el-breadcrumb-item to=link v-if=editMode>Form Produk - Edit</el-breadcrumb-item>
-                            <el-breadcrumb-item to=link v-else>Form Produk</el-breadcrumb-item>
+                            <el-breadcrumb-item to="/member">Manajemen Member</el-breadcrumb-item>
+                            <el-breadcrumb-item to=link v-if=editMode>Form Member - Edit</el-breadcrumb-item>
+                            <el-breadcrumb-item to=link v-else>Form Member</el-breadcrumb-item>
                         </el-breadcrumb>
                         <el-card class="box-card pt-4 mr-1">
                             <el-form @submit.prevent="submit" @keydown="form.errors.clear($event.target.name)"
                                      label-position="top" ref="form" :model=form :rules=rules>
-                                <el-form-item label="Name" prop="name">
-                                    <el-input size="medium"
-                                              placeholder="Contoh: Makanan Ringan"
-                                              v-model="form.name"></el-input>
-                                </el-form-item>
+                                <el-row :gutter="10">
+                                    <el-col :span="12">
+                                        <el-form-item label="Name" prop="name">
+                                            <el-input size="medium"
+                                                      placeholder="Contoh: John Doe"
+                                                      v-model="form.name"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-form-item label="Phone" prop="phone">
+                                            <el-input size="medium"
+                                                      placeholder="Contoh: +6281230909"
+                                                      v-model="form.phone"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row :gutter="10">
+                                    <el-col :span="24">
+                                        <el-form-item label="Phone" prop="phone">
+                                            <el-input type="textarea" size="medium"
+                                                      placeholder="Contoh: Tegalsari, Surabaya"
+                                                      v-model="form.address"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
                                 <el-form-item size="medium" class="mb-0">
+                                    <input type="hidden" v-model="form.shop_id" ref="shopId">
                                     <el-button v-if=editMode type="primary" @click="update" :disabled=isDisabled>Save
                                     </el-button>
                                     <el-button v-else type="primary" @click="submit" :disabled=isDisabled>Submit
@@ -36,42 +57,36 @@
 
 <script>
     import DashboardShell from "../DashboardShell";
-    import {mapState, mapGetters} from 'vuex'
+    import {mapState, mapGetters, mapActions} from 'vuex'
     import Form from '../../utils/Form'
     import router from '../../router'
 
-    var data, titles
-
-    titles = [{
-        prop: "id",
-        label: "ID"
-    }, {
-        prop: "name",
-        label: "Name"
-    }, {
-        prop: "address",
-        label: "Address"
-    }]
-
     export default {
-        name: "EmployeeForm",
+        name: "MemberForm",
         components: {DashboardShell},
         created() {
             if (this.$route.params.id !== 'new') {
                 this.editMode = true
-                let outlet = this.getById(parseInt(this.$route.params.id))[0]
+
+                let member = this.getById(parseInt(this.$route.params.id))
+                console.log(member)
                 this.form = new Form({
-                    name: outlet.name,
-                    address: outlet.address,
-                    phone: outlet.phone
+                    name: member.name,
+                    address: member.address,
+                    phone: member.phone,
+                    shop_id: member.shop_id
                 })
             }
+
+            this.form.shop_id = this.user.shop.id
         },
         data() {
             return {
                 editMode: false,
                 form: new Form({
                     name: '',
+                    phone: '',
+                    address: ''
                 }),
                 rules: {
                     name: [
@@ -90,9 +105,10 @@
         methods: {
             submit() {
                 this.isLoading = true
-                this.$store.dispatch('outlet/addOutlet', this.form).then(response => {
+                this.$store.dispatch('member/addMember', this.form).then(response => {
                     this.isLoading = false
-                    this.$message.success('Outlet Created!')
+                    this.$message.success('Member Created!')
+                    this.$router.push({name: 'member.index'})
                 }).catch(error => {
                     this.isLoading = false
                     this.$message.error('Save Failed!')
@@ -101,12 +117,13 @@
 
             update() {
                 this.isLoading = true
-                this.$store.dispatch('outlet/updateOutlet', {
+                this.$store.dispatch('member/updateMember', {
                     index: this.$route.params.id,
                     form: this.form
                 }).then(response => {
                     this.isLoading = false
-                    this.$message.success('Outlet Updated!')
+                    this.$message.success('Member Updated!')
+                    this.$router.push({name: 'member.index'})
                 }).catch(error => {
                     this.isLoading = false
                     this.$message.error('Save Failed!')
@@ -118,7 +135,8 @@
                 return this.form.incompleted() || this.isLoading
             },
             ...mapGetters({
-                getById: 'outlet/getById'
+                user: 'auth/getUser',
+                getById: 'member/getById'
             })
         },
     }

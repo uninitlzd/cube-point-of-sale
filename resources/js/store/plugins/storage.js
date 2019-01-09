@@ -29,6 +29,12 @@ const mapStateForCache = (state) => {
         },
         employee: {
             employees: state.employee.employees
+        },
+        member: {
+            members: state.member.members
+        },
+        discount: {
+            discounts: state.discount.discounts
         }
     }
 };

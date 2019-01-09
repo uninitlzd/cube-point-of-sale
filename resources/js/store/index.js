@@ -13,6 +13,7 @@ import order from './order'
 import material from './material'
 import employee from './employee'
 import member from './member'
+import discount from './discount'
 
 import cache from './plugins/cache'
 import sync from './plugins/sync'
@@ -45,7 +46,8 @@ export default new Vuex.Store({
         order,
         material,
         employee,
-        member
+        member,
+        discount
     },
     plugins: [cache, sync]
 })

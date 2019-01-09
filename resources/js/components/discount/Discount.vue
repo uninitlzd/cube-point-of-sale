@@ -4,31 +4,46 @@
             <el-scrollbar class="h-100 scrollbar-component">
                 <el-row class="ml-5 mt-4 mr-4">
                     <el-col :md="23" :xs="24" class="py-4">
-                        <h2 class="mb-3">Member</h2>
+                        <h2 class="mb-3">Discount</h2>
                         <el-breadcrumb separator="/" class="mb-5">
-                            <el-breadcrumb-item to="/member">Manajemen Member</el-breadcrumb-item>
+                            <el-breadcrumb-item to="/discount">Manajemen Discount</el-breadcrumb-item>
                         </el-breadcrumb>
                         <el-card class="box-card mr-5">
                             <div slot="header" class="clearfix">
                                 <el-row :gutter="10">
                                     <el-col :span="6">
-                                        <el-input placeholder="Cari Member" class="mr-4" prefix-icon="el-icon-search"
+                                        <el-input placeholder="Cari Discount" class="mr-4" prefix-icon="el-icon-search"
                                                   v-model="filters[0].value"></el-input>
                                     </el-col>
                                     <el-col :span="18" class="text-right">
                                         <el-button type="primary" icon="el-icon-plus" round size="medium"
-                                                   @click="toCreatePage">Member Baru
+                                                   @click="toCreatePage">Discount Baru
                                         </el-button>
                                     </el-col>
                                 </el-row>
                             </div>
-                            <data-tables :data="members"
+                            <data-tables :data="discounts"
                                          :pagination-props="{background: true, pageSizes: [5, 10, 15] }"
                                          :filters="filters"
                                          :action-col="actions"
-                                         :total="members.length">
+                                         :total="discounts.length">
                                 <el-table-column v-for="title in titles" :prop="title.prop" :label="title.label"
                                                  :key="title.label">
+                                    <template slot-scope="scope">
+                                        <div v-if="title.prop == 'action'">
+                                            <el-dropdown size="small" split-button type="primary" trigger="click" class="" @click="toSetProduct(scope.row.id)">
+                                                Set Produk
+                                                <el-dropdown-menu slot="dropdown">
+                                                    <el-dropdown-item @click.native="toEdit(scope.row.id)">Edit</el-dropdown-item>
+                                                    <el-dropdown-item @click.native="deleteDiscount(scope.row.id)">Delete</el-dropdown-item>
+                                                </el-dropdown-menu>
+                                            </el-dropdown>
+
+                                        </div>
+                                        <div v-else>
+                                            <span>{{ scope.row[title.prop] }}</span>
+                                        </div>
+                                    </template>
                                 </el-table-column>
                             </data-tables>
                         </el-card>
@@ -56,24 +71,21 @@
     ]
 
     const titles = [{
-        prop: "id",
-        label: "ID"
-    }, {
         prop: "name",
         label: "Name"
     }, {
-        prop: "address",
-        label: "Address"
+        prop: "percentage",
+        label: "Persentase"
     }, {
-        prop: "phone",
-        label: "Phone"
+        prop: "action",
+        label: "Action"
     }]
 
     export default {
-        name: "Member",
+        name: "Discount",
         components: {DashboardShell},
         created() {
-            this.$store.dispatch('member/fetchMembers')
+            this.$store.dispatch('discount/fetchDiscounts')
         },
         data() {
             return {
@@ -84,37 +96,21 @@
                         prop: 'name',
                         value: ''
                     }
-                ],
-                actions: {
-                    label: 'Action',
-                    props: {
-                        align: 'center',
-                    },
-                    buttons: [{
-                        props: {
-                            type: 'primary',
-                            icon: 'el-icon-edit',
-                            size: 'small'
-                        },
-                        handler: row => {
-                            router.push('/member/' + row.id)
-                        },
-                        label: 'Edit'
-                    }, {
-                        handler: row => {
-                            this.deleteMember(row.id)
-                        },
-                        label: 'delete'
-                    }]
-                }
+                ]
             }
         },
         methods: {
             toCreatePage() {
-                this.$router.push('/member/new')
+                this.$router.push('/discount/new')
             },
-            deleteMember(index) {
-                store.dispatch('member/deleteMember', index)
+            toEdit(id) {
+                this.$router.push((`/discount/${id}`))
+            },
+            toSetProduct(id) {
+                this.$router.push((`/discount/${id}/products`))
+            },
+            deleteDiscount(index) {
+                store.dispatch('discount/deleteDiscount', index)
                     .then(() => {
                         this.$message.success('Delete Succeed!')
                     }).catch(error => {
@@ -124,7 +120,7 @@
         },
         computed: {
             ...mapState({
-                members: state => state.member.members
+                discounts: state => state.discount.discounts
             })
         }
     }

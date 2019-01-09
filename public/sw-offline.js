@@ -2,7 +2,7 @@ workbox.skipWaiting()
 workbox.clientsClaim()
 
 // fonts
-workbox.routing.precacheAndRoute(
+workbox.routing.registerRoute(
     new RegExp('https://fonts.*'),
     workbox.strategies.cacheFirst({
         cacheName: 'fonts',

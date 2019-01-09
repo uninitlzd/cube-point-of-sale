@@ -1,95 +1,76 @@
 import axios from 'axios'
 
 const types = {
-    FETCH_MEMBER: 'FETCH_MEMBER',
-    ADD_MEMBER: 'ADD_MEMBER',
-    EDIT_MEMBER: 'EDIT_MEMBER',
-    DELETE_MEMBER: 'DELETE_MEMBER'
+    FETCH_DISCOUNT: 'FETCH_DISCOUNT',
+    ADD_DISCOUNT: 'ADD_DISCOUNT',
+    EDIT_DISCOUNT: 'EDIT_DISCOUNT',
+    DELETE_DISCOUNT: 'DELETE_DISCOUNT'
 }
 
 const state = {
-    members: [],
+    discounts: [],
 }
 
 const getters = {
-    getMembers: state => state.members,
-    getById: state => index => state.members.filter(member => member.id === index)
+    getDiscounts: state => state.discounts,
+    getById: state => index => state.discounts.filter(discount => discount.id === parseInt(index))[0]
 }
 
 const mutations = {
-    [types.FETCH_MEMBER](state, members) {
-        state.members = members
+    [types.FETCH_DISCOUNT](state, discounts) {
+        state.discounts = discounts
     },
 
-    [types.ADD_MEMBER](state, member) {
-        state.members.unshift(member)
+    [types.ADD_DISCOUNT](state, discount) {
+        state.discounts.push(discount)
     },
 
-    [types.EDIT_MEMBER](state, {index, member}) {
-        state.members[index] = member
+    [types.EDIT_DISCOUNT](state, {index, discount}) {
+        state.discounts[state.discounts.findIndex(discount => discount.id)] = discount
     },
 
-    // Delete Member From State by id
-    [types.EDIT_MEMBER](state, index) {
-        state.members = state.members.filter(member => member.id !== index)
+    // Delete Discount From State by id
+    [types.DELETE_DISCOUNT](state, index) {
+        state.discounts = state.discounts.filter(discount => discount.id !== index)
     }
 }
 
 const actions = {
-    async addMember({commit}, form) {
-        let data = await form.post('/api/member')
+    async addDiscount({commit}, form) {
+        let data = await form.post('/api/discount')
             .then(data => {
                 return data
             })
 
-        commit(types.ADD_MEMBER, data)
+        commit(types.ADD_DISCOUNT, data)
     },
 
-    async updateMember({commit}, {form, index}) {
-        let member = await form.put('/api/member/' + index)
-            .then(member => {
-                return member
+    async updateDiscount({commit}, {form, index}) {
+        let discount = await form.put('/api/discount/' + index)
+            .then(discount => {
+                return discount
             })
 
-        commit(types.EDIT_MEMBER, {index, member})
+        commit(types.EDIT_DISCOUNT, {index, discount})
     },
 
-    deleteMember({commit}, index) {
-        axios.delete('/api/member/' + index)
-            .then(member => {
-                return member
+    deleteDiscount({commit}, index) {
+        axios.delete('/api/discount/' + index)
+            .then(discount => {
+                return discount
             })
 
-        commit(types.EDIT_MEMBER, index)
+        commit(types.DELETE_DISCOUNT, index)
     },
 
-    async fetchMembers({commit}) {
-        let data = await axios.get('/api/member')
+    async fetchDiscounts({commit}) {
+        let data = await axios.get('/api/discount')
             .then(response => {
 
                 return response.data
             })
 
-        commit(types.FETCH_MEMBER, data)
-    },
-
-    async getById({commit}, id) {
-        let data = await axios.get(`/api/member/${id}`)
-            .then(response => {
-                if (state.members.findIndex(member => member.id) === -1) {
-                    commit(types.ADD_MEMBER, data)
-                } else {
-                    let index = state.members.findIndex(member => member.id);
-                    let member = response.data;
-                    commit(types.EDIT_MEMBER, {index, member})
-                }
-
-                return response.data
-            }).catch(() => {
-                return state.members.findIndex(member => member.id)
-            })
-
-        return data
+        commit(types.FETCH_DISCOUNT, data)
     }
 }
 

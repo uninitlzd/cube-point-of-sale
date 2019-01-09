@@ -101,7 +101,7 @@
                                 </i>
                                 <span class="align-self-center">Membership</span>
                             </el-menu-item>
-                            <el-menu-item index="9" route="/member">
+                            <el-menu-item index="9" route="/discount">
                                 <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
                                     local_offer
                                 </i>

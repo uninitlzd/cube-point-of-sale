@@ -5,11 +5,11 @@
                 <el-row class="ml-5 mt-4 mr-4">
                     <el-col :span="23" class="py-4">
                         <h2 class="mb-3" v-if="editMode">{{ form.name }}</h2>
-                        <h2 class="mb-3" v-else>Member</h2>
+                        <h2 class="mb-3" v-else>Discount</h2>
                         <el-breadcrumb separator="/" class="mb-5">
-                            <el-breadcrumb-item to="/member">Manajemen Member</el-breadcrumb-item>
-                            <el-breadcrumb-item to=link v-if=editMode>Form Member - Edit</el-breadcrumb-item>
-                            <el-breadcrumb-item to=link v-else>Form Member</el-breadcrumb-item>
+                            <el-breadcrumb-item to="/discount">Manajemen Discount</el-breadcrumb-item>
+                            <el-breadcrumb-item to=link v-if=editMode>Form Discount - Edit</el-breadcrumb-item>
+                            <el-breadcrumb-item to=link v-else>Form Discount</el-breadcrumb-item>
                         </el-breadcrumb>
                         <el-card class="box-card pt-4 mr-1">
                             <el-form @submit.prevent="submit" @keydown="form.errors.clear($event.target.name)"
@@ -23,19 +23,10 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="12">
-                                        <el-form-item label="Phone" prop="phone">
+                                        <el-form-item label="Persentase Diskon" prop="percentage">
                                             <el-input size="medium"
-                                                      placeholder="Contoh: +6281230909"
-                                                      v-model="form.phone"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-row>
-                                <el-row :gutter="10">
-                                    <el-col :span="24">
-                                        <el-form-item label="Phone" prop="phone">
-                                            <el-input type="textarea" size="medium"
-                                                      placeholder="Contoh: Tegalsari, Surabaya"
-                                                      v-model="form.address"></el-input>
+                                                      placeholder="Contoh: 20"
+                                                      v-model="form.percentage"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
@@ -67,14 +58,11 @@
         created() {
             if (this.$route.params.id !== 'new') {
                 this.editMode = true
-                this.$store.dispatch('member/getById', this.$route.params.id).then(member => {
-                    console.log(member)
-                    this.form = new Form({
-                        name: member.name,
-                        address: member.address,
-                        phone: member.phone,
-                        shop_id: member.shop_id
-                    })
+                let discount = this.getById(this.$route.params.id)
+                console.log(discount)
+                this.form = new Form({
+                    name: discount.name,
+                    percentage: discount.percentage,
                 })
             }
 
@@ -85,18 +73,14 @@
                 editMode: false,
                 form: new Form({
                     name: '',
-                    phone: '',
-                    address: ''
+                    percentage: '',
                 }),
                 rules: {
                     name: [
                         {required: true, message: 'Please input name', trigger: 'blur'},
                     ],
-                    address: [
-                        {required: true, message: 'Please input address', trigger: 'blur'},
-                    ],
-                    phone: [
-                        {required: true, message: 'Please input phone', trigger: 'blur'},
+                    percentage: [
+                        {required: true, message: 'Please input percentage', trigger: 'blur'},
                     ],
                 },
                 isLoading: false,
@@ -105,10 +89,10 @@
         methods: {
             submit() {
                 this.isLoading = true
-                this.$store.dispatch('member/addMember', this.form).then(response => {
+                this.$store.dispatch('discount/addDiscount', this.form).then(response => {
                     this.isLoading = false
-                    this.$message.success('Member Created!')
-                    this.$router.push({name: 'member.index'})
+                    this.$message.success('Discount Created!')
+                    this.$router.push({name: 'discount.index'})
                 }).catch(error => {
                     this.isLoading = false
                     this.$message.error('Save Failed!')
@@ -117,29 +101,26 @@
 
             update() {
                 this.isLoading = true
-                this.$store.dispatch('member/updateMember', {
+                this.$store.dispatch('discount/updateDiscount', {
                     index: this.$route.params.id,
                     form: this.form
                 }).then(response => {
                     this.isLoading = false
-                    this.$message.success('Member Updated!')
-                    this.$router.push({name: 'member.index'})
+                    this.$message.success('Discount Updated!')
+                    this.$router.push({name: 'discount.index'})
                 }).catch(error => {
                     this.isLoading = false
                     this.$message.error('Save Failed!')
                 })
             },
-
-            ...mapActions({
-                getById: 'member/getById'
-            })
         },
         computed: {
             isDisabled() {
                 return this.form.incompleted() || this.isLoading
             },
             ...mapGetters({
-                user: 'auth/getUser'
+                user: 'auth/getUser',
+                getById: 'discount/getById'
             })
         },
     }

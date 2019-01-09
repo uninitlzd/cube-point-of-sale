@@ -1,4 +1,4 @@
-importScripts("/service-worker/precache-manifest.9e01c6ab82f13f95a87ff56d5c6246f9.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
+importScripts("/service-worker/precache-manifest.1610f87308f0a2b72ce68818ef3aa244.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 workbox.skipWaiting()
 workbox.clientsClaim()
@@ -76,3 +76,4 @@ const navigationRoute = new workbox.routing.NavigationRoute(customHandler, {
 })
 
 workbox.routing.registerRoute(navigationRoute)
+
