@@ -4,7 +4,7 @@
             <el-scrollbar class="h-100 scrollbar-component">
                 <el-row class="ml-5 mt-4 mr-4">
                     <el-col :md="23" :xs="24" class="py-4">
-                        <h2 class="mb-3">Produk</h2>
+                        <h2 class="mb-3">{{ product.name }}</h2>
                         <el-breadcrumb separator="/" class="mb-5">
                             <el-breadcrumb-item to="/product">Manajemen Produk</el-breadcrumb-item>
                         </el-breadcrumb>
@@ -13,39 +13,21 @@
                                 <el-row :gutter="10">
                                     <el-col :span="6">
                                         <el-input placeholder="Cari Produk" class="mr-4" prefix-icon="el-icon-search"
-                                                  v-model="filters[0].value"></el-input>
-                                    </el-col>
-                                    <el-col :span="18" class="text-right">
-                                        <el-button type="primary" icon="el-icon-plus" round size="medium"
-                                                   @click="toCreatePage">Produk Baru
-                                        </el-button>
+                                                  v-model="search"></el-input>
                                     </el-col>
                                 </el-row>
                             </div>
-                            <data-tables :data="products"
+                            <data-tables :data="stocks.filter(data => !search || data.outlet.name.toLowerCase().includes(search.toLowerCase()))"
                                          :pagination-props="{background: true, pageSizes: [5, 10, 15] }"
-                                         :filters="filters"
-                                         :total="products.length">
+                                         :total="stocks.length">
                                 <el-table-column v-for="title in titles" :prop="title.prop" :label="title.label"
                                                  :key="title.label">
                                     <template slot-scope="scope">
-                                        <div v-if="['purchase_price', 'selling_price'].includes(title.prop)">
-                                            <span v-if="title.prop === 'selling_price'">
-                                                <span v-if="(scope.row['has_discount'])">Rp{{ scope.row['original_selling_price'] }}</span>
-                                                <span v-else>Rp{{ scope.row['selling_price'] }}</span>
-                                            </span>
-                                            <span v-else>
-                                                <span>Rp{{ scope.row[title.prop] }}</span>
-                                            </span>
+                                        <div v-if="title.prop === 'name'">
+                                            <span>{{ scope.row['outlet'].name}}</span>
                                         </div>
-                                        <div v-else-if="title.prop === 'action'">
-                                            <el-dropdown size="small" split-button type="primary" trigger="click" class="" @click="toSetStock(scope.row.id)">
-                                                Set Stok
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item @click.native="toEdit(scope.row.id)">Edit</el-dropdown-item>
-                                                    <el-dropdown-item @click.native="deleteDiscount(scope.row.id)">Delete</el-dropdown-item>
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
+                                        <div v-else-if="title.prop === 'amount'">
+                                            <el-input-number v-model="scope.row['amount']" size="small"></el-input-number>
                                         </div>
                                         <div v-else>
                                             <span>{{ scope.row[title.prop] }}</span>
@@ -62,10 +44,10 @@
 </template>
 
 <script>
-    import DashboardShell from "../DashboardShell";
-    import {mapState} from 'vuex'
-    import router from '../../router'
-    import store from '../../store'
+    import DashboardShell from "../../DashboardShell";
+    import {mapState, mapGetters} from 'vuex'
+    import router from '../../../router'
+    import store from '../../../store'
 
     let data;
 
@@ -79,34 +61,35 @@
 
     const titles = [{
         prop: "name",
-        label: "Nama"
+        label: "Nama Outlet"
     }, {
-        prop: "purchase_price",
-        label: "Harga Beli"
-    }, {
-        prop: "selling_price",
-        label: "Harga Jual"
-    }, {
-        prop: "action",
-        label: "Action"
+        prop: "amount",
+        label: "Stok"
     }]
 
     export default {
-        name: "Product",
+        name: "ProductStock",
         components: {DashboardShell},
         created() {
-            this.$store.dispatch('product/fetchProducts')
+
+            let id = this.$route.params.id
+
+            axios.get(`/api/product/${id}`, {
+                params: {
+                    include: 'stocks,stocks.outlet'
+                }
+            }).then(response => {
+                this.product = response.data
+                this.stocks = this.product.stocks
+            })
         },
         data() {
             return {
+                product: '',
+                stocks: [],
                 data,
                 titles,
-                filters: [
-                    {
-                        prop: 'name',
-                        value: ''
-                    }
-                ],
+                search: ''
             }
         },
         methods: {
@@ -117,7 +100,7 @@
                 this.$router.push((`/product/${id}`))
             },
             toSetStock(id) {
-                this.$router.push({name: 'product.stock', params: {id}})
+                this.$router.push((`/product/${id}/stock`))
             },
             deleteProduct(index) {
                 store.dispatch('product/deleteProduct', index)
@@ -129,8 +112,10 @@
             }
         },
         computed: {
-            ...mapState({
-                products: state => state.product.products
+            ...mapGetters({
+                getById: 'product/getById',
+                categories: 'category/getCategories',
+                user: 'auth/getUser'
             })
         }
     }

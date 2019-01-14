@@ -29,7 +29,7 @@
                                 <el-table-column v-for="title in titles" :prop="title.prop" :label="title.label"
                                                  :key="title.label">
                                     <template slot-scope="scope">
-                                        <div v-if="title.prop == 'action'">
+                                        <div v-if="title.prop === 'action'">
                                             <el-dropdown size="small" split-button type="primary" trigger="click" class="" @click="toSetProduct(scope.row.id)">
                                                 Set Produk
                                                 <el-dropdown-menu slot="dropdown">

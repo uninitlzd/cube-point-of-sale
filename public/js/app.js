@@ -9113,6 +9113,9 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Product_Product_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Product_Product_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Product_ProductForm__ = __webpack_require__(268);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Product_ProductForm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_Product_ProductForm__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_product_stock_ProductStock__ = __webpack_require__(577);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_product_stock_ProductStock___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_product_stock_ProductStock__);
+
 
 
 
@@ -9136,6 +9139,14 @@ var product = [{
     path: '/product/new',
     name: 'Product New Form',
     component: __WEBPACK_IMPORTED_MODULE_1__components_Product_ProductForm___default.a,
+    meta: {
+        auth: true,
+        menuIndex: "3"
+    }
+}, {
+    path: '/product/:id/stocks',
+    name: 'product.stock',
+    component: __WEBPACK_IMPORTED_MODULE_2__components_product_stock_ProductStock___default.a,
     meta: {
         auth: true,
         menuIndex: "3"
@@ -9229,7 +9240,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -9247,6 +9258,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(12);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -9325,6 +9344,9 @@ var titles = [{
 }, {
     prop: "selling_price",
     label: "Harga Jual"
+}, {
+    prop: "action",
+    label: "Action"
 }];
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -9334,37 +9356,13 @@ var titles = [{
         this.$store.dispatch('product/fetchProducts');
     },
     data: function data() {
-        var _this = this;
-
         return {
             data: _data,
             titles: titles,
             filters: [{
                 prop: 'name',
                 value: ''
-            }],
-            actions: {
-                label: 'Action',
-                props: {
-                    align: 'center'
-                },
-                buttons: [{
-                    props: {
-                        type: 'primary',
-                        icon: 'el-icon-edit',
-                        size: 'small'
-                    },
-                    handler: function handler(row) {
-                        __WEBPACK_IMPORTED_MODULE_2__router__["a" /* default */].push('/product/' + row.id);
-                    },
-                    label: 'Edit'
-                }, {
-                    handler: function handler(row) {
-                        _this.deleteProduct(row.id);
-                    },
-                    label: 'delete'
-                }]
-            }
+            }]
         };
     },
 
@@ -9372,13 +9370,19 @@ var titles = [{
         toCreatePage: function toCreatePage() {
             this.$router.push('/product/new');
         },
+        toEdit: function toEdit(id) {
+            this.$router.push('/product/' + id);
+        },
+        toSetStock: function toSetStock(id) {
+            this.$router.push({ name: 'product.stock', params: { id: id } });
+        },
         deleteProduct: function deleteProduct(index) {
-            var _this2 = this;
+            var _this = this;
 
             __WEBPACK_IMPORTED_MODULE_3__store__["a" /* default */].dispatch('product/deleteProduct', index).then(function () {
-                _this2.$message.success('Delete Succeed!');
+                _this.$message.success('Delete Succeed!');
             }).catch(function (error) {
-                _this2.$message.error('Delete Failed!');
+                _this.$message.error('Delete Failed!');
             });
         }
     },
@@ -9517,7 +9521,6 @@ var render = function() {
                                   pageSizes: [5, 10, 15]
                                 },
                                 filters: _vm.filters,
-                                "action-col": _vm.actions,
                                 total: _vm.products.length
                               }
                             },
@@ -9572,6 +9575,80 @@ var render = function() {
                                                     ])
                                                   ])
                                             ])
+                                          : title.prop === "action"
+                                          ? _c(
+                                              "div",
+                                              [
+                                                _c(
+                                                  "el-dropdown",
+                                                  {
+                                                    attrs: {
+                                                      size: "small",
+                                                      "split-button": "",
+                                                      type: "primary",
+                                                      trigger: "click"
+                                                    },
+                                                    on: {
+                                                      click: function($event) {
+                                                        _vm.toSetStock(
+                                                          scope.row.id
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n                                            Set Stok\n                                            "
+                                                    ),
+                                                    _c(
+                                                      "el-dropdown-menu",
+                                                      {
+                                                        attrs: {
+                                                          slot: "dropdown"
+                                                        },
+                                                        slot: "dropdown"
+                                                      },
+                                                      [
+                                                        _c(
+                                                          "el-dropdown-item",
+                                                          {
+                                                            nativeOn: {
+                                                              click: function(
+                                                                $event
+                                                              ) {
+                                                                _vm.toEdit(
+                                                                  scope.row.id
+                                                                )
+                                                              }
+                                                            }
+                                                          },
+                                                          [_vm._v("Edit")]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "el-dropdown-item",
+                                                          {
+                                                            nativeOn: {
+                                                              click: function(
+                                                                $event
+                                                              ) {
+                                                                _vm.deleteDiscount(
+                                                                  scope.row.id
+                                                                )
+                                                              }
+                                                            }
+                                                          },
+                                                          [_vm._v("Delete")]
+                                                        )
+                                                      ],
+                                                      1
+                                                    )
+                                                  ],
+                                                  1
+                                                )
+                                              ],
+                                              1
+                                            )
                                           : _c("div", [
                                               _c("span", [
                                                 _vm._v(
@@ -15725,7 +15802,7 @@ var render = function() {
                                     key: "default",
                                     fn: function(scope) {
                                       return [
-                                        title.prop == "action"
+                                        title.prop === "action"
                                           ? _c(
                                               "div",
                                               [
@@ -54443,6 +54520,422 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 /* harmony default export */ __webpack_exports__["a"] = (Bars$1);
 
+
+/***/ }),
+/* 577 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(578)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(580)
+/* template */
+var __vue_template__ = __webpack_require__(581)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-5f0a1d8b"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/product/stock/ProductStock.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5f0a1d8b", Component.options)
+  } else {
+    hotAPI.reload("data-v-5f0a1d8b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 578 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(579);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("3756e4c8", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5f0a1d8b\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ProductStock.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5f0a1d8b\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ProductStock.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 579 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 580 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__DashboardShell__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__DashboardShell___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__DashboardShell__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(12);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+var _data = void 0;
+
+_data = [{
+    id: 1,
+    name: 'Oke',
+    address: 'Oce'
+}];
+
+var titles = [{
+    prop: "name",
+    label: "Nama Outlet"
+}, {
+    prop: "amount",
+    label: "Stok"
+}];
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "ProductStock",
+    components: { DashboardShell: __WEBPACK_IMPORTED_MODULE_0__DashboardShell___default.a },
+    created: function created() {
+        var _this = this;
+
+        var id = this.$route.params.id;
+
+        axios.get('/api/product/' + id, {
+            params: {
+                include: 'stocks,stocks.outlet'
+            }
+        }).then(function (response) {
+            _this.product = response.data;
+            _this.stocks = _this.product.stocks;
+        });
+    },
+    data: function data() {
+        return {
+            product: '',
+            stocks: [],
+            data: _data,
+            titles: titles,
+            search: ''
+        };
+    },
+
+    methods: {
+        toCreatePage: function toCreatePage() {
+            this.$router.push('/product/new');
+        },
+        toEdit: function toEdit(id) {
+            this.$router.push('/product/' + id);
+        },
+        toSetStock: function toSetStock(id) {
+            this.$router.push('/product/' + id + '/stock');
+        },
+        deleteProduct: function deleteProduct(index) {
+            var _this2 = this;
+
+            __WEBPACK_IMPORTED_MODULE_3__store__["a" /* default */].dispatch('product/deleteProduct', index).then(function () {
+                _this2.$message.success('Delete Succeed!');
+            }).catch(function (error) {
+                _this2.$message.error('Delete Failed!');
+            });
+        }
+    },
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["mapGetters"])({
+        getById: 'product/getById',
+        categories: 'category/getCategories',
+        user: 'auth/getUser'
+    }))
+});
+
+/***/ }),
+/* 581 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "dashboard-shell",
+    [
+      _c(
+        "el-col",
+        { staticClass: "pr-0", attrs: { span: 24 } },
+        [
+          _c(
+            "el-scrollbar",
+            { staticClass: "h-100 scrollbar-component" },
+            [
+              _c(
+                "el-row",
+                { staticClass: "ml-5 mt-4 mr-4" },
+                [
+                  _c(
+                    "el-col",
+                    { staticClass: "py-4", attrs: { md: 23, xs: 24 } },
+                    [
+                      _c("h2", { staticClass: "mb-3" }, [
+                        _vm._v(_vm._s(_vm.product.name))
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-breadcrumb",
+                        { staticClass: "mb-5", attrs: { separator: "/" } },
+                        [
+                          _c(
+                            "el-breadcrumb-item",
+                            { attrs: { to: "/product" } },
+                            [_vm._v("Manajemen Produk")]
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-card",
+                        { staticClass: "box-card mr-5" },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "clearfix",
+                              attrs: { slot: "header" },
+                              slot: "header"
+                            },
+                            [
+                              _c(
+                                "el-row",
+                                { attrs: { gutter: 10 } },
+                                [
+                                  _c(
+                                    "el-col",
+                                    { attrs: { span: 6 } },
+                                    [
+                                      _c("el-input", {
+                                        staticClass: "mr-4",
+                                        attrs: {
+                                          placeholder: "Cari Produk",
+                                          "prefix-icon": "el-icon-search"
+                                        },
+                                        model: {
+                                          value: _vm.search,
+                                          callback: function($$v) {
+                                            _vm.search = $$v
+                                          },
+                                          expression: "search"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "data-tables",
+                            {
+                              attrs: {
+                                data: _vm.stocks.filter(function(data) {
+                                  return (
+                                    !_vm.search ||
+                                    data.outlet.name
+                                      .toLowerCase()
+                                      .includes(_vm.search.toLowerCase())
+                                  )
+                                }),
+                                "pagination-props": {
+                                  background: true,
+                                  pageSizes: [5, 10, 15]
+                                },
+                                total: _vm.stocks.length
+                              }
+                            },
+                            _vm._l(_vm.titles, function(title) {
+                              return _c("el-table-column", {
+                                key: title.label,
+                                attrs: { prop: title.prop, label: title.label },
+                                scopedSlots: _vm._u([
+                                  {
+                                    key: "default",
+                                    fn: function(scope) {
+                                      return [
+                                        title.prop === "name"
+                                          ? _c("div", [
+                                              _c("span", [
+                                                _vm._v(
+                                                  _vm._s(
+                                                    scope.row["outlet"].name
+                                                  )
+                                                )
+                                              ])
+                                            ])
+                                          : title.prop === "amount"
+                                          ? _c(
+                                              "div",
+                                              [
+                                                _c("el-input-number", {
+                                                  attrs: { size: "small" },
+                                                  model: {
+                                                    value: scope.row["amount"],
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        scope.row,
+                                                        "amount",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "scope.row['amount']"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            )
+                                          : _c("div", [
+                                              _c("span", [
+                                                _vm._v(
+                                                  _vm._s(scope.row[title.prop])
+                                                )
+                                              ])
+                                            ])
+                                      ]
+                                    }
+                                  }
+                                ])
+                              })
+                            })
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5f0a1d8b", module.exports)
+  }
+}
 
 /***/ })
 ],[93]);

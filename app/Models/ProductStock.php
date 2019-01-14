@@ -16,6 +16,6 @@ class ProductStock extends Model
 
     public function outlet()
     {
-        return $this->belongsToMany(ShopOutlet::class);
+        return $this->belongsTo(ShopOutlet::class, 'shop_outlet_id', 'id');
     }
 }

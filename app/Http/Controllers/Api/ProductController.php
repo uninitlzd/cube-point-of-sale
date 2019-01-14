@@ -42,12 +42,11 @@ class ProductController extends Controller
         $product = Product::where('id', $product->id);
 
         $result = QueryBuilder::for($product)
-            ->allowedIncludes('stocks')
+            ->allowedIncludes('stocks','stocks.outlet')
             ->first();
 
-        return $result;
 
-        return new ProductResource($result->load('discounts'));
+        return new ProductResource($result);
     }
 
     public function store(Request $request)

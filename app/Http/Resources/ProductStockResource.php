@@ -20,7 +20,8 @@ class ProductStockResource extends JsonResource
             'product_id' => $this->product_id,
             'amount' => $this->number_of_stock,
             'unit' => $this->unit,
-            'out_of_stock' => ($this->product->stockable) ? ($this->number_of_stock == 0) : false
+            'out_of_stock' => ($this->product->stockable) ? ($this->number_of_stock == 0) : false,
+            'outlet' => $this->whenLoaded('outlet')
         ];
     }
 }
