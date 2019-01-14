@@ -9,7 +9,7 @@ use App\Models\Member;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\ProductStock;
-use App\Models\TransactionType;
+use App\Models\CustomerType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -54,16 +54,16 @@ class OrderController extends Controller
             'customer_name' => (!is_null($request->get('member_id')))
                 ? Member::find($request->get('member_id'))->name
                 : $request->get('member_id'),
-            'transaction_type_id' => (!is_null($request->get('member_id')))
+            'customer_type_id' => (!is_null($request->get('member_id')))
                 ? 2
-                : $request->get('transaction_type_id'),
+                : $request->get('customer_type_id'),
             'order_total' => $request->get('order_total'),
             'tax' => $request->get('tax'),
             'total' => $request->get('order_total') + $request->get('tax')
         ]);
 
-        $transactionType = TransactionType::find($order->transaction_type_id);
-        $discountByTransactionType = $transactionType->discount_percentage;
+        $customerType = CustomerType::find($order->customer_type_id);
+        $discountByTransactionType = $customerType->discount_percentage;
 
         $orderDetails = collect($request->get('order_details'));
         $orderDetailsTotal = $orderDetails->pluck('sub_total')->sum() * ((100 - $discountByTransactionType) / 100);
@@ -99,7 +99,7 @@ class OrderController extends Controller
         }
 
         $newOrder->load('details');
-        $newOrder->load('transactionType');
+        $newOrder->load('customerType');
 
         return new OrderResource($newOrder);
     }
@@ -114,7 +114,7 @@ class OrderController extends Controller
     {
         $order = Order::where('id', $order->id);
         $result = QueryBuilder::for($order)
-            ->allowedIncludes('details', 'transaction_type')
+            ->allowedIncludes('details', 'customer_type')
             ->first();
 
         return new OrderResource($result);

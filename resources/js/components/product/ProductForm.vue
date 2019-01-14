@@ -71,7 +71,7 @@
                                         <el-form-item label="Product Image" prop="category">
                                             <div class="aspectRatioSizer mb-2">
                                                 <svg viewBox="0 0 1 1"></svg>
-                                                <img :src="form.image" alt="" :class=imageFit>
+                                                <img :src="imagePreview" alt="" :class=imageFit>
                                             </div>
                                             <input type="file" style="display: none" ref="fileExplorer" @change="setImgPreview">
                                             <el-button type="primary" @click.native="openFileExplorer" size="small">Choose Image</el-button>
@@ -113,6 +113,8 @@
                 this.editMode = true
                 let product = this.getById(parseInt(this.$route.params.id))[0]
 
+                this.imagePreview = product.image
+
                 this.form = new Form({
                     name: product.name,
                     category_id: product.category_id,
@@ -120,7 +122,7 @@
                     selling_price: (product.has_discount) ? product.original_selling_price : product.selling_price,
                     description: product.description,
                     stockable: 1,
-                    image: product.image,
+                    image: '',
                     shop_id: product.shop_id
                 })
             }
@@ -196,6 +198,7 @@
                     this.$message.success('Product Updated!')
 
                 }).catch(error => {
+                    console.log(error)
                     this.isLoading = false
                     this.$message.error('Save Failed!')
                 })
@@ -210,6 +213,7 @@
                     var reader = new FileReader();
                     reader.onload = (e) => {
                         this.imagePreview = e.target.result;
+                        this.form.originalData.image = e.target.result
                         this.form.image = e.target.result
                     }
 

@@ -3,41 +3,51 @@
         <el-col :span="24" class="pr-0">
             <el-scrollbar class="h-100 scrollbar-component">
                 <el-row class="ml-5 mt-4 mr-4">
-                    <el-col :span="23" class="py-4">
-                        <h2 class="mb-3" v-if="editMode">{{ form.name }}</h2>
-                        <h2 class="mb-3" v-else>Discount</h2>
+                    <el-col :md="23" :xs="24" class="py-4">
+                        <h2 class="mb-3">{{ discount.name }}</h2>
                         <el-breadcrumb separator="/" class="mb-5">
-                            <el-breadcrumb-item to="/discount">Manajemen Discount</el-breadcrumb-item>
-                            <el-breadcrumb-item to=link v-if=editMode>Form Discount - Set Produk</el-breadcrumb-item>
-                            <el-breadcrumb-item to=link v-else>Form Discount</el-breadcrumb-item>
+                            <el-breadcrumb-item to="/product">Manajemen Diskon</el-breadcrumb-item>
+                            <el-breadcrumb-item>Set Produk</el-breadcrumb-item>
                         </el-breadcrumb>
-                        <el-card class="box-card pt-4 mr-1">
-                            <el-form @submit.prevent="submit" @keydown="form.errors.clear($event.target.name)"
-                                     label-position="top" ref="form" :model=form :rules=rules>
+                        <el-card class="box-card mr-5">
+                            <div slot="header" class="clearfix">
                                 <el-row :gutter="10">
-                                    <el-col :span="12">
-                                        <el-form-item label="Name" prop="name">
-                                            <el-input size="medium"
-                                                      placeholder="Contoh: John Doe"
-                                                      v-model="form.name"></el-input>
-                                        </el-form-item>
+                                    <el-col :span="6">
+                                        <el-input placeholder="Cari Produk" class="mr-4" prefix-icon="el-icon-search"
+                                                  v-model="filters[0].value"></el-input>
                                     </el-col>
-                                    <el-col :span="12">
-                                        <el-form-item label="Persentase Diskon" prop="percentage">
-                                            <el-input size="medium"
-                                                      placeholder="Contoh: 20"
-                                                      v-model="form.percentage"></el-input>
-                                        </el-form-item>
+                                    <el-col :span="18" class="text-right">
+                                        <el-button type="success" icon="el-icon-check" @click="saveSelection">Simpan
+                                            Pilihan
+                                        </el-button>
                                     </el-col>
                                 </el-row>
-                                <el-form-item size="medium" class="mb-0">
-                                    <input type="hidden" v-model="form.shop_id" ref="shopId">
-                                    <el-button v-if=editMode type="primary" @click="update" :disabled=isDisabled>Save
-                                    </el-button>
-                                    <el-button v-else type="primary" @click="submit" :disabled=isDisabled>Submit
-                                    </el-button>
-                                </el-form-item>
-                            </el-form>
+                            </div>
+                            <el-table :data="products"
+                                      :pagination-props="{background: true, pageSizes: [5, 10, 15] }"
+                                      :total="products.length"
+                                      @selection-change="handleSelectionChange"
+                                      @current-change="handleCurrentChange"
+                                      ref="productTable">
+                                <el-table-column type="selection" :reserve-selection=true row-key="id"></el-table-column>
+                                <el-table-column v-for="title in titles" :prop="title.prop" :label="title.label"
+                                                 :key="title.label">
+                                    <template slot-scope="scope">
+                                        <div v-if="['purchase_price', 'selling_price'].includes(title.prop)">
+                                            <span v-if="title.prop === 'selling_price'">
+                                                <span v-if="(scope.row['has_discount'])">Rp{{ scope.row['original_selling_price'] }}</span>
+                                                <span v-else>Rp{{ scope.row['selling_price'] }}</span>
+                                            </span>
+                                            <span v-else>
+                                                <span>Rp{{ scope.row[title.prop] }}</span>
+                                            </span>
+                                        </div>
+                                        <div v-else>
+                                            <span>{{ scope.row[title.prop] }}</span>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -48,81 +58,119 @@
 
 <script>
     import DashboardShell from "../DashboardShell";
-    import {mapState, mapGetters, mapActions} from 'vuex'
-    import Form from '../../utils/Form'
+    import {mapState, mapGetters} from 'vuex'
     import router from '../../router'
+    import store from '../../store'
+    import Form from '../../utils/Form'
+
+    let data;
+
+    data = [
+        {
+            id: 1,
+            name: 'Oke',
+            address: 'Oce'
+        }
+    ]
+
+    const titles = [{
+        prop: "name",
+        label: "Nama"
+    }, {
+        prop: "purchase_price",
+        label: "Harga Beli"
+    }, {
+        prop: "selling_price",
+        label: "Harga Jual"
+    }]
 
     export default {
-        name: "EmployeeForm",
+        name: "DiscountProductForm",
         components: {DashboardShell},
         created() {
             if (this.$route.params.id !== 'new') {
+                let id = this.$route.params.id
                 this.editMode = true
-                let discount = this.getById(this.$route.params.id)
-                console.log(discount)
-                this.form = new Form({
-                    name: discount.name,
-                    percentage: discount.percentage,
+                let discount = this.getById(id)
+
+                this.discount = {
+                    id: discount.id,
+                    name: discount.name
+                }
+
+                axios.get(`/api/product?filter[discount_id]=${id},null`).then(products => {
+                    this.products = products.data
+                    if (this.products.length === this.products.filter(product => product.has_discount).size) {
+                        this.$refs.productTable.toggleAllSelection()
+                    } else {
+                        this.toggleSelection(this.products.filter(product => product.has_discount))
+                    }
                 })
             }
-
-            this.form.shop_id = this.user.shop.id
+        },
+        mounted() {
         },
         data() {
             return {
+                products: [],
                 editMode: false,
+                discount: {},
                 form: new Form({
                     name: '',
                     percentage: '',
                 }),
-                rules: {
-                    name: [
-                        {required: true, message: 'Please input name', trigger: 'blur'},
-                    ],
-                    percentage: [
-                        {required: true, message: 'Please input percentage', trigger: 'blur'},
-                    ],
-                },
-                isLoading: false,
+                data,
+                titles,
+                filters: [
+                    {
+                        prop: 'name',
+                        value: ''
+                    }
+                ],
+                selectedProducts: []
             }
         },
         methods: {
-            submit() {
-                this.isLoading = true
-                this.$store.dispatch('discount/addDiscount', this.form).then(response => {
-                    this.isLoading = false
-                    this.$message.success('Discount Created!')
-                    this.$router.push({name: 'discount.index'})
-                }).catch(error => {
-                    this.isLoading = false
-                    this.$message.error('Save Failed!')
+            toCreatePage() {
+                this.$router.push('/product/new')
+            },
+            deleteProduct(index) {
+                store.dispatch('product/deleteProduct', index)
+                    .then(() => {
+                        this.$message.success('Delete Succeed!')
+                    }).catch(error => {
+                    this.$message.error('Delete Failed!')
                 })
+            },
+            saveSelection() {
+                axios.post(`/api/discount/${this.discount.id}/products`, {
+                    product_ids: this.selectedProducts.map(product => product.id)
+                }).then(response => {
+                    console.log(response.data)
+                })
+            },
+            handleSelectionChange(val) {
+                this.selectedProducts = val
+            },
+            handleCurrentChange(val) {
+                this.selectedProducts = val
+            },
+            toggleSelection(rows) {
+                if (rows) {
+                    rows.forEach(row => {
+                        this.$refs.productTable.toggleRowSelection(row);
+                        this.$refs.productTable.doLayout()
+                    });
+                }
             },
 
-            update() {
-                this.isLoading = true
-                this.$store.dispatch('discount/updateDiscount', {
-                    index: this.$route.params.id,
-                    form: this.form
-                }).then(response => {
-                    this.isLoading = false
-                    this.$message.success('Discount Updated!')
-                    this.$router.push({name: 'discount.index'})
-                }).catch(error => {
-                    this.isLoading = false
-                    this.$message.error('Save Failed!')
-                })
-            },
         },
         computed: {
-            isDisabled() {
-                return this.form.incompleted() || this.isLoading
-            },
             ...mapGetters({
                 user: 'auth/getUser',
                 getById: 'discount/getById'
             })
-        },
+        }
     }
 </script>
 

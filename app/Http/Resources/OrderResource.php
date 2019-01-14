@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use App\Helpers\Money;
 use App\Models\Member;
 use App\Models\Order;
-use App\Models\TransactionType;
+use App\Models\CustomerType;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 

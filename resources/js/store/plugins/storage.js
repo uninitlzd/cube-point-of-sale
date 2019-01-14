@@ -4,8 +4,6 @@ const store = localforage.createInstance({
     name: 'app',
 });
 
-import {mapState} from 'vuex'
-
 const mapStateForCache = (state) => {
     return {
         auth: {

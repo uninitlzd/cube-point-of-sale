@@ -19,6 +19,9 @@
                                         <el-button type="primary" icon="el-icon-plus" round size="medium"
                                                    @click="toCreatePage">Member Baru
                                         </el-button>
+                                        <el-button type="success" icon="el-icon-menu" round size="medium"
+                                                   @click="toCustomerTypePage">Tipe Pelanggan
+                                        </el-button>
                                     </el-col>
                                 </el-row>
                             </div>
@@ -112,6 +115,9 @@
         methods: {
             toCreatePage() {
                 this.$router.push('/member/new')
+            },
+            toCustomerTypePage() {
+                this.$router.push('/customer-type/')
             },
             deleteMember(index) {
                 store.dispatch('member/deleteMember', index)

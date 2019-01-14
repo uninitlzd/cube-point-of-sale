@@ -30,8 +30,8 @@ const mutations = {
     },
 
     // Delete Product From State by id
-    [types.DELETE_PRODUCT](state, index) {
-        state.products = state.products.filter(product => product.id !== index)
+    [types.DELETE_PRODUCT](state, id) {
+        state.products = state.products.filter(product => product.id !== id)
     }
 }
 
@@ -56,12 +56,12 @@ const actions = {
     },
 
     deleteProduct({commit}, index) {
-        axios.delete('/api/product/' + index)
+        axios.delete('/api/product/' + id)
             .then(product => {
                 return product
             })
 
-        commit(types.EDIT_PRODUCT, index)
+        commit(types.DELETE_PRODUCT, id)
     },
 
     async fetchProducts({commit}) {

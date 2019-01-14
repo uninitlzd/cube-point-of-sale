@@ -21,9 +21,9 @@ class Order extends Model
         return $this->hasMany(OrderDetail::class);
     }
 
-    public function transactionType()
+    public function customerType()
     {
-        return $this->belongsTo(TransactionType::class);
+        return $this->belongsTo(CustomerType::class);
     }
 
     public function scopeCreatedBetween(Builder $query, $dateStart, $dateEnd)

@@ -25,7 +25,6 @@
                             <data-tables :data="discounts"
                                          :pagination-props="{background: true, pageSizes: [5, 10, 15] }"
                                          :filters="filters"
-                                         :action-col="actions"
                                          :total="discounts.length">
                                 <el-table-column v-for="title in titles" :prop="title.prop" :label="title.label"
                                                  :key="title.label">
@@ -38,7 +37,6 @@
                                                     <el-dropdown-item @click.native="deleteDiscount(scope.row.id)">Delete</el-dropdown-item>
                                                 </el-dropdown-menu>
                                             </el-dropdown>
-
                                         </div>
                                         <div v-else>
                                             <span>{{ scope.row[title.prop] }}</span>

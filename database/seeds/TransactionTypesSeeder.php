@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\TransactionType;
+use App\Models\CustomerType;
 use Illuminate\Database\Seeder;
 
 class TransactionTypesSeeder extends Seeder
@@ -12,12 +12,12 @@ class TransactionTypesSeeder extends Seeder
      */
     public function run()
     {
-        TransactionType::create([
+        CustomerType::create([
             'name' => 'Regular',
             'discount_percentage' => 0,
         ]);
 
-        TransactionType::create([
+        CustomerType::create([
             'name' => 'Member',
             'discount_percentage' => 5,
         ]);

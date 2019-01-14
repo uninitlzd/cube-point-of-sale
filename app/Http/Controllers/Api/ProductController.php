@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\ProductCreated;
 use App\Filters\FiltersDiscountedProduct;
+use App\Filters\FiltersDiscountIdOrNull;
 use App\Helpers\FileHelper;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Intervention\Image\Image;
@@ -29,10 +31,10 @@ class ProductController extends Controller
 
         $result = QueryBuilder::for($products)
             ->allowedIncludes('stocks')
-            ->allowedFilters('name', Filter::custom('discounted', FiltersDiscountedProduct::class))
+            ->allowedFilters('name', Filter::custom('discount_id', FiltersDiscountIdOrNull::class), Filter::custom('discounted', FiltersDiscountedProduct::class))
             ->get();
 
-        return ProductResource::collection($result->load('discounts'));
+        return ProductResource::collection($result->load('discount'));
     }
 
     public function show(Product $product)
@@ -41,7 +43,6 @@ class ProductController extends Controller
 
         $result = QueryBuilder::for($product)
             ->allowedIncludes('stocks')
-            ->allowedFilters(Filter::custom('discounted', FiltersDiscountedProduct::class))
             ->first();
 
         return $result;
@@ -65,10 +66,21 @@ class ProductController extends Controller
     }
 
     // Todo: Create Request Object for Product Update
-    public function update(StoreProductRequest $request, Product $product)
+    public function update(Request $request, Product $product)
     {
-        $product = tap($product)->update($request->all())->fresh();
-        return new ProductResource($product);
+        $data = [
+            'name' => $request->name,
+            'description' => $request->description,
+            'purchase_price' => $request->purchase_price,
+            'selling_price' => $request->selling_price,
+        ];
+
+        if ($request->has('image')) {
+            $data['image'] = FileHelper::saveBase64Image($request->image, 500, '/images/products/');
+        }
+
+        $product = tap($product)->update($data)->fresh();
+        return response()->json(new ProductResource($product));
     }
 
     public function destroy(Product $product)

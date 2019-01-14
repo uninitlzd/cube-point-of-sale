@@ -3,7 +3,7 @@
 use App\Models\OwnerDetail;
 use App\Models\Role;
 use App\Models\Shop;
-use App\Models\TransactionType;
+use App\Models\CustomerType;
 use App\Models\User;
 use App\Models\UserRole;
 use Illuminate\Database\Seeder;
@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         User::truncate();
         Shop::truncate();
         OwnerDetail::truncate();*/
-        TransactionType::truncate();
+        CustomerType::truncate();
         Schema::enableForeignKeyConstraints();
 
        /* $this->call(RolesTableSeeder::class);

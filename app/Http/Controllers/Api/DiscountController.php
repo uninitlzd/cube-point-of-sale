@@ -60,7 +60,7 @@ class DiscountController extends Controller
                 ->allowedIncludes('products')
                 ->first();
 
-        return new DiscountResource($result->load('products'));
+        return new DiscountResource($result);
     }
 
     /**

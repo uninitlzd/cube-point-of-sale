@@ -20,7 +20,7 @@ class DiscountResource extends Resource
             'name' => $this->name,
             'percentage' => (double) $this->percentage,
             'deleted_at' => $this->deleted_at,
-            'products' => DiscountProductResource::collection($this->whenLoaded('products'))
+            'products' => ProductResource::collection($this->whenLoaded('products'))
         ];
     }
 }

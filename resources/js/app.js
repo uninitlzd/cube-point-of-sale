@@ -12,8 +12,3 @@ const app = new Vue({
     router,
     components: { App }
 });
-
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-}
-

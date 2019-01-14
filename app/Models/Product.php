@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
@@ -33,13 +34,13 @@ class Product extends Model
         return $this->belongsToMany(ShopOutlet::class, 'product_stocks');
     }
 
-    public function discounts()
+    public function discount()
     {
-        return $this->belongsToMany(Discount::class, 'product_discounts', 'product_id', 'discount_id');
+        return $this->belongsTo(Discount::class);
     }
 
     public function hasDiscount()
     {
-        return ($this->discounts->count());
+        return (!is_null($this->discount));
     }
 }

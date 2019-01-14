@@ -23,7 +23,7 @@ const discount = [
     },
     {
         path: '/discount/:id/products',
-        name: 'discount.edit',
+        name: 'discount.assign.products',
         component: DiscountProductForm,
         meta: {
             auth: true,

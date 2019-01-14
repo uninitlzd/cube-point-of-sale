@@ -4,27 +4,32 @@
             <el-scrollbar class="h-100 scrollbar-component">
                 <el-row class="ml-5 mt-4 mr-4">
                     <el-col :md="23" :xs="24" class="py-4">
-                        <h2 class="mb-3">Kategori</h2>
+                        <h2 class="mb-3">CustomerType</h2>
                         <el-breadcrumb separator="/" class="mb-5">
-                            <el-breadcrumb-item to="/category">Manajemen Kategori</el-breadcrumb-item>
+                            <el-breadcrumb-item to="/customer-type">Manajemen CustomerType</el-breadcrumb-item>
                         </el-breadcrumb>
                         <el-card class="box-card mr-5">
                             <div slot="header" class="clearfix">
                                 <el-row :gutter="10">
                                     <el-col :span="6">
-                                        <el-input placeholder="Cari Kategori" class="mr-4" v-model="search" prefix-icon="el-icon-search"></el-input>
+                                        <el-input placeholder="Cari CustomerType" class="mr-4" prefix-icon="el-icon-search"
+                                                  v-model="filters[0].value"></el-input>
                                     </el-col>
                                     <el-col :span="18" class="text-right">
                                         <el-button type="primary" icon="el-icon-plus" round size="medium"
-                                                   @click="toCreatePage">Kategori Baru
+                                                   @click="toCreatePage">CustomerType Baru
+                                        </el-button>
+                                        <el-button type="success" icon="el-icon-menu" round size="medium"
+                                                   @click="toCustomerTypePage">Tipe Pelanggan
                                         </el-button>
                                     </el-col>
                                 </el-row>
                             </div>
-                            <data-tables :data="categories.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+                            <data-tables :data="customer-types"
                                          :pagination-props="{background: true, pageSizes: [5, 10, 15] }"
+                                         :filters="filters"
                                          :action-col="actions"
-                                         :total="categories.length">
+                                         :total="customer-types.length">
                                 <el-table-column v-for="title in titles" :prop="title.prop" :label="title.label"
                                                  :key="title.label">
                                 </el-table-column>
@@ -54,22 +59,35 @@
     ]
 
     const titles = [{
+        prop: "id",
+        label: "ID"
+    }, {
         prop: "name",
         label: "Name"
+    }, {
+        prop: "address",
+        label: "Address"
+    }, {
+        prop: "phone",
+        label: "Phone"
     }]
 
     export default {
-        name: "Category",
+        name: "CustomerType",
         components: {DashboardShell},
         created() {
-            this.$store.dispatch('category/fetchCategories')
+            this.$store.dispatch('customer-type/fetchCustomerTypes')
         },
         data() {
             return {
-                selectedCategory: [],
                 data,
                 titles,
-                search: '',
+                filters: [
+                    {
+                        prop: 'name',
+                        value: ''
+                    }
+                ],
                 actions: {
                     label: 'Action',
                     props: {
@@ -82,12 +100,12 @@
                             size: 'small'
                         },
                         handler: row => {
-                            router.push('/category/' + row.id)
+                            router.push('/customer-type/' + row.id)
                         },
                         label: 'Edit'
                     }, {
                         handler: row => {
-                            this.deleteCategory(row.id)
+                            this.deleteCustomerType(row.id)
                         },
                         label: 'delete'
                     }]
@@ -96,10 +114,13 @@
         },
         methods: {
             toCreatePage() {
-                this.$router.push('/category/new')
+                this.$router.push('/customer-type/new')
             },
-            deleteCategory(index) {
-                store.dispatch('category/deleteCategory', index)
+            toCustomerTypePage() {
+                this.$router.push('/customer-type/')
+            },
+            deleteCustomerType(index) {
+                store.dispatch('customerType/delete', index)
                     .then(() => {
                         this.$message.success('Delete Succeed!')
                     }).catch(error => {
@@ -109,7 +130,7 @@
         },
         computed: {
             ...mapState({
-                categories: state => state.category.categories
+                customerType: state => state.customerType.customerTypes
             })
         }
     }
