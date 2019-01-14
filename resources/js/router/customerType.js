@@ -1,5 +1,5 @@
-import Member from '../components/Member/Member.vue'
-import MemberForm from '../components/Member/MemberForm'
+import CustomerType from '../components/customer-type/CustomerType.vue'
+import CustomerTypeForm from '../components/customer-type/CustomerTypeForm'
 
 const customerType = [
     {
@@ -23,7 +23,7 @@ const customerType = [
     {
         path: '/customer-type/new',
         name: 'customer-type.create',
-        component: MemberForm,
+        component: CustomerTypeForm,
         meta: {
             auth: true,
             menuIndex: "8"

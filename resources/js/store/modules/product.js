@@ -26,7 +26,7 @@ const mutations = {
     },
 
     [types.EDIT_PRODUCT](state, {index, product}) {
-        state.products[state.products.findIndex(product => product.id)] = product
+        state.products[state.products.findIndex(product => product.id === index)] = product
     },
 
     // Delete Product From State by id

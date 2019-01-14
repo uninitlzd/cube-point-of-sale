@@ -26,7 +26,7 @@ const mutations = {
     },
 
     [types.EDIT_CATEGORY](state, {index, category}) {
-        state.categories[state.categories.findIndex(category => category.id)] = category
+        state.categories[state.categories.findIndex(category => category.id === index)] = category
     },
 
     // Delete Category From State by id

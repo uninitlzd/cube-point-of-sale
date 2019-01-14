@@ -6,7 +6,7 @@
                     <el-col :md="23" :xs="24" class="py-4">
                         <h2 class="mb-3">{{ discount.name }}</h2>
                         <el-breadcrumb separator="/" class="mb-5">
-                            <el-breadcrumb-item to="/product">Manajemen Diskon</el-breadcrumb-item>
+                            <el-breadcrumb-item to="/discount">Manajemen Diskon</el-breadcrumb-item>
                             <el-breadcrumb-item>Set Produk</el-breadcrumb-item>
                         </el-breadcrumb>
                         <el-card class="box-card mr-5">
@@ -23,7 +23,7 @@
                                     </el-col>
                                 </el-row>
                             </div>
-                            <el-table :data="products"
+                            <data-tables :data="products"
                                       :pagination-props="{background: true, pageSizes: [5, 10, 15] }"
                                       :total="products.length"
                                       @selection-change="handleSelectionChange"
@@ -47,7 +47,7 @@
                                         </div>
                                     </template>
                                 </el-table-column>
-                            </el-table>
+                            </data-tables>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -101,7 +101,7 @@
                 axios.get(`/api/product?filter[discount_id]=${id},null`).then(products => {
                     this.products = products.data
                     if (this.products.length === this.products.filter(product => product.has_discount).size) {
-                        this.$refs.productTable.toggleAllSelection()
+                        this.$refs.productTable.$children[0].toggleAllSelection()
                     } else {
                         this.toggleSelection(this.products.filter(product => product.has_discount))
                     }
@@ -109,6 +109,7 @@
             }
         },
         mounted() {
+
         },
         data() {
             return {
@@ -146,7 +147,7 @@
                 axios.post(`/api/discount/${this.discount.id}/products`, {
                     product_ids: this.selectedProducts.map(product => product.id)
                 }).then(response => {
-                    console.log(response.data)
+                    this.$router.push({name: 'discount.index'})
                 })
             },
             handleSelectionChange(val) {
@@ -158,8 +159,8 @@
             toggleSelection(rows) {
                 if (rows) {
                     rows.forEach(row => {
-                        this.$refs.productTable.toggleRowSelection(row);
-                        this.$refs.productTable.doLayout()
+                        this.$refs.productTable.$children[0].toggleRowSelection(row);
+                        this.$refs.productTable.$children[0].doLayout()
                     });
                 }
             },

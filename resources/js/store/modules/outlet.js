@@ -26,7 +26,7 @@ const mutations = {
     },
 
     [types.EDIT_OUTLET](state, {index, outlet}) {
-        state.outlets[state.outlets.findIndex(outlet => outlet.id)] = outlet
+        state.outlets[state.outlets.findIndex(outlet => outlet.id === index)] = outlet
     },
 
     // Delete Outlet From State by id

@@ -1,6 +1,6 @@
-import router from '../router'
+import router from './../../router'
 import axios from 'axios'
-import {setState, deleteState} from './plugins/storage'
+import {setState, deleteState} from './../plugins/storage'
 
 const types = {
     INIT_AUTH: 'INIT_AUTH',

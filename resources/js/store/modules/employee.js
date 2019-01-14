@@ -26,7 +26,7 @@ const mutations = {
     },
 
     [types.EDIT_EMPLOYEE](state, {index, employee}) {
-        state.employees[state.employees.findIndex(employee => employee.id)] = employee
+        state.employees[state.employees.findIndex(employee => employee.id === index)] = employee
     },
 
     // Delete Employee From State by id

@@ -9,6 +9,10 @@ import Vue from 'vue'
 import Vuebar from 'vuebar'
 import VueRouter from 'vue-router'
 import VueOffline from 'vue-offline'
+import VueChartkick from 'vue-chartkick'
+import Chart from 'chart.js'
+import Bars from 'vuebars'
+
 
 Vue.use(ElementUI)
 Vue.use(DataTables)
@@ -16,6 +20,8 @@ Vue.use(DataTablesServer)
 Vue.use(Vuebar)
 Vue.use(VueRouter)
 Vue.use(VueOffline)
+Vue.use(VueChartkick, {adapter: Chart})
+Vue.use(Bars)
 
 Vue.component('Navbar', Navbar)
 

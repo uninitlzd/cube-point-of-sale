@@ -26,7 +26,7 @@ const mutations = {
     },
 
     [types.EDIT_DISCOUNT](state, {index, discount}) {
-        state.discounts[state.discounts.findIndex(discount => discount.id)] = discount
+        state.discounts[state.discounts.findIndex(discount => discount.id === index)] = discount
     },
 
     // Delete Discount From State by id

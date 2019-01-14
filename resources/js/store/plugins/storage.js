@@ -33,6 +33,9 @@ const mapStateForCache = (state) => {
         },
         discount: {
             discounts: state.discount.discounts
+        },
+        customerType: {
+            customerTypes: state.customerType.customerTypes
         }
     }
 };

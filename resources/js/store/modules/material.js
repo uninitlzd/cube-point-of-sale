@@ -26,7 +26,7 @@ const mutations = {
     },
 
     [types.EDIT_MATERIAL](state, {index, material}) {
-        state.materials[state.materials.findIndex(material => material.id)] = material
+        state.materials[state.materials.findIndex(material => material.id === index)] = material
     },
 
     // Delete Material From State by id

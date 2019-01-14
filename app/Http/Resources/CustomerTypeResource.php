@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 
-class CategoryResource extends Resource
+class CustomerTypeResource extends Resource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,8 @@ class CategoryResource extends Resource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
+            'discount_percentage' => $this->discount_percentage
         ];
     }
 }

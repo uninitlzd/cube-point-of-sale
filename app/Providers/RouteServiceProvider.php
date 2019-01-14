@@ -37,6 +37,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('product', \App\Models\Product::class);
         Route::model('discount', \App\Models\Discount::class);
         Route::model('order', \App\Models\Order::class);
+        Route::model('customer_type', \App\Models\CustomerType::class);
 
         parent::boot();
 

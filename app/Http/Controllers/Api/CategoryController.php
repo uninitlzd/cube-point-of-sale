@@ -20,7 +20,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = $this->user->shop->categories;
-        return $categories;
+
         return CategoryResource::collection($categories);
     }
 
@@ -40,6 +40,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $category = tap($category)->update($request->all())->fresh();
+
         return new CategoryResource($category);
     }
 
