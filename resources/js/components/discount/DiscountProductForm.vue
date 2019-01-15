@@ -98,7 +98,7 @@
                     name: discount.name
                 }
 
-                axios.get(`/api/product?filter[discount_id]=${id},null`).then(products => {
+                axios.get(`/api/product?filter[discount_id]=${id},nullapp`).then(products => {
                     this.products = products.data
                     if (this.products.length === this.products.filter(product => product.has_discount).size) {
                         this.$refs.productTable.$children[0].toggleAllSelection()

@@ -28,6 +28,7 @@
                                         </div>
                                         <div v-else-if="title.prop === 'amount'">
                                             <el-input-number v-model="scope.row['amount']" size="small"></el-input-number>
+                                            <el-button size="small" type="primary" @click.native="saveStockAmount(scope.row['id'])">Save</el-button>
                                         </div>
                                         <div v-else>
                                             <span>{{ scope.row[title.prop] }}</span>
@@ -109,6 +110,9 @@
                     }).catch(error => {
                     this.$message.error('Delete Failed!')
                 })
+            },
+            saveStockAmount(index) {
+
             }
         },
         computed: {

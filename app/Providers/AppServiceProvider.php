@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Contracts\CategoryGroupEloquentRepository;
 use App\Models\Product;
 use App\Models\User;
 use App\Observers\ProductObserver;

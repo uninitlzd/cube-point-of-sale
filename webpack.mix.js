@@ -24,7 +24,10 @@ mix.js('resources/js/app.js', 'public/js')
         'lodash',
         'popper.js',
         'accounting-js'
-    ])
+    ]).options({
+        processCssUrls: false
+    });
+
 
 if (mix.inProduction()) {
     mix.webpackConfig({
