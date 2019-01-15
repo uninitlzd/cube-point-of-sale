@@ -18,6 +18,7 @@ import employee from "./employee";
 import member from "./member";
 import discount from "./discount"
 import customerType from "./customerType"
+import cashier from "./cashier"
 
 const router = new VueRouter({
     // mode: 'history',
@@ -71,6 +72,7 @@ const router = new VueRouter({
         ...member,
         ...discount,
         ...customerType,
+        ...cashier,
         {
             path: '*',
             redirect: '/'

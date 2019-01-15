@@ -232,7 +232,7 @@ p {
 }
 
 .scrollbar-component .el-scrollbar__wrap {
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 .image-fit-cover {
@@ -312,4 +312,8 @@ a {
 
 .aspectRatioSizer > * {
   grid-area: 1 / 1 / 2 / 2;
+}
+
+.product-list__wrapper > .el-card__body {
+  height: calc(100vh - 180px);
 }

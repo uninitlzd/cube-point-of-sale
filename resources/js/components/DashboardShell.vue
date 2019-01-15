@@ -107,12 +107,6 @@
                                 </i>
                                 <span class="align-self-center">Discount</span>
                             </el-menu-item>
-                            <el-menu-item index="10" route="/report">
-                                <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
-                                    settings
-                                </i>
-                                <span class="align-self-center">Settings</span>
-                            </el-menu-item>
                         </template>
                     </el-menu>
                 </nav>
