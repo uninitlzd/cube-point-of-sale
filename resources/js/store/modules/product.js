@@ -13,7 +13,8 @@ const state = {
 
 const getters = {
     getProducts: state => state.products,
-    getById: state => index => state.products.filter(product => product.id === index)
+    getById: state => id => state.products.filter(product => product.id === id),
+    getStockByOutlet: state => id => state.stocks.filter(stock => stock.shop_outlet_id === id)
 }
 
 const mutations = {
@@ -25,8 +26,8 @@ const mutations = {
         state.products.unshift(product)
     },
 
-    [types.EDIT_PRODUCT](state, {index, product}) {
-        state.products[state.products.findIndex(product => product.id === index)] = product
+    [types.EDIT_PRODUCT](state, {id, product}) {
+        state.products[state.products.findIndex(product => product.id === id)] = product
     },
 
     // Delete Product From State by id
@@ -46,16 +47,16 @@ const actions = {
         commit(types.ADD_PRODUCT, data)
     },
 
-    async updateProduct({commit}, {form, index}) {
-        let product = await form.put('/api/product/' + index)
+    async updateProduct({commit}, {form, id}) {
+        let product = await form.put('/api/product/' + id)
             .then(product => {
                 return product
             })
 
-        commit(types.EDIT_PRODUCT, {index, product})
+        commit(types.EDIT_PRODUCT, {id, product})
     },
 
-    deleteProduct({commit}, index) {
+    deleteProduct({commit}, id) {
         axios.delete('/api/product/' + id)
             .then(product => {
                 return product
@@ -65,15 +66,25 @@ const actions = {
     },
 
     async fetchProducts({commit}) {
-        let data = await axios.get('/api/product')
+        let data = await axios.get('/api/product', {
+            params: {
+                include: 'stocks'
+            }
+        })
             .then(response => {
 
                 return response.data
             })
 
-        console.log(data)
-
         commit(types.FETCH_PRODUCT, data)
+    },
+
+    async updateStock({commit}, {stock}) {
+        await axios.patch(`/api/outlet/${stock.shop_outlet_id}/product/${stock.product_id}`, {
+            number_of_stock: stock.amount
+        }).then(response => {
+            return response.data
+        })
     }
 }
 

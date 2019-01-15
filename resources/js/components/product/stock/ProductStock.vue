@@ -27,8 +27,7 @@
                                             <span>{{ scope.row['outlet'].name}}</span>
                                         </div>
                                         <div v-else-if="title.prop === 'amount'">
-                                            <el-input-number v-model="scope.row['amount']" size="small"></el-input-number>
-                                            <el-button size="small" type="primary" @click.native="saveStockAmount(scope.row['id'])">Save</el-button>
+                                            <el-input-number v-model="scope.row['amount']" size="small" @change="saveStockAmount(scope.row)" @blur="saveStockAmount(scope.row)"></el-input-number>
                                         </div>
                                         <div v-else>
                                             <span>{{ scope.row[title.prop] }}</span>
@@ -111,15 +110,18 @@
                     this.$message.error('Delete Failed!')
                 })
             },
-            saveStockAmount(index) {
-
+            saveStockAmount(stock) {
+                this.$store.dispatch('product/updateStock', {
+                    stock
+                })
             }
         },
         computed: {
             ...mapGetters({
                 getById: 'product/getById',
                 categories: 'category/getCategories',
-                user: 'auth/getUser'
+                user: 'auth/getUser',
+                getOutlet: 'outlet/getById'
             })
         }
     }

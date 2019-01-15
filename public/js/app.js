@@ -40363,9 +40363,16 @@ var getters = {
         return state.products;
     },
     getById: function getById(state) {
-        return function (index) {
+        return function (id) {
             return state.products.filter(function (product) {
-                return product.id === index;
+                return product.id === id;
+            });
+        };
+    },
+    getStockByOutlet: function getStockByOutlet(state) {
+        return function (id) {
+            return state.stocks.filter(function (stock) {
+                return stock.shop_outlet_id === id;
             });
         };
     }
@@ -40376,11 +40383,11 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, types.FETCH_PRODUC
 }), _defineProperty(_mutations, types.ADD_PRODUCT, function (state, product) {
     state.products.unshift(product);
 }), _defineProperty(_mutations, types.EDIT_PRODUCT, function (state, _ref) {
-    var index = _ref.index,
+    var id = _ref.id,
         product = _ref.product;
 
     state.products[state.products.findIndex(function (product) {
-        return product.id === index;
+        return product.id === id;
     })] = product;
 }), _defineProperty(_mutations, types.DELETE_PRODUCT, function (state, id) {
     state.products = state.products.filter(function (product) {
@@ -40427,14 +40434,14 @@ var actions = {
         var _ref6 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2(_ref4, _ref5) {
             var commit = _ref4.commit;
             var form = _ref5.form,
-                index = _ref5.index;
+                id = _ref5.id;
             var product;
             return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
                         case 0:
                             _context2.next = 2;
-                            return form.put('/api/product/' + index).then(function (product) {
+                            return form.put('/api/product/' + id).then(function (product) {
                                 return product;
                             });
 
@@ -40442,7 +40449,7 @@ var actions = {
                             product = _context2.sent;
 
 
-                            commit(types.EDIT_PRODUCT, { index: index, product: product });
+                            commit(types.EDIT_PRODUCT, { id: id, product: product });
 
                         case 4:
                         case 'end':
@@ -40458,7 +40465,7 @@ var actions = {
 
         return updateProduct;
     }(),
-    deleteProduct: function deleteProduct(_ref7, index) {
+    deleteProduct: function deleteProduct(_ref7, id) {
         var commit = _ref7.commit;
 
         __WEBPACK_IMPORTED_MODULE_1_axios___default.a.delete('/api/product/' + id).then(function (product) {
@@ -40476,7 +40483,11 @@ var actions = {
                     switch (_context3.prev = _context3.next) {
                         case 0:
                             _context3.next = 2;
-                            return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get('/api/product').then(function (response) {
+                            return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get('/api/product', {
+                                params: {
+                                    include: 'stocks'
+                                }
+                            }).then(function (response) {
 
                                 return response.data;
                             });
@@ -40485,11 +40496,9 @@ var actions = {
                             data = _context3.sent;
 
 
-                            console.log(data);
-
                             commit(types.FETCH_PRODUCT, data);
 
-                        case 5:
+                        case 4:
                         case 'end':
                             return _context3.stop();
                     }
@@ -40502,6 +40511,35 @@ var actions = {
         }
 
         return fetchProducts;
+    }(),
+    updateStock: function () {
+        var _ref12 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee4(_ref10, _ref11) {
+            var commit = _ref10.commit;
+            var stock = _ref11.stock;
+            return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
+                while (1) {
+                    switch (_context4.prev = _context4.next) {
+                        case 0:
+                            _context4.next = 2;
+                            return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.patch('/api/outlet/' + stock.shop_outlet_id + '/product/' + stock.product_id, {
+                                number_of_stock: stock.amount
+                            }).then(function (response) {
+                                return response.data;
+                            });
+
+                        case 2:
+                        case 'end':
+                            return _context4.stop();
+                    }
+                }
+            }, _callee4, this);
+        }));
+
+        function updateStock(_x6, _x7) {
+            return _ref12.apply(this, arguments);
+        }
+
+        return updateStock;
     }()
 };
 
@@ -47095,7 +47133,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -47113,7 +47151,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(13);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-//
 //
 //
 //
@@ -47227,12 +47264,17 @@ var titles = [{
                 _this2.$message.error('Delete Failed!');
             });
         },
-        saveStockAmount: function saveStockAmount(index) {}
+        saveStockAmount: function saveStockAmount(stock) {
+            this.$store.dispatch('product/updateStock', {
+                stock: stock
+            });
+        }
     },
     computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["mapGetters"])({
         getById: 'product/getById',
         categories: 'category/getCategories',
-        user: 'auth/getUser'
+        user: 'auth/getUser',
+        getOutlet: 'outlet/getById'
     }))
 });
 
@@ -47368,6 +47410,18 @@ var render = function() {
                                               [
                                                 _c("el-input-number", {
                                                   attrs: { size: "small" },
+                                                  on: {
+                                                    change: function($event) {
+                                                      _vm.saveStockAmount(
+                                                        scope.row
+                                                      )
+                                                    },
+                                                    blur: function($event) {
+                                                      _vm.saveStockAmount(
+                                                        scope.row
+                                                      )
+                                                    }
+                                                  },
                                                   model: {
                                                     value: scope.row["amount"],
                                                     callback: function($$v) {
@@ -47380,25 +47434,7 @@ var render = function() {
                                                     expression:
                                                       "scope.row['amount']"
                                                   }
-                                                }),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "el-button",
-                                                  {
-                                                    attrs: {
-                                                      size: "small",
-                                                      type: "primary"
-                                                    },
-                                                    nativeOn: {
-                                                      click: function($event) {
-                                                        _vm.saveStockAmount(
-                                                          scope.row["id"]
-                                                        )
-                                                      }
-                                                    }
-                                                  },
-                                                  [_vm._v("Save")]
-                                                )
+                                                })
                                               ],
                                               1
                                             )
