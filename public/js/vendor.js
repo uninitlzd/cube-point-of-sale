@@ -78377,28 +78377,34 @@ module.exports = __webpack_require__(47);
 /* 557 */,
 /* 558 */,
 /* 559 */,
-/* 560 */
+/* 560 */,
+/* 561 */,
+/* 562 */,
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-__webpack_require__(561);
+__webpack_require__(567);
 __webpack_require__(232);
 __webpack_require__(10);
-__webpack_require__(562);
+__webpack_require__(568);
 __webpack_require__(76);
 __webpack_require__(67);
 __webpack_require__(99);
 __webpack_require__(7);
 __webpack_require__(100);
-__webpack_require__(563);
+__webpack_require__(569);
 __webpack_require__(77);
-__webpack_require__(566);
+__webpack_require__(572);
 __webpack_require__(233);
-module.exports = __webpack_require__(567);
+module.exports = __webpack_require__(573);
 
 
 /***/ }),
-/* 561 */
+/* 567 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -82348,7 +82354,7 @@ module.exports = __webpack_require__(567);
 
 
 /***/ }),
-/* 562 */
+/* 568 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -82356,14 +82362,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof="fun
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)):window.Vue&&window.axios&&Vue.use(o,window.axios)}();
 
 /***/ }),
-/* 563 */
+/* 569 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VuexPersistence", function() { return VuexPersistence; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MockStorage", function() { return MockStorage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_merge__ = __webpack_require__(564);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_merge__ = __webpack_require__(570);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_merge___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash_merge__);
 
 
@@ -82456,7 +82462,7 @@ class VuexPersistence {
         this.subscribed = false;
         this.supportCircular = options.supportCircular || false;
         if (this.supportCircular) {
-            CircularJSON = __webpack_require__(565);
+            CircularJSON = __webpack_require__(571);
         }
         // @ts-ignore
         if (false) {
@@ -82603,7 +82609,7 @@ class VuexPersistence {
 
 
 /***/ }),
-/* 564 */
+/* 570 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -84573,7 +84579,7 @@ module.exports = merge;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18), __webpack_require__(68)(module)))
 
 /***/ }),
-/* 565 */
+/* 571 */
 /***/ (function(module, exports) {
 
 /*!
@@ -84786,7 +84792,7 @@ module.exports = CircularJSON;
 
 
 /***/ }),
-/* 566 */
+/* 572 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -101901,7 +101907,7 @@ module.exports = CircularJSON;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18), __webpack_require__(68)(module)))
 
 /***/ }),
-/* 567 */
+/* 573 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (global, factory) {
@@ -102322,4 +102328,4 @@ module.exports = CircularJSON;
 //# sourceMappingURL=accounting.umd.js.map
 
 /***/ })
-],[560]);
+],[566]);

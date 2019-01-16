@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@glidejs/glide@^3.2.4":
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/@glidejs/glide/-/glide-3.2.4.tgz#2ea91d1b6c209983511026b93080f93b83e5e1c4"
+  integrity sha512-ylTX+3NB2XW/y5CCda9xRkO+q+016u6YL8X/zlNGkfDRAx/lm/UtFoXL1EBm+zUDYIAldeoLbloM2vJpH4YwZA==
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -7286,6 +7291,14 @@ vue-data-tables@^3.4.4:
   dependencies:
     element-ui "^2.3.9"
     lodash "^4.17.10"
+    vue "^2.5.16"
+
+vue-glide-js@^1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/vue-glide-js/-/vue-glide-js-1.3.6.tgz#89970c2c62460501801a60db7bb4644731bc2f5c"
+  integrity sha512-ZbasHRKmWYEJFpB5UWPy95xWJhjkcoXjkrBwzJuZt68Onccorl5QM7J9cu0My9TGYqlk9QBb2nb6JHniJVTTXQ==
+  dependencies:
+    "@glidejs/glide" "^3.2.4"
     vue "^2.5.16"
 
 vue-hot-reload-api@^2.2.0:

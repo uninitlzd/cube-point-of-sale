@@ -315,5 +315,35 @@ a {
 }
 
 .product-list__wrapper > .el-card__body {
-  height: calc(100vh - 180px);
+  height: calc(100vh - 250px);
+}
+
+.product-list__item {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.product-list__item__title {
+  color: #303133;
+  background: white;
+  font-weight: 600;
+}
+
+.product-list__item__title p {
+  font-family: 'Raleway', sans-serif;
+}
+
+.order-list__wrapper > .el-card__body {
+  height: calc(100vh - 147px);
+}
+
+.order-list__content__wrapper {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+}
+
+#category-slider ul {
+  margin-bottom: 0 !important;
 }

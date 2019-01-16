@@ -22,9 +22,11 @@
             <el-col :span=12>
                 <ul class="list-inline d-flex h-100 justify-content-end">
                     <li class="list-inline-item my-auto">
-                        <el-button size="small" type="primary" plain round >
-                            <i class="material-icons mr-2 align-middle" style="font-size: 11pt; margin-bottom: 1px">store</i>Tampilan Kasir
-                        </el-button>
+                        <router-link to="/cashier">
+                            <el-button size="small" type="primary" plain round >
+                                <i class="material-icons mr-2 align-middle" style="font-size: 11pt; margin-bottom: 1px">store</i>Tampilan Kasir
+                            </el-button>
+                        </router-link>
                     </li>
                     <li class="list-inline-item">
                         <el-dropdown class="h-100 d-flex align-self-center">

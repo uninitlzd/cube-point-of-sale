@@ -12,8 +12,10 @@ import VueOffline from 'vue-offline'
 import VueChartkick from 'vue-chartkick'
 import Chart from 'chart.js'
 import Bars from 'vuebars'
+import VueGlide from 'vue-glide-js'
+import 'vue-glide-js/dist/vue-glide.css'
 
-
+Vue.use(VueGlide)
 Vue.use(ElementUI)
 Vue.use(DataTables)
 Vue.use(DataTablesServer)
