@@ -29,7 +29,7 @@ class StoreOrderRequest extends FormRequest
             'transaction_type_id' => '',
             'member_id' => '',
             'customer_name' => '',
-            'tax' => '',
+            'orderTax' => '',
             'order_total' => '',
         ];
     }

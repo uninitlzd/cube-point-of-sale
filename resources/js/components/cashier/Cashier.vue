@@ -10,14 +10,22 @@
                             <div slot="header">
                                 <el-row :gutter="10">
                                     <el-col class="col-md-8" style="overflow: hidden">
-                                        <vue-glide class="w-100">
-                                            <vue-glide-slide v-for="i in 10" :key="i" class="mb-0">
-                                                <el-button type="primary" class="w-100" size="small">Semua Produk</el-button>
+                                        <vue-glide class="w-100" :options="{ gap: 10 }">
+                                            <vue-glide-slide class="mb-0">
+                                                <el-button type="primary" class="w-100" size="small">Semua Produk
+                                                </el-button>
+                                            </vue-glide-slide>
+                                            <vue-glide-slide v-for="category in categories" :key="category.id"
+                                                             class="mb-0">
+                                                <el-button type="primary" plain class="w-100" size="small">{{
+                                                    category.name }}
+                                                </el-button>
                                             </vue-glide-slide>
                                         </vue-glide>
                                     </el-col>
                                     <el-col class="col-md-4">
-                                        <el-input prefix-icon="el-icon-search" placeholder="Cari Produk" size="small" class="input-with-select">
+                                        <el-input prefix-icon="el-icon-search" placeholder="Cari Produk" size="small"
+                                                  class="input-with-select">
 
                                         </el-input>
                                     </el-col>
@@ -27,13 +35,14 @@
                                 <el-row>
                                     <el-scrollbar class="scrollbar-component" style="height: calc(100vh - 158px)">
                                         <el-row :gutter="20" class="flex-grow-1 px-3 pl-3 pt-3 pb-0 align-items-top">
-                                            <el-col v-for="index in 20" :key="index" class="mb-3 col-md-3 col-sm-6">
-                                                <div class="product-list__item">
-                                                    <img src="/images/products/20181203035007_products.jpg"
-                                                         style="width: 100%; height: 15rem; object-fit: center; object-fit: cover">
+                                            <el-col v-for="product in products" :key="product.id"
+                                                    class="mb-3 col-md-3 col-sm-6">
+                                                <div class="product-list__item" @click="addProductOrder(product)">
+                                                    <img :src=product.image
+                                                         style="width: 100%; height: 15rem; object-fit: cover; object-fit: cover">
 
                                                     <div class="product-list__item__title w-100 mb-1">
-                                                        <p class="mb-0 px-3 py-3">Kopi Kota ya</p>
+                                                        <p class="mb-0 px-3 py-3">{{ product.name }}</p>
                                                     </div>
                                                 </div>
                                             </el-col>
@@ -48,32 +57,73 @@
                                  :body-style="{padding: 0}">
                             <div slot="header" class="clearfix">
                                 <el-row :gutter="10" class="d-flex align-items-center">
-                                    <el-col class="col-md-6">Daftar Pesanan</el-col>
+                                    <el-col class="col-md-6 font-weight-bold"><span>Daftar Pesanan</span></el-col>
                                     <el-col class="col-md-6 text-right">
                                         <el-select v-model="value" placeholder="Tipe Transaksi" size="mini">
                                             <el-option
-                                                    v-for="item in options"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
+                                                v-for="item in options"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
                                             </el-option>
                                         </el-select>
                                     </el-col>
                                 </el-row>
                             </div>
                             <el-col :span="24" class="d-flex flex-column h-100">
-                                <el-row :gutter="10" class="order-list__content__wrapper">
-                                    <el-scrollbar class="scrollbar-component h-100" style="flex: 1 1 auto">
-
+                                <el-row :gutter="10" class="order-list__content__wrapper d-flex px-2">
+                                    <el-scrollbar class="scrollbar-component" style="flex: 1 1 auto">
+                                        <div class="px-3 py-2">
+                                            <div v-for="(order, index) in orders" class="my-3">
+                                                <el-row type="flex">
+                                                    <el-col :md="22">
+                                                        <p class="mb-2 font-weight-bold">{{ order.name }} {{ (order.has_discount) ? '(Promo)' : ''}}</p>
+                                                        <el-row type="flex" :gutter="10">
+                                                            <el-col class="col-md-4"><span>Rp{{ order.selling_price }}</span></el-col>
+                                                            <el-col class="col-md-4">
+                                                                <el-input-number size="mini" :min="0" class="w-100" v-model="order.amount" @change="isZero(order, index)"></el-input-number>
+                                                            </el-col>
+                                                            <el-col class="col-md-4"><span>Rp{{ order.amount * order.selling_price }}</span></el-col>
+                                                        </el-row>
+                                                    </el-col>
+                                                    <el-col :md="2" class="align-self-center">
+                                                        <el-button type="danger" size="mini" circle plain icon="el-icon-close" @click.native="deleteProductOrder(index)"></el-button>
+                                                    </el-col>
+                                                </el-row>
+                                                <hr class="mt-3 mb-3">
+                                            </div>
+                                        </div>
                                     </el-scrollbar>
                                 </el-row>
-                                <el-row :gutter="10" class="pb-2 order-list__button border-top">
+                                <el-row :gutter="10" class="pb-2 order-list__total border-top">
                                     <div class="py-2 px-4 ">
-                                        <el-col class="col-md-6">
-                                            <el-button type="primary">Kembali</el-button>
+                                        <el-row type="flex">
+                                            <el-col :md="16" class="font-weight-bold" style="font-size: 10pt"><span>Sub Total</span>
+                                            </el-col>
+                                            <el-col :md="8" class="font-weight-bold" style="font-size: 10pt"><span>Rp{{ orderSubTotal }}</span>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row type="flex">
+                                            <el-col :md="16" class="font-weight-bold" style="font-size: 10pt">
+                                                <span>Tax</span></el-col>
+                                            <el-col :md="8" class="font-weight-bold" style="font-size: 10pt"><span>Rp{{ orderTax }}</span>
+                                            </el-col>
+                                        </el-row>
+                                        <hr class="mt-2 mb-2">
+                                        <el-row type="flex">
+                                            <el-col :md="16" class="font-weight-bold"><span>Total</span></el-col>
+                                            <el-col :md="8" class="font-weight-bold"><span>Rp{{ orderTotal }}</span></el-col>
+                                        </el-row>
+                                    </div>
+                                </el-row>
+                                <el-row :gutter="10" class="pb-2 order-list__button border-top no-gutters">
+                                    <div class="py-4 px-4 d-flex align-items-center">
+                                        <el-col class="col-md-6 px-0">
+                                            <el-button type="danger" size="small" circle
+                                                       icon="el-icon-delete"></el-button>
                                         </el-col>
                                         <el-col class="col-md-6 text-right">
-                                            <el-button type="primary">Oke</el-button>
+                                            <el-button type="success" size="small">Proses</el-button>
                                         </el-col>
                                     </div>
                                 </el-row>
@@ -112,6 +162,7 @@
         components: {DashboardShell},
         created() {
             this.$store.dispatch('category/fetchCategories')
+            this.$store.dispatch('product/fetchProducts')
         },
         data() {
             return {
@@ -151,9 +202,11 @@
                     value: 'Gojek',
                     label: 'Gojek'
                 }],
-                value: ''
+                value: '',
+                orders: []
             }
         },
+        persist: ['orders'],
         methods: {
             toCreatePage() {
                 this.$router.push('/category/new')
@@ -165,12 +218,46 @@
                     }).catch(error => {
                     this.$message.error('Delete Failed!')
                 })
+            },
+            addProductOrder(p) {
+                if (this.orders.filter(product => product.id === p.id).length !== 0) {
+                    this.orders.filter(product => product.id === p.id)
+                        .map(product => {
+                            product.amount += 1
+                        })
+
+                    this.orders = this.orders.slice()
+                } else {
+                    p.amount = 1
+                    this.orders.push(p)
+                }
+            },
+            deleteProductOrder(i) {
+                this.orders = this.orders.filter((value, index, arr) => index !== i)
+            },
+            isZero(order, i) {
+                if (order.amount === 0)
+                    this.deleteProductOrder(i)
             }
         },
         computed: {
             ...mapState({
-                categories: state => state.category.categories
-            })
+                categories: state => state.category.categories,
+                products: state => state.product.products,
+                user: state => state.auth.user
+            }),
+            orderSubTotal() {
+                return this.orders.reduce((acc, current, currentIndex, arr) => {
+                    console.log(current)
+                    return acc + (current.amount * current.selling_price)
+                }, 0)
+            },
+            orderTax() {
+                return (this.user.shop.tax / 100) * this.orderSubTotal
+            },
+            orderTotal() {
+                return this.orderSubTotal + this.orderTax
+            }
         }
     }
 </script>
@@ -178,3 +265,5 @@
 <style scoped>
 
 </style>
+
+<!--Todo: Renew newest product information even product has been added in order storage-->

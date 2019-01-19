@@ -29,7 +29,7 @@ class ShopController extends Controller
         $shop = $this->user->shop ?: new Shop;
         $shop->name = $request->get('name');
         $shop->type = $request->get('type');
-        $shop->tax = $request->get('tax');
+        $shop->tax = $request->get('orderTax');
 
         $shop = $this->user->shop()->save($shop);
 

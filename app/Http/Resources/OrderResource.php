@@ -27,7 +27,7 @@ class OrderResource extends JsonResource
             'customer_name' => $this->customer_name,
             'order_details' => OrderDetailResource::collection($this->whenLoaded('details')),
             'order_total' => Money::format($this->order_total),
-            'tax' => Money::format($this->tax),
+            'orderTax' => Money::format($this->tax),
             'total' => Money::format($this->total),
             'paid' => Money::format($this->paid),
             'created_at' => Carbon::parse($this->created_at)->toFormattedDateString()

@@ -188,11 +188,15 @@ html, body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'PT Sans', sans-serif;
+  font-family: 'PT Sans', sans-serif !important;
 }
 
 p, span, a, li {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto', sans-serif !important;
+}
+
+span {
+  font-size: 11pt;
 }
 
 #main-top-nav p {
@@ -322,6 +326,11 @@ a {
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 10px;
   overflow: hidden;
+}
+
+.product-list__item:hover {
+  cursor: pointer;
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
 .product-list__item__title {

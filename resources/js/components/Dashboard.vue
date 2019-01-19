@@ -38,7 +38,7 @@
                                     </el-col>
                                     <el-col :md="8" :sm="24">
                                         <el-form-item prop="tax" label="Presentase PPn">
-                                            <el-input label="Presentase PPn" size="medium" placeholder="PPn" v-model="form.tax">
+                                            <el-input label="Presentase PPn" size="medium" placeholder="PPn" v-model="form.orderTax">
                                                 <template slot="append">%</template>
                                             </el-input>
                                         </el-form-item>
@@ -98,7 +98,7 @@
                 form: new Form({
                     name: '',
                     type: '',
-                    tax: 0
+                    orderTax: 0
                 }),
                 rules: {
                     name: [
@@ -134,7 +134,7 @@
                 this.form = new Form({
                     name: this.shop.shop.name,
                     type: parseInt(this.shop.shop.type),
-                    tax: parseInt(this.shop.shop.tax),
+                    orderTax: parseInt(this.shop.shop.orderTax),
                 })
             }
         },
