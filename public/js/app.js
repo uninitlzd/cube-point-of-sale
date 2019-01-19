@@ -50305,29 +50305,52 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "DashboardShell",
+    created: function created() {
+        this.$store.dispatch('outlet/fetchOutlets');
+    },
     data: function data() {
         return {
             isCollapsed: true,
             collapsedClass: 'collapsed',
-            openedClass: 'opened'
+            openedClass: 'opened',
+            cashierView: false,
+            outlet: ''
         };
     },
 
     computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["mapState"])({ activeIndex: function activeIndex(state) {
             return state.menu.activeIndex;
-        } }), Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["mapState"])({ shop: function shop(state) {
+        } }), Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["mapState"])({
+        shop: function shop(state) {
             return state.shop.shop;
-        } })),
+        },
+        outlets: function outlets(state) {
+            return state.outlet.outlets;
+        }
+    })),
     methods: {
         logout: function logout() {
             this.$store.dispatch('auth/logout');
         }
-    }
+    },
+    persist: ['cashierView']
 });
 
 /***/ }),
@@ -50422,45 +50445,94 @@ var render = function() {
               "ul",
               { staticClass: "list-inline d-flex h-100 justify-content-end" },
               [
-                _c(
-                  "li",
-                  { staticClass: "list-inline-item my-auto" },
-                  [
-                    _c(
-                      "router-link",
-                      { attrs: { to: "/cashier" } },
+                !_vm.cashierView
+                  ? _c(
+                      "li",
+                      { staticClass: "list-inline-item my-auto" },
                       [
                         _c(
-                          "el-button",
-                          {
-                            attrs: {
-                              size: "small",
-                              type: "primary",
-                              plain: "",
-                              round: ""
-                            }
-                          },
+                          "router-link",
+                          { attrs: { to: "/cashier" } },
                           [
                             _c(
-                              "i",
+                              "el-button",
                               {
-                                staticClass: "material-icons mr-2 align-middle",
-                                staticStyle: {
-                                  "font-size": "11pt",
-                                  "margin-bottom": "1px"
+                                attrs: {
+                                  size: "small",
+                                  type: "primary",
+                                  plain: "",
+                                  round: ""
+                                },
+                                nativeOn: {
+                                  click: function($event) {
+                                    _vm.cashierView = true
+                                  }
                                 }
                               },
-                              [_vm._v("store")]
-                            ),
-                            _vm._v("Tampilan Kasir\n                        ")
-                          ]
+                              [
+                                _c(
+                                  "i",
+                                  {
+                                    staticClass:
+                                      "material-icons mr-2 align-middle",
+                                    staticStyle: {
+                                      "font-size": "11pt",
+                                      "margin-bottom": "1px"
+                                    }
+                                  },
+                                  [_vm._v("store")]
+                                ),
+                                _vm._v(
+                                  "Tampilan Kasir\n                        "
+                                )
+                              ]
+                            )
+                          ],
+                          1
                         )
                       ],
                       1
                     )
-                  ],
-                  1
-                ),
+                  : _c(
+                      "li",
+                      { staticClass: "list-inline-item my-auto" },
+                      [
+                        _c(
+                          "router-link",
+                          { attrs: { to: "/cashier" } },
+                          [
+                            _c(
+                              "el-select",
+                              {
+                                attrs: {
+                                  filterable: "",
+                                  placeholder: "Pilih Cabang",
+                                  size: "medium"
+                                },
+                                model: {
+                                  value: _vm.outlet,
+                                  callback: function($$v) {
+                                    _vm.outlet = $$v
+                                  },
+                                  expression: "outlet"
+                                }
+                              },
+                              _vm._l(_vm.outlets, function(outlet) {
+                                return _c("el-option", {
+                                  key: outlet.id,
+                                  attrs: {
+                                    label: outlet.name,
+                                    value: outlet.id
+                                  }
+                                })
+                              })
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
                 _vm._v(" "),
                 _c(
                   "li",
@@ -61421,7 +61493,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -61439,6 +61511,66 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(13);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -61602,15 +61734,19 @@ var titles = [{
     created: function created() {
         this.$store.dispatch('category/fetchCategories');
         this.$store.dispatch('product/fetchProducts');
+        this.$store.dispatch('customerType/fetchCustomerTypes');
+        this.$store.dispatch('member/fetchMembers');
     },
     data: function data() {
         var _this = this;
 
         return {
             selectedCategory: [],
+            category: 0,
+            shop_outlet_id: 0,
             data: _data,
             titles: titles,
-            search: '',
+            searchProduct: '',
             actions: {
                 label: 'Action',
                 props: {
@@ -61644,7 +61780,19 @@ var titles = [{
                 label: 'Gojek'
             }],
             value: '',
-            orders: []
+            orders: {
+                type: 1,
+                member_id: '',
+                customerName: '',
+                products: [],
+                tax: '',
+                orderTotal: '',
+                total: '',
+                paid: 0,
+                amount: ''
+            },
+            paymentProcessDialog: false,
+            nominals: [5000, 10000, 20000, 50000, 100000]
         };
     },
 
@@ -61663,28 +61811,59 @@ var titles = [{
             });
         },
         addProductOrder: function addProductOrder(p) {
-            if (this.orders.filter(function (product) {
+            if (this.orders.products.filter(function (product) {
                 return product.id === p.id;
             }).length !== 0) {
-                this.orders.filter(function (product) {
-                    return product.id === p.id;
-                }).map(function (product) {
-                    product.amount += 1;
-                });
+                this.orders.products = this.orders.products.map(function (product) {
+                    if (product.id === p.id) product.amount += 1;
 
-                this.orders = this.orders.slice();
+                    return product;
+                });
             } else {
                 p.amount = 1;
-                this.orders.push(p);
+                this.orders.products.push(p);
             }
         },
         deleteProductOrder: function deleteProductOrder(i) {
-            this.orders = this.orders.filter(function (value, index, arr) {
+            this.orders.products = this.orders.products.filter(function (value, index, arr) {
                 return index !== i;
             });
         },
-        isZero: function isZero(order, i) {
-            if (order.amount === 0) this.deleteProductOrder(i);
+        isZero: function isZero(productAmount, i) {
+            if (productAmount === 0) this.deleteProductOrder(i);
+
+            this.orders.products = this.orders.products.slice();
+        },
+        emptyOrder: function emptyOrder() {
+            var _this3 = this;
+
+            this.$confirm('Anda yakin ingin mengkosongkan daftar order?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+            }).then(function () {
+                _this3.orders.products = [];
+
+                _this3.$message({
+                    type: 'success',
+                    message: 'Daftar order dikosongkan'
+                });
+            });
+        },
+        memberTypeOnChange: function memberTypeOnChange(type) {
+            if (type === 1) {
+                this.orders.member_id = '';
+            }
+        },
+        nominalButtonListener: function nominalButtonListener(val) {
+            switch (val) {
+                case 'del':
+                    return this.orders.paid = this.orders.paid.slice(0, -1);
+                case 'clear':
+                    return this.orders.paid = '';
+                default:
+                    return this.orders.paid += val;
+            }
         }
     },
     computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["mapState"])({
@@ -61696,19 +61875,52 @@ var titles = [{
         },
         user: function user(state) {
             return state.auth.user;
+        },
+        customerTypes: function customerTypes(state) {
+            return state.customerType.customerTypes;
+        },
+        members: function members(state) {
+            return state.member.members;
         }
     }), {
         orderSubTotal: function orderSubTotal() {
-            return this.orders.reduce(function (acc, current, currentIndex, arr) {
-                console.log(current);
+            var _this4 = this;
+
+            var customerType = this.customerTypes.find(function (customerType) {
+                return customerType.id === _this4.orders.type;
+            });
+
+            var subTotal = this.orders.products.reduce(function (acc, current, currentIndex, arr) {
                 return acc + current.amount * current.selling_price;
             }, 0);
+
+            var amount = this.orders.products.reduce(function (acc, current, currentIndex, arr) {
+                return acc + current.amount;
+            }, 0);
+
+            this.orders.amount = amount;
+
+            if (customerType.discount_percentage) subTotal *= 1 - customerType.discount_percentage / 100;
+
+            this.orders.orderTotal = subTotal;
+            return subTotal;
         },
         orderTax: function orderTax() {
-            return this.user.shop.tax / 100 * this.orderSubTotal;
+            return this.orders.tax = this.user.shop.tax / 100 * this.orderSubTotal;
         },
         orderTotal: function orderTotal() {
-            return this.orderSubTotal + this.orderTax;
+            return this.orders.total = this.orderSubTotal + this.orderTax;
+        },
+        filteredProductByCategory: function filteredProductByCategory() {
+            var _this5 = this;
+
+            if (this.category !== 0) {
+                return this.products.filter(function (product) {
+                    return product.category_id === _this5.category;
+                });
+            }
+
+            return this.products;
         }
     })
 });
@@ -61789,7 +62001,13 @@ var render = function() {
                                                   staticClass: "w-100",
                                                   attrs: {
                                                     type: "primary",
+                                                    plain: _vm.category !== 0,
                                                     size: "small"
+                                                  },
+                                                  nativeOn: {
+                                                    click: function($event) {
+                                                      _vm.category = 0
+                                                    }
                                                   }
                                                 },
                                                 [
@@ -61802,13 +62020,11 @@ var render = function() {
                                             1
                                           ),
                                           _vm._v(" "),
-                                          _vm._l(_vm.categories, function(
-                                            category
-                                          ) {
+                                          _vm._l(_vm.categories, function(c) {
                                             return _c(
                                               "vue-glide-slide",
                                               {
-                                                key: category.id,
+                                                key: c.id,
                                                 staticClass: "mb-0"
                                               },
                                               [
@@ -61818,13 +62034,19 @@ var render = function() {
                                                     staticClass: "w-100",
                                                     attrs: {
                                                       type: "primary",
-                                                      plain: "",
+                                                      plain:
+                                                        _vm.category !== c.id,
                                                       size: "small"
+                                                    },
+                                                    nativeOn: {
+                                                      click: function($event) {
+                                                        _vm.category = c.id
+                                                      }
                                                     }
                                                   },
                                                   [
                                                     _vm._v(
-                                                      _vm._s(category.name) +
+                                                      _vm._s(c.name) +
                                                         "\n                                            "
                                                     )
                                                   ]
@@ -61850,6 +62072,13 @@ var render = function() {
                                           "prefix-icon": "el-icon-search",
                                           placeholder: "Cari Produk",
                                           size: "small"
+                                        },
+                                        model: {
+                                          value: _vm.searchProduct,
+                                          callback: function($$v) {
+                                            _vm.searchProduct = $$v
+                                          },
+                                          expression: "searchProduct"
                                         }
                                       })
                                     ],
@@ -61885,66 +62114,79 @@ var render = function() {
                                             "flex-grow-1 px-3 pl-3 pt-3 pb-0 align-items-top",
                                           attrs: { gutter: 20 }
                                         },
-                                        _vm._l(_vm.products, function(product) {
-                                          return _c(
-                                            "el-col",
-                                            {
-                                              key: product.id,
-                                              staticClass:
-                                                "mb-3 col-md-3 col-sm-6"
-                                            },
-                                            [
-                                              _c(
-                                                "div",
-                                                {
-                                                  staticClass:
-                                                    "product-list__item",
-                                                  on: {
-                                                    click: function($event) {
-                                                      _vm.addProductOrder(
-                                                        product
-                                                      )
-                                                    }
-                                                  }
-                                                },
-                                                [
-                                                  _c("img", {
-                                                    staticStyle: {
-                                                      width: "100%",
-                                                      height: "15rem",
-                                                      "object-fit": "cover"
-                                                    },
-                                                    attrs: {
-                                                      src: product.image
-                                                    }
-                                                  }),
-                                                  _vm._v(" "),
-                                                  _c(
-                                                    "div",
-                                                    {
-                                                      staticClass:
-                                                        "product-list__item__title w-100 mb-1"
-                                                    },
-                                                    [
-                                                      _c(
-                                                        "p",
-                                                        {
-                                                          staticClass:
-                                                            "mb-0 px-3 py-3"
-                                                        },
-                                                        [
-                                                          _vm._v(
-                                                            _vm._s(product.name)
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]
+                                        _vm._l(
+                                          _vm.searchProduct.length
+                                            ? _vm.filteredProductByCategory.filter(
+                                                function(p) {
+                                                  return p.name.includes(
+                                                    _vm.searchProduct
                                                   )
-                                                ]
+                                                }
                                               )
-                                            ]
-                                          )
-                                        })
+                                            : _vm.filteredProductByCategory,
+                                          function(product) {
+                                            return _c(
+                                              "el-col",
+                                              {
+                                                key: product.id,
+                                                staticClass:
+                                                  "mb-3 col-md-3 col-sm-6"
+                                              },
+                                              [
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "product-list__item",
+                                                    on: {
+                                                      click: function($event) {
+                                                        _vm.addProductOrder(
+                                                          product
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("img", {
+                                                      staticStyle: {
+                                                        width: "100%",
+                                                        height: "15rem",
+                                                        "object-fit": "cover"
+                                                      },
+                                                      attrs: {
+                                                        src: product.image
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "div",
+                                                      {
+                                                        staticClass:
+                                                          "product-list__item__title w-100 mb-1"
+                                                      },
+                                                      [
+                                                        _c(
+                                                          "p",
+                                                          {
+                                                            staticClass:
+                                                              "mb-0 px-3 py-3"
+                                                          },
+                                                          [
+                                                            _vm._v(
+                                                              _vm._s(
+                                                                product.name
+                                                              )
+                                                            )
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          }
+                                        )
                                       )
                                     ],
                                     1
@@ -61988,7 +62230,7 @@ var render = function() {
                               _c(
                                 "el-row",
                                 {
-                                  staticClass: "d-flex align-items-center",
+                                  staticClass: "d-flex align-items-center mb-2",
                                   attrs: { gutter: 10 }
                                 },
                                 [
@@ -62011,24 +62253,112 @@ var render = function() {
                                             placeholder: "Tipe Transaksi",
                                             size: "mini"
                                           },
+                                          on: {
+                                            change: function($event) {
+                                              _vm.memberTypeOnChange(
+                                                _vm.orders.type
+                                              )
+                                            }
+                                          },
                                           model: {
-                                            value: _vm.value,
+                                            value: _vm.orders.type,
                                             callback: function($$v) {
-                                              _vm.value = $$v
+                                              _vm.$set(_vm.orders, "type", $$v)
                                             },
-                                            expression: "value"
+                                            expression: "orders.type"
                                           }
                                         },
-                                        _vm._l(_vm.options, function(item) {
-                                          return _c("el-option", {
-                                            key: item.value,
-                                            attrs: {
-                                              label: item.label,
-                                              value: item.value
-                                            }
-                                          })
+                                        _vm._l(_vm.customerTypes, function(
+                                          type
+                                        ) {
+                                          return _c(
+                                            "el-option",
+                                            {
+                                              key: type.id,
+                                              attrs: {
+                                                label: type.name,
+                                                value: type.id
+                                              }
+                                            },
+                                            [
+                                              _c("span", [
+                                                _vm._v(
+                                                  _vm._s(type.name) +
+                                                    " (" +
+                                                    _vm._s(
+                                                      type.discount_percentage
+                                                    ) +
+                                                    "%)"
+                                                )
+                                              ])
+                                            ]
+                                          )
                                         })
                                       )
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "el-row",
+                                {
+                                  staticClass: "d-flex align-items-center",
+                                  attrs: { gutter: 10 }
+                                },
+                                [
+                                  _c(
+                                    "el-col",
+                                    {
+                                      staticClass: "col-md-6 font-weight-bold"
+                                    },
+                                    [_c("span", [_vm._v("Nama Pelanggan:")])]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "el-col",
+                                    { staticClass: "col-md-6 text-right" },
+                                    [
+                                      _vm.orders.type === 1
+                                        ? _c("el-input", {
+                                            attrs: {
+                                              size: "mini",
+                                              placeholder: "Nama"
+                                            }
+                                          })
+                                        : _c(
+                                            "el-select",
+                                            {
+                                              attrs: {
+                                                filterable: "",
+                                                "reserve-keyword": "",
+                                                placeholder: "Cari member",
+                                                size: "mini"
+                                              },
+                                              model: {
+                                                value: _vm.orders.member_id,
+                                                callback: function($$v) {
+                                                  _vm.$set(
+                                                    _vm.orders,
+                                                    "member_id",
+                                                    $$v
+                                                  )
+                                                },
+                                                expression: "orders.member_id"
+                                              }
+                                            },
+                                            _vm._l(_vm.members, function(item) {
+                                              return _c("el-option", {
+                                                key: item.id,
+                                                attrs: {
+                                                  label: item.name,
+                                                  value: item.id
+                                                }
+                                              })
+                                            })
+                                          )
                                     ],
                                     1
                                   )
@@ -62064,8 +62394,8 @@ var render = function() {
                                       _c(
                                         "div",
                                         { staticClass: "px-3 py-2" },
-                                        _vm._l(_vm.orders, function(
-                                          order,
+                                        _vm._l(_vm.orders.products, function(
+                                          product,
                                           index
                                         ) {
                                           return _c(
@@ -62088,10 +62418,12 @@ var render = function() {
                                                         },
                                                         [
                                                           _vm._v(
-                                                            _vm._s(order.name) +
+                                                            _vm._s(
+                                                              product.name
+                                                            ) +
                                                               " " +
                                                               _vm._s(
-                                                                order.has_discount
+                                                                product.has_discount
                                                                   ? "(Promo)"
                                                                   : ""
                                                               )
@@ -62119,7 +62451,7 @@ var render = function() {
                                                                 _vm._v(
                                                                   "Rp" +
                                                                     _vm._s(
-                                                                      order.selling_price
+                                                                      product.selling_price
                                                                     )
                                                                 )
                                                               ])
@@ -62148,25 +62480,25 @@ var render = function() {
                                                                       $event
                                                                     ) {
                                                                       _vm.isZero(
-                                                                        order,
+                                                                        product.amount,
                                                                         index
                                                                       )
                                                                     }
                                                                   },
                                                                   model: {
                                                                     value:
-                                                                      order.amount,
+                                                                      product.amount,
                                                                     callback: function(
                                                                       $$v
                                                                     ) {
                                                                       _vm.$set(
-                                                                        order,
+                                                                        product,
                                                                         "amount",
                                                                         $$v
                                                                       )
                                                                     },
                                                                     expression:
-                                                                      "order.amount"
+                                                                      "product.amount"
                                                                   }
                                                                 }
                                                               )
@@ -62185,8 +62517,8 @@ var render = function() {
                                                                 _vm._v(
                                                                   "Rp" +
                                                                     _vm._s(
-                                                                      order.amount *
-                                                                        order.selling_price
+                                                                      product.amount *
+                                                                        product.selling_price
                                                                     )
                                                                 )
                                                               ])
@@ -62396,6 +62728,11 @@ var render = function() {
                                               size: "small",
                                               circle: "",
                                               icon: "el-icon-delete"
+                                            },
+                                            nativeOn: {
+                                              click: function($event) {
+                                                return _vm.emptyOrder($event)
+                                              }
                                             }
                                           })
                                         ],
@@ -62412,6 +62749,11 @@ var render = function() {
                                               attrs: {
                                                 type: "success",
                                                 size: "small"
+                                              },
+                                              nativeOn: {
+                                                click: function($event) {
+                                                  _vm.paymentProcessDialog = true
+                                                }
                                               }
                                             },
                                             [_vm._v("Proses")]
@@ -62439,6 +62781,243 @@ var render = function() {
             ],
             1
           )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "el-dialog",
+        {
+          attrs: { title: "Pembayaran", visible: _vm.paymentProcessDialog },
+          on: {
+            "update:visible": function($event) {
+              _vm.paymentProcessDialog = $event
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-6" }, [
+              _c("label", { attrs: { for: "" } }, [_vm._v("Dibayar")]),
+              _vm._v(" "),
+              _c("h6", [_vm._v("Rp" + _vm._s(_vm.orders.paid))])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-6" }, [
+              _c("label", { attrs: { for: "" } }, [_vm._v("Total")]),
+              _vm._v(" "),
+              _c("h6", [_vm._v("Rp" + _vm._s(_vm.orders.total))])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-8" }, [
+              _c(
+                "div",
+                { staticClass: "d-flex flex-row flex-wrap align-items-center" },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "d-flex w-100 flex-wrap my-2" },
+                    [
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "flex-grow-1",
+                          attrs: { type: "primary", plain: "", round: "" },
+                          nativeOn: {
+                            click: function($event) {
+                              _vm.nominalButtonListener(7)
+                            }
+                          }
+                        },
+                        [_vm._v("7")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "flex-grow-1",
+                          attrs: { type: "primary", plain: "", round: "" },
+                          nativeOn: {
+                            click: function($event) {
+                              _vm.nominalButtonListener(8)
+                            }
+                          }
+                        },
+                        [_vm._v("8")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "flex-grow-1",
+                          attrs: { type: "primary", plain: "", round: "" },
+                          nativeOn: {
+                            click: function($event) {
+                              _vm.nominalButtonListener(9)
+                            }
+                          }
+                        },
+                        [_vm._v("9")]
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "d-flex w-100 flex-wrap my-2" },
+                    [
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "flex-grow-1",
+                          attrs: { type: "primary", plain: "", round: "" },
+                          nativeOn: {
+                            click: function($event) {
+                              _vm.nominalButtonListener(4)
+                            }
+                          }
+                        },
+                        [_vm._v("4")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "flex-grow-1",
+                          attrs: { type: "primary", plain: "", round: "" },
+                          nativeOn: {
+                            click: function($event) {
+                              _vm.nominalButtonListener(5)
+                            }
+                          }
+                        },
+                        [_vm._v("5")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "flex-grow-1",
+                          attrs: { type: "primary", plain: "", round: "" },
+                          nativeOn: {
+                            click: function($event) {
+                              _vm.nominalButtonListener(6)
+                            }
+                          }
+                        },
+                        [_vm._v("6")]
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "d-flex w-100 flex-wrap my-2" },
+                    [
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "flex-grow-1",
+                          attrs: { type: "primary", plain: "", round: "" },
+                          nativeOn: {
+                            click: function($event) {
+                              _vm.nominalButtonListener(1)
+                            }
+                          }
+                        },
+                        [_vm._v("1")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "flex-grow-1",
+                          attrs: { type: "primary", plain: "", round: "" },
+                          nativeOn: {
+                            click: function($event) {
+                              _vm.nominalButtonListener(2)
+                            }
+                          }
+                        },
+                        [_vm._v("2")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "flex-grow-1",
+                          attrs: { type: "primary", plain: "", round: "" },
+                          nativeOn: {
+                            click: function($event) {
+                              _vm.nominalButtonListener(3)
+                            }
+                          }
+                        },
+                        [_vm._v("3")]
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "d-flex w-100 flex-wrap my-2" },
+                    [
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "flex-grow-1",
+                          attrs: { type: "primary", plain: "", round: "" },
+                          nativeOn: {
+                            click: function($event) {
+                              _vm.nominalButtonListener("0")
+                            }
+                          }
+                        },
+                        [_vm._v("0")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "flex-grow-1",
+                          attrs: { type: "primary", plain: "", round: "" },
+                          nativeOn: {
+                            click: function($event) {
+                              _vm.nominalButtonListener("del")
+                            }
+                          }
+                        },
+                        [_c("span", { staticClass: "el-icon-arrow-left" })]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "flex-grow-1",
+                          attrs: { type: "primary", plain: "", round: "" },
+                          nativeOn: {
+                            click: function($event) {
+                              _vm.nominalButtonListener("clear")
+                            }
+                          }
+                        },
+                        [_vm._v("C")]
+                      )
+                    ],
+                    1
+                  )
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-4" })
+          ])
         ]
       )
     ],

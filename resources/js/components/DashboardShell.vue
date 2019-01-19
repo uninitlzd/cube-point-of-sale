@@ -21,11 +21,23 @@
             </el-col>
             <el-col :span=12>
                 <ul class="list-inline d-flex h-100 justify-content-end">
-                    <li class="list-inline-item my-auto">
+                    <li class="list-inline-item my-auto" v-if="!cashierView">
                         <router-link to="/cashier">
-                            <el-button size="small" type="primary" plain round >
+                            <el-button size="small" type="primary" plain round @click.native="cashierView = true">
                                 <i class="material-icons mr-2 align-middle" style="font-size: 11pt; margin-bottom: 1px">store</i>Tampilan Kasir
                             </el-button>
+                        </router-link>
+                    </li>
+                    <li class="list-inline-item my-auto" v-else>
+                        <router-link to="/cashier">
+                            <el-select v-model="outlet" filterable placeholder="Pilih Cabang" size="medium">
+                                <el-option
+                                    v-for="outlet in outlets"
+                                    :key="outlet.id"
+                                    :label="outlet.name"
+                                    :value="outlet.id">
+                                </el-option>
+                            </el-select>
                         </router-link>
                     </li>
                     <li class="list-inline-item">
@@ -123,22 +135,31 @@
 
     export default {
         name: "DashboardShell",
+        created() {
+            this.$store.dispatch('outlet/fetchOutlets')
+        },
         data() {
             return {
                 isCollapsed: true,
                 collapsedClass: 'collapsed',
-                openedClass: 'opened'
+                openedClass: 'opened',
+                cashierView: false,
+                outlet: ''
             }
         },
         computed: {
             ...mapState({ activeIndex: state => state.menu.activeIndex }),
-            ...mapState({ shop: state => state.shop.shop })
+            ...mapState({
+                shop: state => state.shop.shop,
+                outlets: state => state.outlet.outlets
+            })
         },
         methods: {
             logout() {
                 this.$store.dispatch('auth/logout')
             }
-        }
+        },
+        persist: ['cashierView']
     }
 </script>
 

@@ -25,6 +25,7 @@ class OrderResource extends JsonResource
             'transaction_type' => new TransactionTypeResource($this->whenLoaded('transactionType')),
             'member_id' => $this->member_id,
             'customer_name' => $this->customer_name,
+            'amount' => $this->amount,
             'order_details' => OrderDetailResource::collection($this->whenLoaded('details')),
             'order_total' => Money::format($this->order_total),
             'orderTax' => Money::format($this->tax),

@@ -31,6 +31,7 @@ class StoreOrderRequest extends FormRequest
             'customer_name' => '',
             'orderTax' => '',
             'order_total' => '',
+            'amount' => ''
         ];
     }
 }

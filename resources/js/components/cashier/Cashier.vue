@@ -12,21 +12,20 @@
                                     <el-col class="col-md-8" style="overflow: hidden">
                                         <vue-glide class="w-100" :options="{ gap: 10 }">
                                             <vue-glide-slide class="mb-0">
-                                                <el-button type="primary" class="w-100" size="small">Semua Produk
+                                                <el-button type="primary" :plain="(category !== 0)" class="w-100" size="small" @click.native="category = 0">Semua Produk
                                                 </el-button>
                                             </vue-glide-slide>
-                                            <vue-glide-slide v-for="category in categories" :key="category.id"
+                                            <vue-glide-slide v-for="c in categories" :key="c.id"
                                                              class="mb-0">
-                                                <el-button type="primary" plain class="w-100" size="small">{{
-                                                    category.name }}
+                                                <el-button type="primary"  :plain="(category !== c.id)" class="w-100" size="small" @click.native="category = c.id">{{
+                                                    c.name }}
                                                 </el-button>
                                             </vue-glide-slide>
                                         </vue-glide>
                                     </el-col>
                                     <el-col class="col-md-4">
                                         <el-input prefix-icon="el-icon-search" placeholder="Cari Produk" size="small"
-                                                  class="input-with-select">
-
+                                                  class="input-with-select" v-model="searchProduct">
                                         </el-input>
                                     </el-col>
                                 </el-row>
@@ -35,7 +34,7 @@
                                 <el-row>
                                     <el-scrollbar class="scrollbar-component" style="height: calc(100vh - 158px)">
                                         <el-row :gutter="20" class="flex-grow-1 px-3 pl-3 pt-3 pb-0 align-items-top">
-                                            <el-col v-for="product in products" :key="product.id"
+                                            <el-col v-for="product in (searchProduct.length) ? filteredProductByCategory.filter(p => p.name.includes(searchProduct)) : filteredProductByCategory" :key="product.id"
                                                     class="mb-3 col-md-3 col-sm-6">
                                                 <div class="product-list__item" @click="addProductOrder(product)">
                                                     <img :src=product.image
@@ -56,15 +55,36 @@
                         <el-card class="box-card order-list__wrapper" shadow="never" style="border-top-left-radius: 0;"
                                  :body-style="{padding: 0}">
                             <div slot="header" class="clearfix">
-                                <el-row :gutter="10" class="d-flex align-items-center">
+                                <el-row :gutter="10" class="d-flex align-items-center mb-2">
                                     <el-col class="col-md-6 font-weight-bold"><span>Daftar Pesanan</span></el-col>
                                     <el-col class="col-md-6 text-right">
-                                        <el-select v-model="value" placeholder="Tipe Transaksi" size="mini">
+                                        <el-select v-model="orders.type" placeholder="Tipe Transaksi" size="mini" @change="memberTypeOnChange(orders.type)">
                                             <el-option
-                                                v-for="item in options"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
+                                                v-for="type in customerTypes"
+                                                :key="type.id"
+                                                :label=type.name
+                                                :value="type.id">
+                                                <span>{{ type.name }} ({{ type.discount_percentage }}%)</span>
+                                            </el-option>
+                                        </el-select>
+                                    </el-col>
+                                </el-row>
+                                <el-row :gutter="10" class="d-flex align-items-center">
+                                    <el-col class="col-md-6 font-weight-bold"><span>Nama Pelanggan:</span></el-col>
+                                    <el-col class="col-md-6 text-right">
+                                        <el-input size="mini" placeholder="Nama" v-if="orders.type === 1"></el-input>
+                                        <el-select
+                                            v-else
+                                            v-model="orders.member_id"
+                                            filterable
+                                            reserve-keyword
+                                            placeholder="Cari member"
+                                            size="mini">
+                                            <el-option
+                                                v-for="item in members"
+                                                :key="item.id"
+                                                :label="item.name"
+                                                :value="item.id">
                                             </el-option>
                                         </el-select>
                                     </el-col>
@@ -74,16 +94,16 @@
                                 <el-row :gutter="10" class="order-list__content__wrapper d-flex px-2">
                                     <el-scrollbar class="scrollbar-component" style="flex: 1 1 auto">
                                         <div class="px-3 py-2">
-                                            <div v-for="(order, index) in orders" class="my-3">
+                                            <div v-for="(product, index) in orders.products" class="my-3">
                                                 <el-row type="flex">
                                                     <el-col :md="22">
-                                                        <p class="mb-2 font-weight-bold">{{ order.name }} {{ (order.has_discount) ? '(Promo)' : ''}}</p>
+                                                        <p class="mb-2 font-weight-bold">{{ product.name }} {{ (product.has_discount) ? '(Promo)' : ''}}</p>
                                                         <el-row type="flex" :gutter="10">
-                                                            <el-col class="col-md-4"><span>Rp{{ order.selling_price }}</span></el-col>
+                                                            <el-col class="col-md-4"><span>Rp{{ product.selling_price }}</span></el-col>
                                                             <el-col class="col-md-4">
-                                                                <el-input-number size="mini" :min="0" class="w-100" v-model="order.amount" @change="isZero(order, index)"></el-input-number>
+                                                                <el-input-number size="mini" :min="0" class="w-100" v-model="product.amount" @change="isZero(product.amount, index)"></el-input-number>
                                                             </el-col>
-                                                            <el-col class="col-md-4"><span>Rp{{ order.amount * order.selling_price }}</span></el-col>
+                                                            <el-col class="col-md-4"><span>Rp{{ product.amount * product.selling_price }}</span></el-col>
                                                         </el-row>
                                                     </el-col>
                                                     <el-col :md="2" class="align-self-center">
@@ -120,10 +140,10 @@
                                     <div class="py-4 px-4 d-flex align-items-center">
                                         <el-col class="col-md-6 px-0">
                                             <el-button type="danger" size="small" circle
-                                                       icon="el-icon-delete"></el-button>
+                                                       icon="el-icon-delete" @click.native="emptyOrder"></el-button>
                                         </el-col>
                                         <el-col class="col-md-6 text-right">
-                                            <el-button type="success" size="small">Proses</el-button>
+                                            <el-button type="success" size="small" @click.native="paymentProcessDialog = true">Proses</el-button>
                                         </el-col>
                                     </div>
                                 </el-row>
@@ -133,6 +153,46 @@
                 </el-row>
             </div>
         </el-col>
+        <el-dialog title="Pembayaran" :visible.sync="paymentProcessDialog">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="">Dibayar</label>
+                    <h6>Rp{{ orders.paid }}</h6>
+                </div>
+                <div class="col-md-6">
+                    <label for="">Total</label>
+                    <h6>Rp{{ orders.total }}</h6>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="d-flex flex-row flex-wrap align-items-center">
+                        <div class="d-flex w-100 flex-wrap my-2">
+                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(7)">7</el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(8)">8</el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(9)">9</el-button>
+                        </div>
+                        <div class="d-flex w-100 flex-wrap my-2">
+                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(4)">4</el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(5)">5</el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(6)">6</el-button>
+                        </div>
+                        <div class="d-flex w-100 flex-wrap my-2">
+                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(1)">1</el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(2)">2</el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(3)">3</el-button>
+                        </div>
+                        <div class="d-flex w-100 flex-wrap my-2">
+                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener('0')">0</el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener('del')"><span class="el-icon-arrow-left"></span></el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener('clear')">C</el-button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </el-dialog>
     </dashboard-shell>
 </template>
 
@@ -163,13 +223,17 @@
         created() {
             this.$store.dispatch('category/fetchCategories')
             this.$store.dispatch('product/fetchProducts')
+            this.$store.dispatch('customerType/fetchCustomerTypes')
+            this.$store.dispatch('member/fetchMembers')
         },
         data() {
             return {
                 selectedCategory: [],
+                category: 0,
+                shop_outlet_id: 0,
                 data,
                 titles,
-                search: '',
+                searchProduct: '',
                 actions: {
                     label: 'Action',
                     props: {
@@ -203,7 +267,19 @@
                     label: 'Gojek'
                 }],
                 value: '',
-                orders: []
+                orders: {
+                    type: 1,
+                    member_id: '',
+                    customerName: '',
+                    products: [],
+                    tax: '',
+                    orderTotal: '',
+                    total: '',
+                    paid: 0,
+                    amount: ''
+                },
+                paymentProcessDialog: false,
+                nominals: [5000, 10000, 20000, 50000, 100000]
             }
         },
         persist: ['orders'],
@@ -220,43 +296,98 @@
                 })
             },
             addProductOrder(p) {
-                if (this.orders.filter(product => product.id === p.id).length !== 0) {
-                    this.orders.filter(product => product.id === p.id)
-                        .map(product => {
-                            product.amount += 1
-                        })
+                if (this.orders.products.filter(product => product.id === p.id).length !== 0) {
+                    this.orders.products = this.orders.products.map(product => {
+                            if (product.id === p.id)
+                                product.amount += 1
 
-                    this.orders = this.orders.slice()
+                            return product
+                        })
                 } else {
                     p.amount = 1
-                    this.orders.push(p)
+                    this.orders.products.push(p)
                 }
             },
             deleteProductOrder(i) {
-                this.orders = this.orders.filter((value, index, arr) => index !== i)
+                this.orders.products = this.orders.products.filter((value, index, arr) => index !== i)
             },
-            isZero(order, i) {
-                if (order.amount === 0)
+            isZero(productAmount, i) {
+                if (productAmount === 0)
                     this.deleteProductOrder(i)
+
+                this.orders.products = this.orders.products.slice()
+            },
+            emptyOrder() {
+                this.$confirm('Anda yakin ingin mengkosongkan daftar order?', 'Warning', {
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancel',
+                    type: 'warning'
+                }).then(() => {
+                    this.orders.products = []
+
+                    this.$message({
+                        type: 'success',
+                        message: 'Daftar order dikosongkan'
+                    });
+                });
+            },
+            memberTypeOnChange(type) {
+                if (type === 1) {
+                    this.orders.member_id = ''
+                }
+            },
+            nominalButtonListener(val) {
+                switch (val) {
+                    case 'del':
+                        return this.orders.paid = this.orders.paid.slice(0, -1)
+                    case 'clear':
+                        return this.orders.paid = ''
+                    default:
+                        return this.orders.paid += val
+                }
             }
         },
         computed: {
             ...mapState({
                 categories: state => state.category.categories,
                 products: state => state.product.products,
-                user: state => state.auth.user
+                user: state => state.auth.user,
+                customerTypes: state => state.customerType.customerTypes,
+                members: state => state.member.members
             }),
             orderSubTotal() {
-                return this.orders.reduce((acc, current, currentIndex, arr) => {
-                    console.log(current)
+                let customerType = this.customerTypes.find(customerType => {
+                    return customerType.id === this.orders.type
+                })
+
+                let subTotal = this.orders.products.reduce((acc, current, currentIndex, arr) => {
                     return acc + (current.amount * current.selling_price)
                 }, 0)
+
+                let amount = this.orders.products.reduce((acc, current, currentIndex, arr) => {
+                    return acc + (current.amount)
+                }, 0)
+
+                this.orders.amount = amount
+
+                if (customerType.discount_percentage)
+                    subTotal *= 1 - customerType.discount_percentage / 100
+
+                this.orders.orderTotal = subTotal
+                return subTotal
             },
             orderTax() {
-                return (this.user.shop.tax / 100) * this.orderSubTotal
+                return this.orders.tax = (this.user.shop.tax / 100) * this.orderSubTotal
             },
             orderTotal() {
-                return this.orderSubTotal + this.orderTax
+                return this.orders.total = this.orderSubTotal + this.orderTax
+            },
+            filteredProductByCategory() {
+                if (this.category !== 0) {
+                    return this.products.filter(product => product.category_id === this.category)
+                }
+
+                return this.products
             }
         }
     }
