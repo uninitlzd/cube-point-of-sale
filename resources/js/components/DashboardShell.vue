@@ -23,31 +23,42 @@
                 <ul class="list-inline d-flex h-100 justify-content-end">
                     <li class="list-inline-item my-auto" v-if="!cashierView">
                         <router-link to="/cashier">
-                            <el-button size="small" type="primary" plain round @click.native="cashierView = true">
-                                <i class="material-icons mr-2 align-middle" style="font-size: 11pt; margin-bottom: 1px">store</i>Tampilan Kasir
+                            <el-button size="small" type="primary" plain round @click.native="setCashierView">
+                                <i class="material-icons mr-2 align-middle" style="font-size: 11pt; margin-bottom: 1px">store</i>Tampilan
+                                Kasir
                             </el-button>
                         </router-link>
                     </li>
                     <li class="list-inline-item my-auto" v-else>
-                        <router-link to="/cashier">
-                            <el-select v-model="outlet" filterable placeholder="Pilih Cabang" size="medium">
-                                <el-option
-                                    v-for="outlet in outlets"
-                                    :key="outlet.id"
-                                    :label="outlet.name"
-                                    :value="outlet.id">
-                                </el-option>
-                            </el-select>
-                        </router-link>
+                        <ul class="list-inline d-flex align-items-center">
+                            <li class="list-inline-item d-flex text-primary" style="font-size: 10pt;"><i
+                                class="material-icons mr-1 align-self-center" style="padding-left: 20px">
+                                store
+                            </i></li>
+                            <li class="list-inline-item">
+                                <router-link to="/cashier">
+                                    <el-select v-model="shop_outlet_id" filterable placeholder="Pilih Cabang" size="small" @change="selectOutletChangeListener">
+                                        <el-option
+                                            v-for="outlet in outlets"
+                                            :key="outlet.id"
+                                            :label="outlet.name"
+                                            :value="outlet.id">
+                                        </el-option>
+                                    </el-select>
+                                </router-link>
+                            </li>
+                        </ul>
                     </li>
                     <li class="list-inline-item">
                         <el-dropdown class="h-100 d-flex align-self-center">
                             <ul class="list-inline d-flex flex-row ml-auto h-100 justify-content-end el-dropdown-link pr-3">
-                                <li class="list-inline-item my-auto rounded-circle overflow-hidden mr-3" style="width: 30px;">
+                                <li class="list-inline-item my-auto rounded-circle overflow-hidden mr-3"
+                                    style="width: 30px;">
                                     <img
                                         src="/images/avatar.jpg" alt="" class="w-100 image-fit-cover"></li>
                                 <li class="list-inline-item my-auto">Alfredo Eka</li>
-                                <li class="list-inline-item my-auto"><i class="el-icon-arrow-down el-icon--right"></i></li>
+                                <li class="list-inline-item my-auto"><i class="el-icon-arrow-down el-icon--right"></i>
+                                </li>
                             </ul>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item>Pengaturan</el-dropdown-item>
@@ -143,13 +154,13 @@
                 isCollapsed: true,
                 collapsedClass: 'collapsed',
                 openedClass: 'opened',
-                cashierView: false,
-                outlet: ''
+                shop_outlet_id: ''
             }
         },
         computed: {
-            ...mapState({ activeIndex: state => state.menu.activeIndex }),
+            ...mapState({activeIndex: state => state.menu.activeIndex}),
             ...mapState({
+                cashierView: state => state.menu.cashierView,
                 shop: state => state.shop.shop,
                 outlets: state => state.outlet.outlets
             })
@@ -157,9 +168,15 @@
         methods: {
             logout() {
                 this.$store.dispatch('auth/logout')
+            },
+            setCashierView() {
+                this.$store.dispatch('menu/cashierViewActive')
+            },
+            selectOutletChangeListener() {
+                this.$emit('outletChanged', this.shop_outlet_id)
             }
         },
-        persist: ['cashierView']
+        persist: ['shop_outlet_id']
     }
 </script>
 

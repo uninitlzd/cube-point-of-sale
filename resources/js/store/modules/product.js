@@ -13,7 +13,10 @@ const state = {
 
 const getters = {
     getProducts: state => state.products,
-    getById: state => id => state.products.filter(product => product.id === id),
+    getOutletProducts: state => shop_outlet_id => state.products.each(product => {
+       product.stocks = product.stocks.find(stock.shop_outlet_id === shop_outlet_id)
+    }),
+    getById: state => id => state.products.find(product => product.id === id),
     getStockByOutlet: state => id => state.stocks.filter(stock => stock.shop_outlet_id === id)
 }
 
@@ -47,13 +50,13 @@ const actions = {
         commit(types.ADD_PRODUCT, data)
     },
 
-    async updateProduct({commit}, {form, id}) {
-        let product = await form.put('/api/product/' + id)
+    async updateProduct({commit}, {index, form}) {
+        let product = await form.put('/api/product/' + index)
             .then(product => {
                 return product
             })
 
-        commit(types.EDIT_PRODUCT, {id, product})
+        commit(types.EDIT_PRODUCT, {index, product})
     },
 
     deleteProduct({commit}, id) {

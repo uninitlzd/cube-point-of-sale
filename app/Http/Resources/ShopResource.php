@@ -18,7 +18,7 @@ class ShopResource extends Resource
             'id' => $this->id,
             'name' => $this->name,
             'type' => $this->type,
-            'orderTax' => $this->tax,
+            'tax' => $this->tax,
         ];
     }
 }

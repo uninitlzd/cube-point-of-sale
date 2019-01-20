@@ -68,15 +68,16 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $data = [
+            'category_id' => $request->category_id,
             'name' => $request->name,
             'description' => $request->description,
             'purchase_price' => $request->purchase_price,
             'selling_price' => $request->selling_price,
         ];
 
-        if ($request->has('image')) {
-            $data['image'] = FileHelper::saveBase64Image($request->image, 500, '/images/products/');
-        }
+        if ($request->has('image'))
+            if (!is_null($request->image))
+                $data['image'] = FileHelper::saveBase64Image($request->image, 500, '/images/products/');
 
         $product = tap($product)->update($data)->fresh();
         return response()->json(new ProductResource($product));

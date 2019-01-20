@@ -34,6 +34,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     //Outlet Endpoint
     Route::resource('outlet', 'OutletController');
     Route::patch('/outlet/{outlet}/product/{product}', 'OutletProductStockController@update');
+    Route::get('/outlet/{outlet}/products', 'OutletProductController@show');
 
     //Category Endpoint
     Route::resource('category', 'CategoryController');

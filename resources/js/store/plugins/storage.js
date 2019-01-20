@@ -36,6 +36,9 @@ const mapStateForCache = (state) => {
         },
         customerType: {
             customerTypes: state.customerType.customerTypes
+        },
+        menu: {
+            cashierView: state.menu.cashierView
         }
     }
 };

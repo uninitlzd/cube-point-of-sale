@@ -109,7 +109,13 @@ router.afterEach((to, from) => {
         case 'Register':
             break;
         default:
-            store.dispatch('setActiveMenuIndex', to.meta.menuIndex)
+            store.dispatch('menu/setActiveMenuIndex', to.meta.menuIndex)
+    }
+
+    switch (from.name) {
+        case 'cashier.index':
+            store.dispatch('menu/cashierViewDeactive')
+            break;
     }
 })
 

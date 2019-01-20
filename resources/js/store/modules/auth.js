@@ -10,7 +10,8 @@ const types = {
 
 const state = {
     logged: false,
-    user: null
+    user: null,
+    shop_outlet_id: 0
 }
 
 const mutations = {

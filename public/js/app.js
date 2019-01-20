@@ -5090,7 +5090,13 @@ router.afterEach(function (to, from) {
         case 'Register':
             break;
         default:
-            __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].dispatch('setActiveMenuIndex', to.meta.menuIndex);
+            __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].dispatch('menu/setActiveMenuIndex', to.meta.menuIndex);
+    }
+
+    switch (from.name) {
+        case 'cashier.index':
+            __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].dispatch('menu/cashierViewDeactive');
+            break;
     }
 });
 
@@ -7469,6 +7475,9 @@ var mapStateForCache = function mapStateForCache(state) {
         },
         customerType: {
             customerTypes: state.customerType.customerTypes
+        },
+        menu: {
+            cashierView: state.menu.cashierView
         }
     };
 };
@@ -22315,7 +22324,7 @@ exports.positioners = positioners;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(236);
-module.exports = __webpack_require__(568);
+module.exports = __webpack_require__(569);
 
 
 /***/ }),
@@ -22331,7 +22340,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__App_vue__ = __webpack_require__(563);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__App_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__App_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_persist__ = __webpack_require__(579);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_persist__ = __webpack_require__(568);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_persist___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_vue_persist__);
 
 
@@ -42996,26 +43005,35 @@ var modules = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
+var _mutations;
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
 
 var types = {
-    SET_ACTIVE: 'SET_ACTIVE'
+    SET_ACTIVE: 'SET_ACTIVE',
+    TOGGLE_CASHIER_VIEW: 'TOGGLE_CASHIER_VIEW'
 };
 
 var state = {
-    activeIndex: "0"
+    activeIndex: "0",
+    cashierView: false
 };
 
-var mutations = _defineProperty({}, types.SET_ACTIVE, function (state, index) {
+var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_ACTIVE, function (state, index) {
     state.activeIndex = index;
-});
+}), _defineProperty(_mutations, types.TOGGLE_CASHIER_VIEW, function (state, status) {
+    state.cashierView = status;
+}), _mutations);
 
 var getters = {
     activeIndex: function activeIndex(state) {
         return state.activeIndex;
+    },
+    cashierView: function cashierView(state) {
+        return state.cashierView;
     }
 };
 
@@ -43024,11 +43042,21 @@ var actions = {
         var commit = _ref.commit;
 
         commit(types.SET_ACTIVE, index);
+    },
+    cashierViewActive: function cashierViewActive(_ref2) {
+        var commit = _ref2.commit;
+
+        commit(types.TOGGLE_CASHIER_VIEW, true);
+    },
+    cashierViewDeactive: function cashierViewDeactive(_ref3) {
+        var commit = _ref3.commit;
+
+        commit(types.TOGGLE_CASHIER_VIEW, false);
     }
 };
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    namespace: true,
+    namespaced: true,
     state: state,
     mutations: mutations,
     getters: getters,
@@ -43112,7 +43140,8 @@ var types = {
 
 var state = {
     logged: false,
-    user: null
+    user: null,
+    shop_outlet_id: 0
 };
 
 var mutations = (_mutations = {}, _defineProperty(_mutations, types.LOGIN, function (state, user) {
@@ -46869,9 +46898,16 @@ var getters = {
     getProducts: function getProducts(state) {
         return state.products;
     },
+    getOutletProducts: function getOutletProducts(state) {
+        return function (shop_outlet_id) {
+            return state.products.each(function (product) {
+                product.stocks = product.stocks.find(stock.shop_outlet_id === shop_outlet_id);
+            });
+        };
+    },
     getById: function getById(state) {
         return function (id) {
-            return state.products.filter(function (product) {
+            return state.products.find(function (product) {
                 return product.id === id;
             });
         };
@@ -46940,15 +46976,15 @@ var actions = {
     updateProduct: function () {
         var _ref6 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2(_ref4, _ref5) {
             var commit = _ref4.commit;
-            var form = _ref5.form,
-                id = _ref5.id;
+            var index = _ref5.index,
+                form = _ref5.form;
             var product;
             return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
                         case 0:
                             _context2.next = 2;
-                            return form.put('/api/product/' + id).then(function (product) {
+                            return form.put('/api/product/' + index).then(function (product) {
                                 return product;
                             });
 
@@ -46956,7 +46992,7 @@ var actions = {
                             product = _context2.sent;
 
 
-                            commit(types.EDIT_PRODUCT, { id: id, product: product });
+                            commit(types.EDIT_PRODUCT, { index: index, product: product });
 
                         case 4:
                         case 'end':
@@ -50317,6 +50353,17 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -50330,14 +50377,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             isCollapsed: true,
             collapsedClass: 'collapsed',
             openedClass: 'opened',
-            cashierView: false,
-            outlet: ''
+            shop_outlet_id: ''
         };
     },
 
     computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["mapState"])({ activeIndex: function activeIndex(state) {
             return state.menu.activeIndex;
         } }), Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["mapState"])({
+        cashierView: function cashierView(state) {
+            return state.menu.cashierView;
+        },
         shop: function shop(state) {
             return state.shop.shop;
         },
@@ -50348,9 +50397,15 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     methods: {
         logout: function logout() {
             this.$store.dispatch('auth/logout');
+        },
+        setCashierView: function setCashierView() {
+            this.$store.dispatch('menu/cashierViewActive');
+        },
+        selectOutletChangeListener: function selectOutletChangeListener() {
+            this.$emit('outletChanged', this.shop_outlet_id);
         }
     },
-    persist: ['cashierView']
+    persist: ['shop_outlet_id']
 });
 
 /***/ }),
@@ -50465,7 +50520,7 @@ var render = function() {
                                 },
                                 nativeOn: {
                                   click: function($event) {
-                                    _vm.cashierView = true
+                                    return _vm.setCashierView($event)
                                   }
                                 }
                               },
@@ -50483,7 +50538,7 @@ var render = function() {
                                   [_vm._v("store")]
                                 ),
                                 _vm._v(
-                                  "Tampilan Kasir\n                        "
+                                  "Tampilan\n                            Kasir\n                        "
                                 )
                               ]
                             )
@@ -50493,46 +50548,83 @@ var render = function() {
                       ],
                       1
                     )
-                  : _c(
-                      "li",
-                      { staticClass: "list-inline-item my-auto" },
-                      [
-                        _c(
-                          "router-link",
-                          { attrs: { to: "/cashier" } },
-                          [
-                            _c(
-                              "el-select",
-                              {
-                                attrs: {
-                                  filterable: "",
-                                  placeholder: "Pilih Cabang",
-                                  size: "medium"
+                  : _c("li", { staticClass: "list-inline-item my-auto" }, [
+                      _c(
+                        "ul",
+                        {
+                          staticClass: "list-inline d-flex align-items-center"
+                        },
+                        [
+                          _c(
+                            "li",
+                            {
+                              staticClass:
+                                "list-inline-item d-flex text-primary",
+                              staticStyle: { "font-size": "10pt" }
+                            },
+                            [
+                              _c(
+                                "i",
+                                {
+                                  staticClass:
+                                    "material-icons mr-1 align-self-center",
+                                  staticStyle: { "padding-left": "20px" }
                                 },
-                                model: {
-                                  value: _vm.outlet,
-                                  callback: function($$v) {
-                                    _vm.outlet = $$v
-                                  },
-                                  expression: "outlet"
-                                }
-                              },
-                              _vm._l(_vm.outlets, function(outlet) {
-                                return _c("el-option", {
-                                  key: outlet.id,
-                                  attrs: {
-                                    label: outlet.name,
-                                    value: outlet.id
-                                  }
-                                })
-                              })
-                            )
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    ),
+                                [
+                                  _vm._v(
+                                    "\n                            store\n                        "
+                                  )
+                                ]
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "li",
+                            { staticClass: "list-inline-item" },
+                            [
+                              _c(
+                                "router-link",
+                                { attrs: { to: "/cashier" } },
+                                [
+                                  _c(
+                                    "el-select",
+                                    {
+                                      attrs: {
+                                        filterable: "",
+                                        placeholder: "Pilih Cabang",
+                                        size: "small"
+                                      },
+                                      on: {
+                                        change: _vm.selectOutletChangeListener
+                                      },
+                                      model: {
+                                        value: _vm.shop_outlet_id,
+                                        callback: function($$v) {
+                                          _vm.shop_outlet_id = $$v
+                                        },
+                                        expression: "shop_outlet_id"
+                                      }
+                                    },
+                                    _vm._l(_vm.outlets, function(outlet) {
+                                      return _c("el-option", {
+                                        key: outlet.id,
+                                        attrs: {
+                                          label: outlet.name,
+                                          value: outlet.id
+                                        }
+                                      })
+                                    })
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ]
+                      )
+                    ]),
                 _vm._v(" "),
                 _c(
                   "li",
@@ -52941,7 +53033,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     created: function created() {
         if (this.$route.params.id !== 'new') {
             this.editMode = true;
-            var product = this.getById(parseInt(this.$route.params.id))[0];
+            var product = this.getById(parseInt(this.$route.params.id));
 
             this.imagePreview = product.image;
 
@@ -52952,7 +53044,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                 selling_price: product.has_discount ? product.original_selling_price : product.selling_price,
                 description: product.description,
                 stockable: 1,
-                image: '',
+                image: null,
                 shop_id: product.shop_id
             });
         }
@@ -53009,6 +53101,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             this.$store.dispatch('product/addProduct', this.form).then(function (response) {
                 _this.isLoading = false;
                 _this.$message.success('Product Created!');
+                _this.$router.push({ name: 'product.index' });
             }).catch(function (error) {
                 _this.isLoading = false;
                 _this.$message.error('Save Failed!');
@@ -53019,11 +53112,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
             this.isLoading = true;
             this.$store.dispatch('product/updateProduct', {
-                index: this.$route.params.id,
+                index: parseInt(this.$route.params.id),
                 form: this.form
             }).then(function (response) {
                 _this2.isLoading = false;
                 _this2.$message.success('Product Updated!');
+                _this2.$router.push({ name: 'product.index' });
             }).catch(function (error) {
                 console.log(error);
                 _this2.isLoading = false;
@@ -53052,7 +53146,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     },
     computed: _extends({
         isDisabled: function isDisabled() {
-            return this.form.incompleted() || this.isLoading;
+            return this.isLoading;
         }
     }, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["mapGetters"])({
         getById: 'product/getById',
@@ -61493,7 +61587,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -61511,6 +61605,55 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(13);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -61729,7 +61872,7 @@ var titles = [{
 }];
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: "Category",
+    name: "Cashier",
     components: { DashboardShell: __WEBPACK_IMPORTED_MODULE_0__DashboardShell___default.a },
     created: function created() {
         this.$store.dispatch('category/fetchCategories');
@@ -61796,7 +61939,7 @@ var titles = [{
         };
     },
 
-    persist: ['orders'],
+    persist: ['orders', 'shop_outlet_id'],
     methods: {
         toCreatePage: function toCreatePage() {
             this.$router.push('/category/new');
@@ -61864,14 +62007,15 @@ var titles = [{
                 default:
                     return this.orders.paid += val;
             }
+        },
+        onOutletChanged: function onOutletChanged(id) {
+            this.shop_outlet_id = id;
+            this.$forceUpdate();
         }
     },
     computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["mapState"])({
         categories: function categories(state) {
             return state.category.categories;
-        },
-        products: function products(state) {
-            return state.product.products;
         },
         user: function user(state) {
             return state.auth.user;
@@ -61881,6 +62025,9 @@ var titles = [{
         },
         members: function members(state) {
             return state.member.members;
+        },
+        products: function products(state) {
+            return state.product.products;
         }
     }), {
         orderSubTotal: function orderSubTotal() {
@@ -61911,16 +62058,26 @@ var titles = [{
         orderTotal: function orderTotal() {
             return this.orders.total = this.orderSubTotal + this.orderTax;
         },
-        filteredProductByCategory: function filteredProductByCategory() {
+        filteredProducts: function filteredProducts() {
             var _this5 = this;
 
+            var products = this.products;
             if (this.category !== 0) {
-                return this.products.filter(function (product) {
+                products = this.products.filter(function (product) {
                     return product.category_id === _this5.category;
                 });
             }
 
-            return this.products;
+            if (this.shop_outlet_id !== 0) {
+                products = products.map(function (product) {
+                    if (Array.isArray(product.stocks)) product.stocks = product.stocks.find(function (stock) {
+                        return stock.shop_outlet_id === _this5.shop_outlet_id;
+                    });
+                    return product;
+                });
+            }
+
+            return products;
         }
     })
 });
@@ -61935,6 +62092,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "dashboard-shell",
+    { on: { outletChanged: _vm.onOutletChanged } },
     [
       _c(
         "el-col",
@@ -62108,88 +62266,137 @@ var render = function() {
                                     },
                                     [
                                       _c(
-                                        "el-row",
+                                        "div",
                                         {
                                           staticClass:
-                                            "flex-grow-1 px-3 pl-3 pt-3 pb-0 align-items-top",
-                                          attrs: { gutter: 20 }
+                                            "d-flex flex-row flex-wrap flex-grow-1 px-3 pl-3 pt-3 pb-0 align-items-top"
                                         },
                                         _vm._l(
                                           _vm.searchProduct.length
-                                            ? _vm.filteredProductByCategory.filter(
+                                            ? _vm.filteredProducts.filter(
                                                 function(p) {
                                                   return p.name.includes(
                                                     _vm.searchProduct
                                                   )
                                                 }
                                               )
-                                            : _vm.filteredProductByCategory,
+                                            : _vm.filteredProducts,
                                           function(product) {
                                             return _c(
-                                              "el-col",
+                                              "div",
                                               {
                                                 key: product.id,
                                                 staticClass:
-                                                  "mb-3 col-md-3 col-sm-6"
+                                                  "d-flex mb-3 col-md-4 col-sm-6"
                                               },
                                               [
-                                                _c(
-                                                  "div",
-                                                  {
-                                                    staticClass:
-                                                      "product-list__item",
-                                                    on: {
-                                                      click: function($event) {
-                                                        _vm.addProductOrder(
-                                                          product
-                                                        )
-                                                      }
-                                                    }
-                                                  },
-                                                  [
-                                                    _c("img", {
-                                                      staticStyle: {
-                                                        width: "100%",
-                                                        height: "15rem",
-                                                        "object-fit": "cover"
-                                                      },
-                                                      attrs: {
-                                                        src: product.image
-                                                      }
-                                                    }),
-                                                    _vm._v(" "),
-                                                    _c(
+                                                product.stocks.amount !== 0
+                                                  ? _c(
                                                       "div",
                                                       {
                                                         staticClass:
-                                                          "product-list__item__title w-100 mb-1"
+                                                          "product-list__item",
+                                                        on: {
+                                                          click: function(
+                                                            $event
+                                                          ) {
+                                                            _vm.addProductOrder(
+                                                              product
+                                                            )
+                                                          }
+                                                        }
                                                       },
                                                       [
+                                                        _c("img", {
+                                                          staticStyle: {
+                                                            width: "100%",
+                                                            height: "15rem",
+                                                            "object-fit":
+                                                              "cover"
+                                                          },
+                                                          attrs: {
+                                                            src: product.image
+                                                          }
+                                                        }),
+                                                        _vm._v(" "),
                                                         _c(
-                                                          "p",
+                                                          "div",
                                                           {
                                                             staticClass:
-                                                              "mb-0 px-3 py-3"
+                                                              "product-list__item__title w-100 mb-1"
                                                           },
                                                           [
-                                                            _vm._v(
-                                                              _vm._s(
-                                                                product.name
-                                                              )
+                                                            _c(
+                                                              "p",
+                                                              {
+                                                                staticClass:
+                                                                  "mb-0 px-3 py-3"
+                                                              },
+                                                              [
+                                                                _vm._v(
+                                                                  _vm._s(
+                                                                    product.name
+                                                                  )
+                                                                )
+                                                              ]
                                                             )
                                                           ]
                                                         )
                                                       ]
                                                     )
-                                                  ]
-                                                )
+                                                  : _c(
+                                                      "div",
+                                                      {
+                                                        staticClass:
+                                                          "product-list__item",
+                                                        staticStyle: {
+                                                          opacity: "0.5"
+                                                        }
+                                                      },
+                                                      [
+                                                        _c("img", {
+                                                          staticStyle: {
+                                                            width: "100%",
+                                                            height: "15rem",
+                                                            "object-fit":
+                                                              "cover"
+                                                          },
+                                                          attrs: {
+                                                            src: product.image
+                                                          }
+                                                        }),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "div",
+                                                          {
+                                                            staticClass:
+                                                              "product-list__item__title w-100 mb-1"
+                                                          },
+                                                          [
+                                                            _c(
+                                                              "p",
+                                                              {
+                                                                staticClass:
+                                                                  "mb-0 px-3 py-3"
+                                                              },
+                                                              [
+                                                                _vm._v(
+                                                                  _vm._s(
+                                                                    product.name
+                                                                  ) + " (Habis)"
+                                                                )
+                                                              ]
+                                                            )
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
                                               ]
                                             )
                                           }
                                         )
                                       )
-                                    ],
-                                    1
+                                    ]
                                   )
                                 ],
                                 1
@@ -62756,7 +62963,11 @@ var render = function() {
                                                 }
                                               }
                                             },
-                                            [_vm._v("Proses")]
+                                            [
+                                              _vm._v(
+                                                "Proses\n                                        "
+                                              )
+                                            ]
                                           )
                                         ],
                                         1
@@ -62832,7 +63043,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("7")]
+                        [_vm._v("7\n                        ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -62846,7 +63057,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("8")]
+                        [_vm._v("8\n                        ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -62860,7 +63071,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("9")]
+                        [_vm._v("9\n                        ")]
                       )
                     ],
                     1
@@ -62881,7 +63092,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("4")]
+                        [_vm._v("4\n                        ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -62895,7 +63106,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("5")]
+                        [_vm._v("5\n                        ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -62909,7 +63120,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("6")]
+                        [_vm._v("6\n                        ")]
                       )
                     ],
                     1
@@ -62930,7 +63141,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("1")]
+                        [_vm._v("1\n                        ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -62944,7 +63155,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("2")]
+                        [_vm._v("2\n                        ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -62958,7 +63169,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("3")]
+                        [_vm._v("3\n                        ")]
                       )
                     ],
                     1
@@ -62979,7 +63190,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("0")]
+                        [_vm._v("0\n                        ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -63007,7 +63218,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("C")]
+                        [_vm._v("C\n                        ")]
                       )
                     ],
                     1
@@ -63171,22 +63382,6 @@ if (false) {
 
 /***/ }),
 /* 568 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 569 */,
-/* 570 */,
-/* 571 */,
-/* 572 */,
-/* 573 */,
-/* 574 */,
-/* 575 */,
-/* 576 */,
-/* 577 */,
-/* 578 */,
-/* 579 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (global, factory) {
@@ -63273,6 +63468,12 @@ return index;
 
 })));
 
+
+/***/ }),
+/* 569 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 ],[235]);

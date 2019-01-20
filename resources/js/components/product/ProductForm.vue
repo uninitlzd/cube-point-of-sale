@@ -111,7 +111,7 @@
         created() {
             if (this.$route.params.id !== 'new') {
                 this.editMode = true
-                let product = this.getById(parseInt(this.$route.params.id))[0]
+                let product = this.getById(parseInt(this.$route.params.id))
 
                 this.imagePreview = product.image
 
@@ -122,7 +122,7 @@
                     selling_price: (product.has_discount) ? product.original_selling_price : product.selling_price,
                     description: product.description,
                     stockable: 1,
-                    image: '',
+                    image: null,
                     shop_id: product.shop_id
                 })
             }
@@ -182,6 +182,7 @@
                 this.$store.dispatch('product/addProduct', this.form).then(response => {
                     this.isLoading = false
                     this.$message.success('Product Created!')
+                    this.$router.push({name: 'product.index'})
                 }).catch(error => {
                     this.isLoading = false
                     this.$message.error('Save Failed!')
@@ -191,12 +192,12 @@
             update() {
                 this.isLoading = true
                 this.$store.dispatch('product/updateProduct', {
-                    index: this.$route.params.id,
+                    index: parseInt(this.$route.params.id),
                     form: this.form
                 }).then(response => {
                     this.isLoading = false
                     this.$message.success('Product Updated!')
-
+                    this.$router.push({name: 'product.index'})
                 }).catch(error => {
                     console.log(error)
                     this.isLoading = false
@@ -223,7 +224,7 @@
         },
         computed: {
             isDisabled() {
-                return this.form.incompleted() || this.isLoading
+                return this.isLoading
             },
             ...mapGetters({
                 getById: 'product/getById',

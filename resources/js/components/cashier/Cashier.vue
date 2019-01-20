@@ -1,5 +1,5 @@
 <template xmlns="http://www.w3.org/1999/html">
-    <dashboard-shell>
+    <dashboard-shell @outletChanged="onOutletChanged">
         <el-col :span="24" class="pr-0 mb-0" style="width: calc(100% - 60px)">
             <div class="w-100 h-100 px-4 pt-4">
                 <el-row>
@@ -12,12 +12,14 @@
                                     <el-col class="col-md-8" style="overflow: hidden">
                                         <vue-glide class="w-100" :options="{ gap: 10 }">
                                             <vue-glide-slide class="mb-0">
-                                                <el-button type="primary" :plain="(category !== 0)" class="w-100" size="small" @click.native="category = 0">Semua Produk
+                                                <el-button type="primary" :plain="(category !== 0)" class="w-100"
+                                                           size="small" @click.native="category = 0">Semua Produk
                                                 </el-button>
                                             </vue-glide-slide>
                                             <vue-glide-slide v-for="c in categories" :key="c.id"
                                                              class="mb-0">
-                                                <el-button type="primary"  :plain="(category !== c.id)" class="w-100" size="small" @click.native="category = c.id">{{
+                                                <el-button type="primary" :plain="(category !== c.id)" class="w-100"
+                                                           size="small" @click.native="category = c.id">{{
                                                     c.name }}
                                                 </el-button>
                                             </vue-glide-slide>
@@ -33,10 +35,14 @@
                             <el-col :span="24" class="pb-3">
                                 <el-row>
                                     <el-scrollbar class="scrollbar-component" style="height: calc(100vh - 158px)">
-                                        <el-row :gutter="20" class="flex-grow-1 px-3 pl-3 pt-3 pb-0 align-items-top">
-                                            <el-col v-for="product in (searchProduct.length) ? filteredProductByCategory.filter(p => p.name.includes(searchProduct)) : filteredProductByCategory" :key="product.id"
-                                                    class="mb-3 col-md-3 col-sm-6">
-                                                <div class="product-list__item" @click="addProductOrder(product)">
+                                        <div
+                                            class="d-flex flex-row flex-wrap flex-grow-1 px-3 pl-3 pt-3 pb-0 align-items-top">
+                                            <div
+                                                v-for="product in (searchProduct.length) ? filteredProducts.filter(p => p.name.includes(searchProduct)) : filteredProducts"
+                                                :key="product.id"
+                                                class="d-flex mb-3 col-md-4 col-sm-6">
+                                                <div class="product-list__item" @click="addProductOrder(product)"
+                                                     v-if="product.stocks.amount !== 0">
                                                     <img :src=product.image
                                                          style="width: 100%; height: 15rem; object-fit: cover; object-fit: cover">
 
@@ -44,8 +50,16 @@
                                                         <p class="mb-0 px-3 py-3">{{ product.name }}</p>
                                                     </div>
                                                 </div>
-                                            </el-col>
-                                        </el-row>
+                                                <div class="product-list__item" v-else style="opacity: 0.5;">
+                                                    <img :src=product.image
+                                                         style="width: 100%; height: 15rem; object-fit: cover; object-fit: cover">
+
+                                                    <div class="product-list__item__title w-100 mb-1">
+                                                        <p class="mb-0 px-3 py-3">{{ product.name }} (Habis)</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </el-scrollbar>
                                 </el-row>
                             </el-col>
@@ -58,7 +72,8 @@
                                 <el-row :gutter="10" class="d-flex align-items-center mb-2">
                                     <el-col class="col-md-6 font-weight-bold"><span>Daftar Pesanan</span></el-col>
                                     <el-col class="col-md-6 text-right">
-                                        <el-select v-model="orders.type" placeholder="Tipe Transaksi" size="mini" @change="memberTypeOnChange(orders.type)">
+                                        <el-select v-model="orders.type" placeholder="Tipe Transaksi" size="mini"
+                                                   @change="memberTypeOnChange(orders.type)">
                                             <el-option
                                                 v-for="type in customerTypes"
                                                 :key="type.id"
@@ -97,17 +112,24 @@
                                             <div v-for="(product, index) in orders.products" class="my-3">
                                                 <el-row type="flex">
                                                     <el-col :md="22">
-                                                        <p class="mb-2 font-weight-bold">{{ product.name }} {{ (product.has_discount) ? '(Promo)' : ''}}</p>
+                                                        <p class="mb-2 font-weight-bold">{{ product.name }} {{
+                                                            (product.has_discount) ? '(Promo)' : ''}}</p>
                                                         <el-row type="flex" :gutter="10">
-                                                            <el-col class="col-md-4"><span>Rp{{ product.selling_price }}</span></el-col>
                                                             <el-col class="col-md-4">
-                                                                <el-input-number size="mini" :min="0" class="w-100" v-model="product.amount" @change="isZero(product.amount, index)"></el-input-number>
+                                                                <span>Rp{{ product.selling_price }}</span></el-col>
+                                                            <el-col class="col-md-4">
+                                                                <el-input-number size="mini" :min="0" class="w-100"
+                                                                                 v-model="product.amount"
+                                                                                 @change="isZero(product.amount, index)"></el-input-number>
                                                             </el-col>
-                                                            <el-col class="col-md-4"><span>Rp{{ product.amount * product.selling_price }}</span></el-col>
+                                                            <el-col class="col-md-4"><span>Rp{{ product.amount * product.selling_price }}</span>
+                                                            </el-col>
                                                         </el-row>
                                                     </el-col>
                                                     <el-col :md="2" class="align-self-center">
-                                                        <el-button type="danger" size="mini" circle plain icon="el-icon-close" @click.native="deleteProductOrder(index)"></el-button>
+                                                        <el-button type="danger" size="mini" circle plain
+                                                                   icon="el-icon-close"
+                                                                   @click.native="deleteProductOrder(index)"></el-button>
                                                     </el-col>
                                                 </el-row>
                                                 <hr class="mt-3 mb-3">
@@ -132,7 +154,8 @@
                                         <hr class="mt-2 mb-2">
                                         <el-row type="flex">
                                             <el-col :md="16" class="font-weight-bold"><span>Total</span></el-col>
-                                            <el-col :md="8" class="font-weight-bold"><span>Rp{{ orderTotal }}</span></el-col>
+                                            <el-col :md="8" class="font-weight-bold"><span>Rp{{ orderTotal }}</span>
+                                            </el-col>
                                         </el-row>
                                     </div>
                                 </el-row>
@@ -143,7 +166,9 @@
                                                        icon="el-icon-delete" @click.native="emptyOrder"></el-button>
                                         </el-col>
                                         <el-col class="col-md-6 text-right">
-                                            <el-button type="success" size="small" @click.native="paymentProcessDialog = true">Proses</el-button>
+                                            <el-button type="success" size="small"
+                                                       @click.native="paymentProcessDialog = true">Proses
+                                            </el-button>
                                         </el-col>
                                     </div>
                                 </el-row>
@@ -169,24 +194,48 @@
                 <div class="col-md-8">
                     <div class="d-flex flex-row flex-wrap align-items-center">
                         <div class="d-flex w-100 flex-wrap my-2">
-                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(7)">7</el-button>
-                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(8)">8</el-button>
-                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(9)">9</el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round
+                                       @click.native="nominalButtonListener(7)">7
+                            </el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round
+                                       @click.native="nominalButtonListener(8)">8
+                            </el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round
+                                       @click.native="nominalButtonListener(9)">9
+                            </el-button>
                         </div>
                         <div class="d-flex w-100 flex-wrap my-2">
-                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(4)">4</el-button>
-                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(5)">5</el-button>
-                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(6)">6</el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round
+                                       @click.native="nominalButtonListener(4)">4
+                            </el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round
+                                       @click.native="nominalButtonListener(5)">5
+                            </el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round
+                                       @click.native="nominalButtonListener(6)">6
+                            </el-button>
                         </div>
                         <div class="d-flex w-100 flex-wrap my-2">
-                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(1)">1</el-button>
-                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(2)">2</el-button>
-                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener(3)">3</el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round
+                                       @click.native="nominalButtonListener(1)">1
+                            </el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round
+                                       @click.native="nominalButtonListener(2)">2
+                            </el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round
+                                       @click.native="nominalButtonListener(3)">3
+                            </el-button>
                         </div>
                         <div class="d-flex w-100 flex-wrap my-2">
-                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener('0')">0</el-button>
-                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener('del')"><span class="el-icon-arrow-left"></span></el-button>
-                            <el-button type="primary" class="flex-grow-1" plain round @click.native="nominalButtonListener('clear')">C</el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round
+                                       @click.native="nominalButtonListener('0')">0
+                            </el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round
+                                       @click.native="nominalButtonListener('del')"><span
+                                class="el-icon-arrow-left"></span></el-button>
+                            <el-button type="primary" class="flex-grow-1" plain round
+                                       @click.native="nominalButtonListener('clear')">C
+                            </el-button>
                         </div>
                     </div>
                 </div>
@@ -198,7 +247,7 @@
 
 <script>
     import DashboardShell from "../DashboardShell";
-    import {mapState} from 'vuex'
+    import {mapState, mapGetters} from 'vuex'
     import router from '../../router'
     import store from '../../store'
 
@@ -218,7 +267,7 @@
     }]
 
     export default {
-        name: "Category",
+        name: "Cashier",
         components: {DashboardShell},
         created() {
             this.$store.dispatch('category/fetchCategories')
@@ -282,7 +331,7 @@
                 nominals: [5000, 10000, 20000, 50000, 100000]
             }
         },
-        persist: ['orders'],
+        persist: ['orders', 'shop_outlet_id'],
         methods: {
             toCreatePage() {
                 this.$router.push('/category/new')
@@ -298,11 +347,11 @@
             addProductOrder(p) {
                 if (this.orders.products.filter(product => product.id === p.id).length !== 0) {
                     this.orders.products = this.orders.products.map(product => {
-                            if (product.id === p.id)
-                                product.amount += 1
+                        if (product.id === p.id)
+                            product.amount += 1
 
-                            return product
-                        })
+                        return product
+                    })
                 } else {
                     p.amount = 1
                     this.orders.products.push(p)
@@ -345,15 +394,19 @@
                     default:
                         return this.orders.paid += val
                 }
+            },
+            onOutletChanged(id) {
+                this.shop_outlet_id = id
+                this.$forceUpdate()
             }
         },
         computed: {
             ...mapState({
                 categories: state => state.category.categories,
-                products: state => state.product.products,
                 user: state => state.auth.user,
                 customerTypes: state => state.customerType.customerTypes,
-                members: state => state.member.members
+                members: state => state.member.members,
+                products: state => state.product.products
             }),
             orderSubTotal() {
                 let customerType = this.customerTypes.find(customerType => {
@@ -382,12 +435,21 @@
             orderTotal() {
                 return this.orders.total = this.orderSubTotal + this.orderTax
             },
-            filteredProductByCategory() {
+            filteredProducts() {
+                let products = this.products;
                 if (this.category !== 0) {
-                    return this.products.filter(product => product.category_id === this.category)
+                    products = this.products.filter(product => product.category_id === this.category)
                 }
 
-                return this.products
+                if (this.shop_outlet_id !== 0) {
+                    products = products.map(product => {
+                        if (Array.isArray(product.stocks))
+                            product.stocks = product.stocks.find(stock => stock.shop_outlet_id === this.shop_outlet_id)
+                        return product
+                    })
+                }
+
+                return products
             }
         }
     }
