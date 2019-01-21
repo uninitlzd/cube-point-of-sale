@@ -16,7 +16,7 @@ class DiscountResource extends Resource
     {
         return [
             'id' => $this->id,
-            'shop_id' => $this->shop_id,
+            'shop_id' => (int) $this->shop_id,
             'name' => $this->name,
             'percentage' => (double) $this->percentage,
             'deleted_at' => $this->deleted_at,

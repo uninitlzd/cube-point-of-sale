@@ -15,10 +15,10 @@ class ProductStockResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'shop_outlet_id' => $this->shop_outlet_id,
-            'product_id' => $this->product_id,
-            'amount' => $this->number_of_stock,
+            'id' => (int) $this->id,
+            'shop_outlet_id' => (int) $this->shop_outlet_id,
+            'product_id' => (int) $this->product_id,
+            'amount' => (int) $this->number_of_stock,
             'unit' => $this->unit,
             'out_of_stock' => ($this->product->stockable) ? ($this->number_of_stock == 0) : false,
             'outlet' => $this->whenLoaded('outlet')

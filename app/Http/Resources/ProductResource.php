@@ -15,16 +15,16 @@ class ProductResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+            'id' => (int) $this->id,
             'name' => $this->name,
-            'category_id' => $this->category_id,
+            'category_id' => (int) $this->category_id,
             'description' => $this->description,
-            'purchase_price' => $this->purchase_price,
+            'purchase_price' => (int) $this->purchase_price,
             $this->mergeWhen($this->hasDiscount(), [
-                'original_selling_price' => $this->selling_price,
-                'selling_price' => (1 - $this->discount['percentage'] * 0.01) * $this->selling_price,
+                'original_selling_price' => (int) $this->selling_price,
+                'selling_price' => (int) (1 - $this->discount['percentage'] * 0.01) * $this->selling_price,
             ]),
-            'selling_price' => $this->selling_price,
+            'selling_price' => (int) $this->selling_price,
             'stockable' => $this->stockable,
             'image' => $this->image,
             'has_discount' => ($this->hasDiscount()),
