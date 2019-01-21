@@ -19,17 +19,17 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Schema::disableForeignKeyConstraints();
-        /*Role::truncate();
+        Role::truncate();
         UserRole::truncate();
         User::truncate();
         Shop::truncate();
-        OwnerDetail::truncate();*/
+        OwnerDetail::truncate();
         CustomerType::truncate();
         Schema::enableForeignKeyConstraints();
 
-       /* $this->call(RolesTableSeeder::class);
+        $this->call(RolesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
-        $this->call(ShopTableSeeder::class);*/
+        $this->call(ShopTableSeeder::class);
         $this->call(TransactionTypesSeeder::class);
     }
 }
