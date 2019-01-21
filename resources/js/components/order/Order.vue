@@ -92,7 +92,7 @@
                             size: 'small'
                         },
                         handler: row => {
-                            this.$message.info('oke')
+                            this.toDetailPage(row.id)
                         },
                         label: 'Detail Transaksi'
                     }]
@@ -100,8 +100,8 @@
             }
         },
         methods: {
-            toCreatePage() {
-                this.$router.push('/order/new')
+            toDetailPage(id) {
+                this.$router.push(`/order/${id}`)
             },
             deleteOrder(index) {
                 store.dispatch('order/deleteOrder', index)

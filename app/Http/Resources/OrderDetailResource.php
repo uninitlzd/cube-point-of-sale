@@ -17,6 +17,7 @@ class OrderDetailResource extends Resource
         return [
             "id" => $this->id,
             "product_id" => $this->product_id,
+            "product_name" => $this->product->name,
 			"quantity" => $this->quantity,
 			"selling_price" => $this->selling_price,
 			"sub_total" => (int) $this->sub_total,

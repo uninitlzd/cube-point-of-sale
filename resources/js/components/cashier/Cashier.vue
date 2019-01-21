@@ -36,11 +36,11 @@
                                 <el-row>
                                     <el-scrollbar class="scrollbar-component" style="height: calc(100vh - 158px)">
                                         <div v-if="active_shop_outlet_id !== 0"
-                                            class="d-flex flex-row flex-wrap flex-grow-1 px-3 pl-3 pt-3 pb-0 align-items-top">
+                                             class="d-flex flex-row flex-wrap flex-grow-1 px-3 pl-3 pt-3 pb-0 align-items-top">
                                             <div
-                                                v-for="product in (searchProduct.length) ? filteredProducts.filter(p => p.name.includes(searchProduct)) : filteredProducts"
-                                                :key="product.id"
-                                                class="d-flex mb-3 col-md-4 col-sm-6">
+                                                    v-for="product in (searchProduct.length) ? filteredProducts.filter(p => p.name.includes(searchProduct)) : filteredProducts"
+                                                    :key="product.id"
+                                                    class="d-flex mb-3 col-md-4 col-sm-6">
                                                 <div class="product-list__item" @click="addProductOrder(product)"
                                                      v-if="product.stocks.find(stock => stock.shop_outlet_id === active_shop_outlet_id).amount !== 0">
                                                     <img :src=product.image
@@ -78,10 +78,10 @@
                                         <el-select v-model="orders.type" placeholder="Tipe Transaksi" size="mini"
                                                    @change="memberTypeOnChange(orders.type)">
                                             <el-option
-                                                v-for="type in customerTypes"
-                                                :key="type.id"
-                                                :label=type.name
-                                                :value="type.id">
+                                                    v-for="type in customerTypes"
+                                                    :key="type.id"
+                                                    :label=type.name
+                                                    :value="type.id">
                                                 <span>{{ type.name }} ({{ type.discount_percentage }}%)</span>
                                             </el-option>
                                         </el-select>
@@ -90,19 +90,20 @@
                                 <el-row :gutter="10" class="d-flex align-items-center">
                                     <el-col class="col-md-6 font-weight-bold"><span>Nama Pelanggan:</span></el-col>
                                     <el-col class="col-md-6 text-right">
-                                        <el-input size="mini" v-model="orders.customerName" placeholder="Nama" v-if="orders.type === 1"></el-input>
+                                        <el-input size="mini" v-model="orders.customerName" placeholder="Nama"
+                                                  v-if="orders.type === 1"></el-input>
                                         <el-select
-                                            v-else
-                                            v-model="orders.member_id"
-                                            filterable
-                                            reserve-keyword
-                                            placeholder="Cari member"
-                                            size="mini">
+                                                v-else
+                                                v-model="orders.member_id"
+                                                filterable
+                                                reserve-keyword
+                                                placeholder="Cari member"
+                                                size="mini">
                                             <el-option
-                                                v-for="item in members"
-                                                :key="item.id"
-                                                :label="item.name"
-                                                :value="item.id">
+                                                    v-for="item in members"
+                                                    :key="item.id"
+                                                    :label="item.name"
+                                                    :value="item.id">
                                             </el-option>
                                         </el-select>
                                     </el-col>
@@ -112,7 +113,8 @@
                                 <el-row :gutter="10" class="order-list__content__wrapper d-flex px-2">
                                     <el-scrollbar class="scrollbar-component" style="flex: 1 1 auto">
                                         <div class="px-3 py-2">
-                                            <div v-for="(product, index) in orders.products" class="my-3" v-if="active_shop_outlet_id !== 0">
+                                            <div v-for="(product, index) in orders.products" class="my-3"
+                                                 v-if="active_shop_outlet_id !== 0">
                                                 <el-row type="flex">
                                                     <el-col :md="22">
                                                         <p class="mb-2 font-weight-bold">{{ product.name }} {{
@@ -121,7 +123,9 @@
                                                             <el-col class="col-md-4">
                                                                 <span>Rp{{ product.selling_price }}</span></el-col>
                                                             <el-col class="col-md-4">
-                                                                <el-input-number size="mini" :min="0" :max="product.stocks.find(stock => stock.shop_outlet_id === active_shop_outlet_id).amount" class="w-100"
+                                                                <el-input-number size="mini" :min="0"
+                                                                                 :max="product.stocks.find(stock => stock.shop_outlet_id === active_shop_outlet_id).amount"
+                                                                                 class="w-100"
                                                                                  v-model="product.amount"
                                                                                  @change="isZero(product.amount, index)"></el-input-number>
                                                             </el-col>
@@ -238,7 +242,7 @@
                             </el-button>
                             <el-button type="primary" class="flex-grow-1" plain round
                                        @click.native="nominalButtonListener('del')"><span
-                                class="el-icon-arrow-left"></span></el-button>
+                                    class="el-icon-arrow-left"></span></el-button>
                             <el-button type="primary" class="flex-grow-1" plain round
                                        @click.native="nominalButtonListener('clear')">C
                             </el-button>
@@ -251,6 +255,16 @@
                 <div class="col-md-12 text-right mt-2">
                     <el-button type="success" @click.native="orderCheckout">Bayar</el-button>
                 </div>
+            </div>
+        </el-dialog>
+        <el-dialog
+                width="30%"
+                title="Kembalian"
+                :visible.sync="moneyChangePopup"
+                v-on:closed="emptyOrderNoDialog">
+            <h4>Rp{{ orders.paid - orders.orderTotal }}</h4>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="moneyChangePopup = false; paymentProcessDialog = false">Tutup</el-button>
             </div>
         </el-dialog>
     </dashboard-shell>
@@ -341,6 +355,7 @@
                     amount: ''
                 },
                 paymentProcessDialog: false,
+                moneyChangePopup: false,
                 nominals: [5000, 10000, 20000, 50000, 100000]
             }
         },
@@ -417,15 +432,29 @@
                     order_details: this.orders.products,
                     order_total: this.orders.orderTotal,
                     tax: this.orders.tax,
-                    total: this.orders.total,
-                    paid: this.orders.paid
+                    total: this.orders.orderTotal + this.orders.tax,
+                    paid: this.orders.paid,
+                    amount: this.orders.amount
                 }).then(response => {
-                    console.log(response.data)
+                    this.$message.success('Pesanan berhasil diproses')
+                    this.paymentProcessDialog = false
+                    this.moneyChangePopup = true
                 }).catch(response => {
-                    console.log(response)
+                    this.$message.warning('Pesanan gagal diproses')
                 })
-
-                this.$message.info('Checkout')
+            },
+            emptyOrderNoDialog() {
+                this.orders = {
+                    type: 1,
+                        member_id: '',
+                        customerName: '',
+                        products: [],
+                        tax: '',
+                        orderTotal: '',
+                        total: '',
+                        paid: 0,
+                        amount: ''
+                }
             }
         },
         computed: {

@@ -26,7 +26,7 @@ mix.js('resources/js/app.js', 'public/js')
         'accounting-js'
     ]).options({
         processCssUrls: false
-    }).browserSync('cube-pos-spa.test');
+    });
 
 
 if (mix.inProduction()) {

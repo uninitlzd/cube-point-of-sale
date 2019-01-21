@@ -55117,12 +55117,23 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_order_Order_vue__ = __webpack_require__(486);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_order_Order_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_order_Order_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_order_OrderDetail__ = __webpack_require__(580);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_order_OrderDetail___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_order_OrderDetail__);
+
 
 
 var category = [{
     path: '/order',
-    name: 'Order Index',
+    name: 'order.index',
     component: __WEBPACK_IMPORTED_MODULE_0__components_order_Order_vue___default.a,
+    meta: {
+        auth: true,
+        menuIndex: "4"
+    }
+}, {
+    path: '/order/:id',
+    name: 'order.show',
+    component: __WEBPACK_IMPORTED_MODULE_1__components_order_OrderDetail___default.a,
     meta: {
         auth: true,
         menuIndex: "4"
@@ -55326,7 +55337,7 @@ var titles = [{
                         size: 'small'
                     },
                     handler: function handler(row) {
-                        _this.$message.info('oke');
+                        _this.toDetailPage(row.id);
                     },
                     label: 'Detail Transaksi'
                 }]
@@ -55335,8 +55346,8 @@ var titles = [{
     },
 
     methods: {
-        toCreatePage: function toCreatePage() {
-            this.$router.push('/order/new');
+        toDetailPage: function toDetailPage(id) {
+            this.$router.push('/order/' + id);
         },
         deleteOrder: function deleteOrder(index) {
             var _this2 = this;
@@ -61626,7 +61637,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -61644,6 +61655,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(13);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -61987,6 +62012,7 @@ var titles = [{
                 amount: ''
             },
             paymentProcessDialog: false,
+            moneyChangePopup: false,
             nominals: [5000, 10000, 20000, 50000, 100000]
         };
     },
@@ -62061,6 +62087,8 @@ var titles = [{
             }
         },
         orderCheckout: function orderCheckout() {
+            var _this4 = this;
+
             axios.post('/api/order', {
                 customer_type_id: this.orders.type,
                 member_id: this.orders.member_id,
@@ -62069,15 +62097,29 @@ var titles = [{
                 order_details: this.orders.products,
                 order_total: this.orders.orderTotal,
                 tax: this.orders.tax,
-                total: this.orders.total,
-                paid: this.orders.paid
+                total: this.orders.orderTotal + this.orders.tax,
+                paid: this.orders.paid,
+                amount: this.orders.amount
             }).then(function (response) {
-                console.log(response.data);
+                _this4.$message.success('Pesanan berhasil diproses');
+                _this4.paymentProcessDialog = false;
+                _this4.moneyChangePopup = true;
             }).catch(function (response) {
-                console.log(response);
+                _this4.$message.warning('Pesanan gagal diproses');
             });
-
-            this.$message.info('Checkout');
+        },
+        emptyOrderNoDialog: function emptyOrderNoDialog() {
+            this.orders = {
+                type: 1,
+                member_id: '',
+                customerName: '',
+                products: [],
+                tax: '',
+                orderTotal: '',
+                total: '',
+                paid: 0,
+                amount: ''
+            };
         }
     },
     computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["mapState"])({
@@ -62101,10 +62143,10 @@ var titles = [{
         }
     }), {
         orderSubTotal: function orderSubTotal() {
-            var _this4 = this;
+            var _this5 = this;
 
             var customerType = this.customerTypes.find(function (customerType) {
-                return customerType.id === _this4.orders.type;
+                return customerType.id === _this5.orders.type;
             });
 
             var subTotal = this.orders.products.reduce(function (acc, current, currentIndex, arr) {
@@ -62129,12 +62171,12 @@ var titles = [{
             return this.orders.total = this.orderSubTotal + this.orderTax;
         },
         filteredProducts: function filteredProducts() {
-            var _this5 = this;
+            var _this6 = this;
 
             var products = this.products;
             if (this.category !== 0) {
                 products = products.filter(function (product) {
-                    return product.category_id === _this5.category;
+                    return product.category_id === _this6.category;
                 });
             }
 
@@ -63389,6 +63431,52 @@ var render = function() {
             )
           ])
         ]
+      ),
+      _vm._v(" "),
+      _c(
+        "el-dialog",
+        {
+          attrs: {
+            width: "30%",
+            title: "Kembalian",
+            visible: _vm.moneyChangePopup
+          },
+          on: {
+            "update:visible": function($event) {
+              _vm.moneyChangePopup = $event
+            },
+            closed: _vm.emptyOrderNoDialog
+          }
+        },
+        [
+          _c("h4", [
+            _vm._v("Rp" + _vm._s(_vm.orders.paid - _vm.orders.orderTotal))
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "dialog-footer",
+              attrs: { slot: "footer" },
+              slot: "footer"
+            },
+            [
+              _c(
+                "el-button",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.moneyChangePopup = false
+                      _vm.paymentProcessDialog = false
+                    }
+                  }
+                },
+                [_vm._v("Tutup")]
+              )
+            ],
+            1
+          )
+        ]
       )
     ],
     1
@@ -63633,6 +63721,433 @@ return index;
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 570 */,
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */,
+/* 579 */,
+/* 580 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(581)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(583)
+/* template */
+var __vue_template__ = __webpack_require__(584)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-5733be23"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/order/OrderDetail.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5733be23", Component.options)
+  } else {
+    hotAPI.reload("data-v-5733be23", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 581 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(582);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("35730131", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5733be23\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./OrderDetail.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5733be23\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./OrderDetail.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 582 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 583 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__DashboardShell__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__DashboardShell___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__DashboardShell__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(13);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+var _data = void 0;
+
+_data = [{
+    id: 1,
+    name: 'Oke',
+    address: 'Oce'
+}];
+
+var titles = [{
+    prop: "id",
+    label: "ID"
+}, {
+    prop: "product_name",
+    label: "Nama Product"
+}, {
+    prop: "quantity",
+    label: "Kuantitas"
+}, {
+    prop: "selling_price",
+    label: "Harga Jual"
+}];
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "OrderDetail",
+    components: { DashboardShell: __WEBPACK_IMPORTED_MODULE_0__DashboardShell___default.a },
+    created: function created() {
+        var _this = this;
+
+        axios.get('/api/order/' + this.$route.params.id + '?include=details,customer_type').then(function (response) {
+            _this.order = response.data;
+        });
+    },
+    data: function data() {
+        return {
+            data: _data,
+            titles: titles,
+            filters: [{
+                prop: 'name',
+                value: ''
+            }],
+            order: {
+                order_details: []
+            }
+        };
+    },
+
+    methods: {
+        toCreatePage: function toCreatePage() {
+            this.$router.push('/order/new');
+        },
+        deleteOrder: function deleteOrder(index) {
+            var _this2 = this;
+
+            __WEBPACK_IMPORTED_MODULE_3__store__["a" /* default */].dispatch('order/deleteOrder', index).then(function () {
+                _this2.$message.success('Delete Succeed!');
+            }).catch(function (error) {
+                _this2.$message.error('Delete Failed!');
+            });
+        }
+    },
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["mapState"])({
+        orders: function orders(state) {
+            return state.order.orders;
+        }
+    }))
+});
+
+/***/ }),
+/* 584 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "dashboard-shell",
+    [
+      _c(
+        "el-col",
+        { staticClass: "pr-0", attrs: { span: 24 } },
+        [
+          _c(
+            "el-scrollbar",
+            { staticClass: "h-100 scrollbar-component" },
+            [
+              _c(
+                "el-row",
+                { staticClass: "ml-5 mt-4 mr-4" },
+                [
+                  _c(
+                    "el-col",
+                    { staticClass: "py-4", attrs: { md: 23, xs: 24 } },
+                    [
+                      _c("h2", { staticClass: "mb-3" }, [
+                        _vm._v("Detail Transaksi")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-breadcrumb",
+                        { staticClass: "mb-5", attrs: { separator: "/" } },
+                        [
+                          _c(
+                            "el-breadcrumb-item",
+                            { attrs: { to: "/order" } },
+                            [_vm._v("Manajemen Transaksi")]
+                          ),
+                          _vm._v(" "),
+                          _c("el-breadcrumb-item", [
+                            _vm._v(
+                              "Order No. # " + _vm._s(this.$route.params.id)
+                            )
+                          ])
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "row" }, [
+                        _c(
+                          "div",
+                          { staticClass: "col-md-4" },
+                          [
+                            _c("el-card", { staticClass: "box-card" }, [
+                              _c(
+                                "h6",
+                                {
+                                  staticClass: "mb-0",
+                                  attrs: { slot: "header" },
+                                  slot: "header"
+                                },
+                                [_vm._v("Pembayaran")]
+                              ),
+                              _vm._v(" "),
+                              _c("div", [
+                                _c("p", [_vm._v("Total Belanja")]),
+                                _vm._v(" "),
+                                _c("h6", [_vm._v(_vm._s(_vm.order.total))])
+                              ])
+                            ])
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "col-md-8" },
+                          [
+                            _c(
+                              "el-card",
+                              { staticClass: "box-card mr-5" },
+                              [
+                                _c(
+                                  "h6",
+                                  {
+                                    staticClass: "mb-0",
+                                    attrs: { slot: "header" },
+                                    slot: "header"
+                                  },
+                                  [_vm._v("Produk")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "data-tables",
+                                  {
+                                    attrs: {
+                                      data: _vm.order.order_details,
+                                      "pagination-props": {
+                                        background: true,
+                                        pageSizes: [5, 10, 15]
+                                      },
+                                      filters: _vm.filters,
+                                      total: _vm.order.order_details.length
+                                    }
+                                  },
+                                  _vm._l(_vm.titles, function(title) {
+                                    return _c("el-table-column", {
+                                      key: title.label,
+                                      attrs: {
+                                        prop: title.prop,
+                                        label: title.label
+                                      },
+                                      scopedSlots: _vm._u([
+                                        {
+                                          key: "default",
+                                          fn: function(scope) {
+                                            return [
+                                              ["selling_price"].includes(
+                                                title.prop
+                                              )
+                                                ? _c("div", [
+                                                    title.prop ===
+                                                    "selling_price"
+                                                      ? _c("span", [
+                                                          _c("span", [
+                                                            _vm._v(
+                                                              "Rp" +
+                                                                _vm._s(
+                                                                  scope.row[
+                                                                    "selling_price"
+                                                                  ]
+                                                                )
+                                                            )
+                                                          ])
+                                                        ])
+                                                      : _vm._e()
+                                                  ])
+                                                : _c("div", [
+                                                    _c("span", [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          scope.row[title.prop]
+                                                        )
+                                                      )
+                                                    ])
+                                                  ])
+                                            ]
+                                          }
+                                        }
+                                      ])
+                                    })
+                                  })
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ])
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5733be23", module.exports)
+  }
+}
 
 /***/ })
 ],[235]);
