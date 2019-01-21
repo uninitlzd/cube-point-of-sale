@@ -50715,7 +50715,7 @@ var render = function() {
                             _c(
                               "li",
                               { staticClass: "list-inline-item my-auto" },
-                              [_vm._v("Alfredo Eka")]
+                              [_vm._v(_vm._s(_vm.user.name))]
                             ),
                             _vm._v(" "),
                             _c(

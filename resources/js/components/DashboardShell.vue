@@ -61,7 +61,7 @@
                                     style="width: 30px;">
                                     <img
                                         src="/images/avatar.jpg" alt="" class="w-100 image-fit-cover"></li>
-                                <li class="list-inline-item my-auto">Alfredo Eka</li>
+                                <li class="list-inline-item my-auto">{{ user.name }}</li>
                                 <li class="list-inline-item my-auto"><i class="el-icon-arrow-down el-icon--right"></i>
                                 </li>
                             </ul>
