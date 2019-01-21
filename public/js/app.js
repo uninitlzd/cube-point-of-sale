@@ -7447,7 +7447,8 @@ var mapStateForCache = function mapStateForCache(state) {
     return {
         auth: {
             logged: state.auth.logged,
-            user: state.auth.user
+            user: state.auth.user,
+            active_shop_outlet_id: state.auth.active_shop_outlet_id
         },
         shop: {
             shop: state.shop.shop
@@ -43135,13 +43136,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var types = {
     INIT_AUTH: 'INIT_AUTH',
     LOGIN: 'LOGIN',
-    LOGOUT: 'LOGOUT'
+    LOGOUT: 'LOGOUT',
+    SET_ACTIVE_SHOP_OUTLET_ID: 'SET_ACTIVE_SHOP_OUTLET_ID'
 };
 
 var state = {
     logged: false,
     user: null,
-    shop_outlet_id: 0
+    active_shop_outlet_id: 0
 };
 
 var mutations = (_mutations = {}, _defineProperty(_mutations, types.LOGIN, function (state, user) {
@@ -43150,8 +43152,8 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, types.LOGIN, funct
 }), _defineProperty(_mutations, types.LOGOUT, function (state) {
     Object(__WEBPACK_IMPORTED_MODULE_3__plugins_storage__["a" /* deleteState */])();
     state.logged = false;
-}), _defineProperty(_mutations, types.INIT_AUTH, function (state) {
-    console.log(state);
+}), _defineProperty(_mutations, types.INIT_AUTH, function (state) {}), _defineProperty(_mutations, types.SET_ACTIVE_SHOP_OUTLET_ID, function (state, id) {
+    state.active_shop_outlet_id = id;
 }), _mutations);
 
 var getters = {
@@ -43160,6 +43162,9 @@ var getters = {
     },
     getUser: function getUser(state) {
         return state.user;
+    },
+    getActiveShopOutletId: function getActiveShopOutletId(state) {
+        return state.active_shop_outlet_id;
     }
 };
 
@@ -43275,7 +43280,12 @@ var actions = {
         }
 
         return logout;
-    }()
+    }(),
+    setActiveShopOuletId: function setActiveShopOuletId(_ref7, id) {
+        var commit = _ref7.commit;
+
+        commit(types.SET_ACTIVE_SHOP_OUTLET_ID, id);
+    }
 };
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -50364,6 +50374,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -50371,13 +50386,14 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     name: "DashboardShell",
     created: function created() {
         this.$store.dispatch('outlet/fetchOutlets');
+        this.activeShopOutletId = this.active_shop_outlet_id;
     },
     data: function data() {
         return {
             isCollapsed: true,
             collapsedClass: 'collapsed',
             openedClass: 'opened',
-            shop_outlet_id: ''
+            activeShopOutletId: 0
         };
     },
 
@@ -50392,6 +50408,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         },
         outlets: function outlets(state) {
             return state.outlet.outlets;
+        },
+        active_shop_outlet_id: function active_shop_outlet_id(state) {
+            return state.auth.active_shop_outlet_id;
         }
     })),
     methods: {
@@ -50401,11 +50420,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         setCashierView: function setCashierView() {
             this.$store.dispatch('menu/cashierViewActive');
         },
-        selectOutletChangeListener: function selectOutletChangeListener() {
-            this.$emit('outletChanged', this.shop_outlet_id);
+        shopOutletOnChange: function shopOutletOnChange(val) {
+            this.$store.dispatch('auth/setActiveShopOuletId', val);
         }
     },
-    persist: ['shop_outlet_id']
+    props: {
+        shop_outlet_id: {
+            type: Number,
+            default: 1
+        }
+    }
 });
 
 /***/ }),
@@ -50596,25 +50620,40 @@ var render = function() {
                                         size: "small"
                                       },
                                       on: {
-                                        change: _vm.selectOutletChangeListener
+                                        change: function($event) {
+                                          _vm.shopOutletOnChange(
+                                            _vm.activeShopOutletId
+                                          )
+                                        }
                                       },
                                       model: {
-                                        value: _vm.shop_outlet_id,
+                                        value: _vm.activeShopOutletId,
                                         callback: function($$v) {
-                                          _vm.shop_outlet_id = $$v
+                                          _vm.activeShopOutletId = $$v
                                         },
-                                        expression: "shop_outlet_id"
+                                        expression: "activeShopOutletId"
                                       }
                                     },
-                                    _vm._l(_vm.outlets, function(outlet) {
-                                      return _c("el-option", {
-                                        key: outlet.id,
+                                    [
+                                      _c("el-option", {
+                                        key: 0,
                                         attrs: {
-                                          label: outlet.name,
-                                          value: outlet.id
+                                          label: "Pilih Outlet",
+                                          value: 0
                                         }
+                                      }),
+                                      _vm._v(" "),
+                                      _vm._l(_vm.outlets, function(outlet) {
+                                        return _c("el-option", {
+                                          key: outlet.id,
+                                          attrs: {
+                                            label: outlet.name,
+                                            value: outlet.id
+                                          }
+                                        })
                                       })
-                                    })
+                                    ],
+                                    2
                                   )
                                 ],
                                 1
@@ -61587,7 +61626,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -61605,6 +61644,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(13);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -61879,6 +61929,8 @@ var titles = [{
         this.$store.dispatch('product/fetchProducts');
         this.$store.dispatch('customerType/fetchCustomerTypes');
         this.$store.dispatch('member/fetchMembers');
+
+        this.shop_outlet_id = this.active_shop_outlet_id;
     },
     data: function data() {
         var _this = this;
@@ -61939,7 +61991,7 @@ var titles = [{
         };
     },
 
-    persist: ['orders', 'shop_outlet_id'],
+    persist: ['orders'],
     methods: {
         toCreatePage: function toCreatePage() {
             this.$router.push('/category/new');
@@ -62008,9 +62060,24 @@ var titles = [{
                     return this.orders.paid += val;
             }
         },
-        onOutletChanged: function onOutletChanged(id) {
-            this.shop_outlet_id = id;
-            this.$forceUpdate();
+        orderCheckout: function orderCheckout() {
+            axios.post('/api/order', {
+                customer_type_id: this.orders.type,
+                member_id: this.orders.member_id,
+                customer_name: this.orders.customerName,
+                shop_outlet_id: this.active_shop_outlet_id,
+                order_details: this.orders.products,
+                order_total: this.orders.orderTotal,
+                tax: this.orders.tax,
+                total: this.orders.total,
+                paid: this.orders.paid
+            }).then(function (response) {
+                console.log(response.data);
+            }).catch(function (response) {
+                console.log(response);
+            });
+
+            this.$message.info('Checkout');
         }
     },
     computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["mapState"])({
@@ -62028,6 +62095,9 @@ var titles = [{
         },
         products: function products(state) {
             return state.product.products;
+        },
+        active_shop_outlet_id: function active_shop_outlet_id(state) {
+            return state.auth.active_shop_outlet_id;
         }
     }), {
         orderSubTotal: function orderSubTotal() {
@@ -62063,23 +62133,20 @@ var titles = [{
 
             var products = this.products;
             if (this.category !== 0) {
-                products = this.products.filter(function (product) {
+                products = products.filter(function (product) {
                     return product.category_id === _this5.category;
-                });
-            }
-
-            if (this.shop_outlet_id !== 0) {
-                products = products.map(function (product) {
-                    if (Array.isArray(product.stocks)) product.stocks = product.stocks.find(function (stock) {
-                        return stock.shop_outlet_id === _this5.shop_outlet_id;
-                    });
-                    return product;
                 });
             }
 
             return products;
         }
-    })
+    }),
+    watch: {
+        shop_outlet_id: function shop_outlet_id() {
+            this.$router.push('/cashier');
+            this.$forceUpdate();
+        }
+    }
 });
 
 /***/ }),
@@ -62092,7 +62159,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "dashboard-shell",
-    { on: { outletChanged: _vm.onOutletChanged } },
+    { attrs: { shop_outlet_id: _vm.shop_outlet_id } },
     [
       _c(
         "el-col",
@@ -62265,137 +62332,166 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _c(
-                                        "div",
-                                        {
-                                          staticClass:
-                                            "d-flex flex-row flex-wrap flex-grow-1 px-3 pl-3 pt-3 pb-0 align-items-top"
-                                        },
-                                        _vm._l(
-                                          _vm.searchProduct.length
-                                            ? _vm.filteredProducts.filter(
-                                                function(p) {
-                                                  return p.name.includes(
-                                                    _vm.searchProduct
+                                      _vm.active_shop_outlet_id !== 0
+                                        ? _c(
+                                            "div",
+                                            {
+                                              staticClass:
+                                                "d-flex flex-row flex-wrap flex-grow-1 px-3 pl-3 pt-3 pb-0 align-items-top"
+                                            },
+                                            _vm._l(
+                                              _vm.searchProduct.length
+                                                ? _vm.filteredProducts.filter(
+                                                    function(p) {
+                                                      return p.name.includes(
+                                                        _vm.searchProduct
+                                                      )
+                                                    }
                                                   )
-                                                }
-                                              )
-                                            : _vm.filteredProducts,
-                                          function(product) {
-                                            return _c(
-                                              "div",
-                                              {
-                                                key: product.id,
-                                                staticClass:
-                                                  "d-flex mb-3 col-md-4 col-sm-6"
-                                              },
-                                              [
-                                                product.stocks.amount !== 0
-                                                  ? _c(
-                                                      "div",
-                                                      {
-                                                        staticClass:
-                                                          "product-list__item",
-                                                        on: {
-                                                          click: function(
-                                                            $event
-                                                          ) {
-                                                            _vm.addProductOrder(
-                                                              product
-                                                            )
-                                                          }
-                                                        }
-                                                      },
-                                                      [
-                                                        _c("img", {
-                                                          staticStyle: {
-                                                            width: "100%",
-                                                            height: "15rem",
-                                                            "object-fit":
-                                                              "cover"
-                                                          },
-                                                          attrs: {
-                                                            src: product.image
-                                                          }
-                                                        }),
-                                                        _vm._v(" "),
-                                                        _c(
+                                                : _vm.filteredProducts,
+                                              function(product) {
+                                                return _c(
+                                                  "div",
+                                                  {
+                                                    key: product.id,
+                                                    staticClass:
+                                                      "d-flex mb-3 col-md-4 col-sm-6"
+                                                  },
+                                                  [
+                                                    product.stocks.find(
+                                                      function(stock) {
+                                                        return (
+                                                          stock.shop_outlet_id ===
+                                                          _vm.active_shop_outlet_id
+                                                        )
+                                                      }
+                                                    ).amount !== 0
+                                                      ? _c(
                                                           "div",
                                                           {
                                                             staticClass:
-                                                              "product-list__item__title w-100 mb-1"
+                                                              "product-list__item",
+                                                            on: {
+                                                              click: function(
+                                                                $event
+                                                              ) {
+                                                                _vm.addProductOrder(
+                                                                  product
+                                                                )
+                                                              }
+                                                            }
                                                           },
                                                           [
+                                                            _c("img", {
+                                                              staticStyle: {
+                                                                width: "100%",
+                                                                height: "15rem",
+                                                                "object-fit":
+                                                                  "cover"
+                                                              },
+                                                              attrs: {
+                                                                src:
+                                                                  product.image
+                                                              }
+                                                            }),
+                                                            _vm._v(" "),
                                                             _c(
-                                                              "p",
+                                                              "div",
                                                               {
                                                                 staticClass:
-                                                                  "mb-0 px-3 py-3"
+                                                                  "product-list__item__title w-100 mb-1"
                                                               },
                                                               [
-                                                                _vm._v(
-                                                                  _vm._s(
-                                                                    product.name
-                                                                  )
+                                                                _c(
+                                                                  "p",
+                                                                  {
+                                                                    staticClass:
+                                                                      "mb-0 px-3 py-3"
+                                                                  },
+                                                                  [
+                                                                    _vm._v(
+                                                                      _vm._s(
+                                                                        product.name
+                                                                      )
+                                                                    )
+                                                                  ]
                                                                 )
                                                               ]
                                                             )
                                                           ]
                                                         )
-                                                      ]
-                                                    )
-                                                  : _c(
-                                                      "div",
-                                                      {
-                                                        staticClass:
-                                                          "product-list__item",
-                                                        staticStyle: {
-                                                          opacity: "0.5"
-                                                        }
-                                                      },
-                                                      [
-                                                        _c("img", {
-                                                          staticStyle: {
-                                                            width: "100%",
-                                                            height: "15rem",
-                                                            "object-fit":
-                                                              "cover"
-                                                          },
-                                                          attrs: {
-                                                            src: product.image
-                                                          }
-                                                        }),
-                                                        _vm._v(" "),
-                                                        _c(
+                                                      : _c(
                                                           "div",
                                                           {
                                                             staticClass:
-                                                              "product-list__item__title w-100 mb-1"
+                                                              "product-list__item",
+                                                            staticStyle: {
+                                                              opacity: "0.5"
+                                                            }
                                                           },
                                                           [
+                                                            _c("img", {
+                                                              staticStyle: {
+                                                                width: "100%",
+                                                                height: "15rem",
+                                                                "object-fit":
+                                                                  "cover"
+                                                              },
+                                                              attrs: {
+                                                                src:
+                                                                  product.image
+                                                              }
+                                                            }),
+                                                            _vm._v(" "),
                                                             _c(
-                                                              "p",
+                                                              "div",
                                                               {
                                                                 staticClass:
-                                                                  "mb-0 px-3 py-3"
+                                                                  "product-list__item__title w-100 mb-1"
                                                               },
                                                               [
-                                                                _vm._v(
-                                                                  _vm._s(
-                                                                    product.name
-                                                                  ) + " (Habis)"
+                                                                _c(
+                                                                  "p",
+                                                                  {
+                                                                    staticClass:
+                                                                      "mb-0 px-3 py-3"
+                                                                  },
+                                                                  [
+                                                                    _vm._v(
+                                                                      _vm._s(
+                                                                        product.name
+                                                                      ) +
+                                                                        " (Habis)"
+                                                                    )
+                                                                  ]
                                                                 )
                                                               ]
                                                             )
                                                           ]
                                                         )
-                                                      ]
-                                                    )
-                                              ]
+                                                  ]
+                                                )
+                                              }
                                             )
-                                          }
-                                        )
-                                      )
+                                          )
+                                        : _c(
+                                            "div",
+                                            { staticClass: "d-flex h-100" },
+                                            [
+                                              _c(
+                                                "h5",
+                                                {
+                                                  staticClass:
+                                                    "align-self-center mx-auto"
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "Pilih Outlet Terlebih Dahulu"
+                                                  )
+                                                ]
+                                              )
+                                            ]
+                                          )
                                     ]
                                   )
                                 ],
@@ -62533,6 +62629,17 @@ var render = function() {
                                             attrs: {
                                               size: "mini",
                                               placeholder: "Nama"
+                                            },
+                                            model: {
+                                              value: _vm.orders.customerName,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.orders,
+                                                  "customerName",
+                                                  $$v
+                                                )
+                                              },
+                                              expression: "orders.customerName"
                                             }
                                           })
                                         : _c(
@@ -62605,132 +62712,177 @@ var render = function() {
                                           product,
                                           index
                                         ) {
-                                          return _c(
-                                            "div",
-                                            { staticClass: "my-3" },
-                                            [
-                                              _c(
-                                                "el-row",
-                                                { attrs: { type: "flex" } },
+                                          return _vm.active_shop_outlet_id !== 0
+                                            ? _c(
+                                                "div",
+                                                { staticClass: "my-3" },
                                                 [
                                                   _c(
-                                                    "el-col",
-                                                    { attrs: { md: 22 } },
+                                                    "el-row",
+                                                    { attrs: { type: "flex" } },
                                                     [
                                                       _c(
-                                                        "p",
-                                                        {
-                                                          staticClass:
-                                                            "mb-2 font-weight-bold"
-                                                        },
-                                                        [
-                                                          _vm._v(
-                                                            _vm._s(
-                                                              product.name
-                                                            ) +
-                                                              " " +
-                                                              _vm._s(
-                                                                product.has_discount
-                                                                  ? "(Promo)"
-                                                                  : ""
-                                                              )
-                                                          )
-                                                        ]
-                                                      ),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "el-row",
-                                                        {
-                                                          attrs: {
-                                                            type: "flex",
-                                                            gutter: 10
-                                                          }
-                                                        },
+                                                        "el-col",
+                                                        { attrs: { md: 22 } },
                                                         [
                                                           _c(
-                                                            "el-col",
+                                                            "p",
                                                             {
                                                               staticClass:
-                                                                "col-md-4"
+                                                                "mb-2 font-weight-bold"
                                                             },
                                                             [
-                                                              _c("span", [
-                                                                _vm._v(
-                                                                  "Rp" +
-                                                                    _vm._s(
-                                                                      product.selling_price
-                                                                    )
-                                                                )
-                                                              ])
+                                                              _vm._v(
+                                                                _vm._s(
+                                                                  product.name
+                                                                ) +
+                                                                  " " +
+                                                                  _vm._s(
+                                                                    product.has_discount
+                                                                      ? "(Promo)"
+                                                                      : ""
+                                                                  )
+                                                              )
                                                             ]
                                                           ),
                                                           _vm._v(" "),
                                                           _c(
-                                                            "el-col",
+                                                            "el-row",
                                                             {
-                                                              staticClass:
-                                                                "col-md-4"
+                                                              attrs: {
+                                                                type: "flex",
+                                                                gutter: 10
+                                                              }
                                                             },
                                                             [
                                                               _c(
-                                                                "el-input-number",
+                                                                "el-col",
                                                                 {
                                                                   staticClass:
-                                                                    "w-100",
-                                                                  attrs: {
-                                                                    size:
-                                                                      "mini",
-                                                                    min: 0
-                                                                  },
-                                                                  on: {
-                                                                    change: function(
-                                                                      $event
-                                                                    ) {
-                                                                      _vm.isZero(
-                                                                        product.amount,
-                                                                        index
-                                                                      )
+                                                                    "col-md-4"
+                                                                },
+                                                                [
+                                                                  _c("span", [
+                                                                    _vm._v(
+                                                                      "Rp" +
+                                                                        _vm._s(
+                                                                          product.selling_price
+                                                                        )
+                                                                    )
+                                                                  ])
+                                                                ]
+                                                              ),
+                                                              _vm._v(" "),
+                                                              _c(
+                                                                "el-col",
+                                                                {
+                                                                  staticClass:
+                                                                    "col-md-4"
+                                                                },
+                                                                [
+                                                                  _c(
+                                                                    "el-input-number",
+                                                                    {
+                                                                      staticClass:
+                                                                        "w-100",
+                                                                      attrs: {
+                                                                        size:
+                                                                          "mini",
+                                                                        min: 0,
+                                                                        max: product.stocks.find(
+                                                                          function(
+                                                                            stock
+                                                                          ) {
+                                                                            return (
+                                                                              stock.shop_outlet_id ===
+                                                                              _vm.active_shop_outlet_id
+                                                                            )
+                                                                          }
+                                                                        ).amount
+                                                                      },
+                                                                      on: {
+                                                                        change: function(
+                                                                          $event
+                                                                        ) {
+                                                                          _vm.isZero(
+                                                                            product.amount,
+                                                                            index
+                                                                          )
+                                                                        }
+                                                                      },
+                                                                      model: {
+                                                                        value:
+                                                                          product.amount,
+                                                                        callback: function(
+                                                                          $$v
+                                                                        ) {
+                                                                          _vm.$set(
+                                                                            product,
+                                                                            "amount",
+                                                                            $$v
+                                                                          )
+                                                                        },
+                                                                        expression:
+                                                                          "product.amount"
+                                                                      }
                                                                     }
-                                                                  },
-                                                                  model: {
-                                                                    value:
-                                                                      product.amount,
-                                                                    callback: function(
-                                                                      $$v
-                                                                    ) {
-                                                                      _vm.$set(
-                                                                        product,
-                                                                        "amount",
-                                                                        $$v
-                                                                      )
-                                                                    },
-                                                                    expression:
-                                                                      "product.amount"
-                                                                  }
-                                                                }
+                                                                  )
+                                                                ],
+                                                                1
+                                                              ),
+                                                              _vm._v(" "),
+                                                              _c(
+                                                                "el-col",
+                                                                {
+                                                                  staticClass:
+                                                                    "col-md-4"
+                                                                },
+                                                                [
+                                                                  _c("span", [
+                                                                    _vm._v(
+                                                                      "Rp" +
+                                                                        _vm._s(
+                                                                          product.amount *
+                                                                            product.selling_price
+                                                                        )
+                                                                    )
+                                                                  ])
+                                                                ]
                                                               )
                                                             ],
                                                             1
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "el-col",
-                                                            {
-                                                              staticClass:
-                                                                "col-md-4"
-                                                            },
-                                                            [
-                                                              _c("span", [
-                                                                _vm._v(
-                                                                  "Rp" +
-                                                                    _vm._s(
-                                                                      product.amount *
-                                                                        product.selling_price
-                                                                    )
-                                                                )
-                                                              ])
-                                                            ]
                                                           )
+                                                        ],
+                                                        1
+                                                      ),
+                                                      _vm._v(" "),
+                                                      _c(
+                                                        "el-col",
+                                                        {
+                                                          staticClass:
+                                                            "align-self-center",
+                                                          attrs: { md: 2 }
+                                                        },
+                                                        [
+                                                          _c("el-button", {
+                                                            attrs: {
+                                                              type: "danger",
+                                                              size: "mini",
+                                                              circle: "",
+                                                              plain: "",
+                                                              icon:
+                                                                "el-icon-close"
+                                                            },
+                                                            nativeOn: {
+                                                              click: function(
+                                                                $event
+                                                              ) {
+                                                                _vm.deleteProductOrder(
+                                                                  index
+                                                                )
+                                                              }
+                                                            }
+                                                          })
                                                         ],
                                                         1
                                                       )
@@ -62738,45 +62890,30 @@ var render = function() {
                                                     1
                                                   ),
                                                   _vm._v(" "),
-                                                  _c(
-                                                    "el-col",
-                                                    {
-                                                      staticClass:
-                                                        "align-self-center",
-                                                      attrs: { md: 2 }
-                                                    },
-                                                    [
-                                                      _c("el-button", {
-                                                        attrs: {
-                                                          type: "danger",
-                                                          size: "mini",
-                                                          circle: "",
-                                                          plain: "",
-                                                          icon: "el-icon-close"
-                                                        },
-                                                        nativeOn: {
-                                                          click: function(
-                                                            $event
-                                                          ) {
-                                                            _vm.deleteProductOrder(
-                                                              index
-                                                            )
-                                                          }
-                                                        }
-                                                      })
-                                                    ],
-                                                    1
-                                                  )
+                                                  _c("hr", {
+                                                    staticClass: "mt-3 mb-3"
+                                                  })
                                                 ],
                                                 1
-                                              ),
-                                              _vm._v(" "),
-                                              _c("hr", {
-                                                staticClass: "mt-3 mb-3"
-                                              })
-                                            ],
-                                            1
-                                          )
+                                              )
+                                            : _c(
+                                                "div",
+                                                { staticClass: "d-flex h-100" },
+                                                [
+                                                  _c(
+                                                    "h5",
+                                                    {
+                                                      staticClass:
+                                                        "align-self-center mx-auto"
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "Pilih Outlet Terlebih Dahulu"
+                                                      )
+                                                    ]
+                                                  )
+                                                ]
+                                              )
                                         })
                                       )
                                     ]
@@ -63228,6 +63365,28 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-4" })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c(
+              "div",
+              { staticClass: "col-md-12 text-right mt-2" },
+              [
+                _c(
+                  "el-button",
+                  {
+                    attrs: { type: "success" },
+                    nativeOn: {
+                      click: function($event) {
+                        return _vm.orderCheckout($event)
+                      }
+                    }
+                  },
+                  [_vm._v("Bayar")]
+                )
+              ],
+              1
+            )
           ])
         ]
       )

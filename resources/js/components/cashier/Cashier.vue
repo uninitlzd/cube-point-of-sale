@@ -1,5 +1,5 @@
 <template xmlns="http://www.w3.org/1999/html">
-    <dashboard-shell @outletChanged="onOutletChanged">
+    <dashboard-shell :shop_outlet_id="shop_outlet_id">
         <el-col :span="24" class="pr-0 mb-0" style="width: calc(100% - 60px)">
             <div class="w-100 h-100 px-4 pt-4">
                 <el-row>
@@ -35,14 +35,14 @@
                             <el-col :span="24" class="pb-3">
                                 <el-row>
                                     <el-scrollbar class="scrollbar-component" style="height: calc(100vh - 158px)">
-                                        <div
+                                        <div v-if="active_shop_outlet_id !== 0"
                                             class="d-flex flex-row flex-wrap flex-grow-1 px-3 pl-3 pt-3 pb-0 align-items-top">
                                             <div
                                                 v-for="product in (searchProduct.length) ? filteredProducts.filter(p => p.name.includes(searchProduct)) : filteredProducts"
                                                 :key="product.id"
                                                 class="d-flex mb-3 col-md-4 col-sm-6">
                                                 <div class="product-list__item" @click="addProductOrder(product)"
-                                                     v-if="product.stocks.amount !== 0">
+                                                     v-if="product.stocks.find(stock => stock.shop_outlet_id === active_shop_outlet_id).amount !== 0">
                                                     <img :src=product.image
                                                          style="width: 100%; height: 15rem; object-fit: cover; object-fit: cover">
 
@@ -59,6 +59,9 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div v-else class="d-flex h-100">
+                                            <h5 class="align-self-center mx-auto">Pilih Outlet Terlebih Dahulu</h5>
                                         </div>
                                     </el-scrollbar>
                                 </el-row>
@@ -87,7 +90,7 @@
                                 <el-row :gutter="10" class="d-flex align-items-center">
                                     <el-col class="col-md-6 font-weight-bold"><span>Nama Pelanggan:</span></el-col>
                                     <el-col class="col-md-6 text-right">
-                                        <el-input size="mini" placeholder="Nama" v-if="orders.type === 1"></el-input>
+                                        <el-input size="mini" v-model="orders.customerName" placeholder="Nama" v-if="orders.type === 1"></el-input>
                                         <el-select
                                             v-else
                                             v-model="orders.member_id"
@@ -109,7 +112,7 @@
                                 <el-row :gutter="10" class="order-list__content__wrapper d-flex px-2">
                                     <el-scrollbar class="scrollbar-component" style="flex: 1 1 auto">
                                         <div class="px-3 py-2">
-                                            <div v-for="(product, index) in orders.products" class="my-3">
+                                            <div v-for="(product, index) in orders.products" class="my-3" v-if="active_shop_outlet_id !== 0">
                                                 <el-row type="flex">
                                                     <el-col :md="22">
                                                         <p class="mb-2 font-weight-bold">{{ product.name }} {{
@@ -118,7 +121,7 @@
                                                             <el-col class="col-md-4">
                                                                 <span>Rp{{ product.selling_price }}</span></el-col>
                                                             <el-col class="col-md-4">
-                                                                <el-input-number size="mini" :min="0" class="w-100"
+                                                                <el-input-number size="mini" :min="0" :max="product.stocks.find(stock => stock.shop_outlet_id === active_shop_outlet_id).amount" class="w-100"
                                                                                  v-model="product.amount"
                                                                                  @change="isZero(product.amount, index)"></el-input-number>
                                                             </el-col>
@@ -133,6 +136,9 @@
                                                     </el-col>
                                                 </el-row>
                                                 <hr class="mt-3 mb-3">
+                                            </div>
+                                            <div v-else class="d-flex h-100">
+                                                <h5 class="align-self-center mx-auto">Pilih Outlet Terlebih Dahulu</h5>
                                             </div>
                                         </div>
                                     </el-scrollbar>
@@ -241,6 +247,11 @@
                 </div>
                 <div class="col-md-4"></div>
             </div>
+            <div class="row">
+                <div class="col-md-12 text-right mt-2">
+                    <el-button type="success" @click.native="orderCheckout">Bayar</el-button>
+                </div>
+            </div>
         </el-dialog>
     </dashboard-shell>
 </template>
@@ -274,6 +285,8 @@
             this.$store.dispatch('product/fetchProducts')
             this.$store.dispatch('customerType/fetchCustomerTypes')
             this.$store.dispatch('member/fetchMembers')
+
+            this.shop_outlet_id = this.active_shop_outlet_id
         },
         data() {
             return {
@@ -331,7 +344,7 @@
                 nominals: [5000, 10000, 20000, 50000, 100000]
             }
         },
-        persist: ['orders', 'shop_outlet_id'],
+        persist: ['orders'],
         methods: {
             toCreatePage() {
                 this.$router.push('/category/new')
@@ -395,9 +408,24 @@
                         return this.orders.paid += val
                 }
             },
-            onOutletChanged(id) {
-                this.shop_outlet_id = id
-                this.$forceUpdate()
+            orderCheckout() {
+                axios.post('/api/order', {
+                    customer_type_id: this.orders.type,
+                    member_id: this.orders.member_id,
+                    customer_name: this.orders.customerName,
+                    shop_outlet_id: this.active_shop_outlet_id,
+                    order_details: this.orders.products,
+                    order_total: this.orders.orderTotal,
+                    tax: this.orders.tax,
+                    total: this.orders.total,
+                    paid: this.orders.paid
+                }).then(response => {
+                    console.log(response.data)
+                }).catch(response => {
+                    console.log(response)
+                })
+
+                this.$message.info('Checkout')
             }
         },
         computed: {
@@ -406,7 +434,8 @@
                 user: state => state.auth.user,
                 customerTypes: state => state.customerType.customerTypes,
                 members: state => state.member.members,
-                products: state => state.product.products
+                products: state => state.product.products,
+                active_shop_outlet_id: state => state.auth.active_shop_outlet_id
             }),
             orderSubTotal() {
                 let customerType = this.customerTypes.find(customerType => {
@@ -436,20 +465,18 @@
                 return this.orders.total = this.orderSubTotal + this.orderTax
             },
             filteredProducts() {
-                let products = this.products;
+                let products = this.products
                 if (this.category !== 0) {
-                    products = this.products.filter(product => product.category_id === this.category)
-                }
-
-                if (this.shop_outlet_id !== 0) {
-                    products = products.map(product => {
-                        if (Array.isArray(product.stocks))
-                            product.stocks = product.stocks.find(stock => stock.shop_outlet_id === this.shop_outlet_id)
-                        return product
-                    })
+                    products = products.filter(product => product.category_id === this.category)
                 }
 
                 return products
+            }
+        },
+        watch: {
+            shop_outlet_id() {
+                this.$router.push('/cashier')
+                this.$forceUpdate()
             }
         }
     }

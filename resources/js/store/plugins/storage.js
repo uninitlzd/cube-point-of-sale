@@ -8,7 +8,8 @@ const mapStateForCache = (state) => {
     return {
         auth: {
             logged: state.auth.logged,
-            user: state.auth.user
+            user: state.auth.user,
+            active_shop_outlet_id: state.auth.active_shop_outlet_id
         },
         shop: {
             shop: state.shop.shop

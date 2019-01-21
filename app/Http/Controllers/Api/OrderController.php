@@ -53,12 +53,12 @@ class OrderController extends Controller
             'employee_id' => $this->user->id,
             'customer_name' => (!is_null($request->get('member_id')))
                 ? Member::find($request->get('member_id'))->name
-                : $request->get('member_id'),
+                : $request->get('customer_name'),
             'customer_type_id' => (!is_null($request->get('member_id')))
                 ? 2
                 : $request->get('customer_type_id'),
             'order_total' => $request->get('order_total'),
-            'orderTax' => $request->get('orderTax'),
+            'tax' => $request->get('tax'),
             'total' => $request->get('order_total') + $request->get('orderTax')
         ]);
 
@@ -66,36 +66,27 @@ class OrderController extends Controller
         $discountByTransactionType = $customerType->discount_percentage;
 
         $orderDetails = collect($request->get('order_details'));
-        $orderDetailsTotal = $orderDetails->pluck('sub_total')->sum() * ((100 - $discountByTransactionType) / 100);
-        $orderDetailsTotalAfterTax = $orderDetailsTotal * ($this->user->shop->tax / 100);
-
-        if ($order->order_total != $orderDetailsTotal) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Price total calculation not same with input'
-            ], 400);
-        }
-
-        if ($order->tax != $orderDetailsTotalAfterTax) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Tax calculation not same with input'
-            ], 400);
-        }
-
         $newOrder = tap($order)->save();
 
         foreach ($orderDetails as $detail) {
             $productStock = ProductStock::where('shop_outlet_id', $order->shop_outlet_id)
-                                ->where('product_id', $detail['product_id'])
+                                ->where('product_id', $detail['id'])
                                 ->first();
 
             if ($productStock->product->stockable && $productStock->number_of_stock != 0)
-                $productStock->number_of_stock = $productStock->number_of_stock - $detail['quantity']; //Todo: Create servic
+                $productStock->number_of_stock = $productStock->number_of_stock - $detail['amount']; //Todo: Create servic
 
             $productStock->save();
 
-            $order->details()->save(new OrderDetail($detail));
+            $data = [
+                'product_id' => $detail['id'],
+                'selling_price' => $detail['selling_price'],
+                'discounted' => $detail['has_discount'],
+                'quantity' => $detail['amount'],
+                'sub_total' => $detail['selling_price'] * $detail['amount']
+            ];
+
+            $order->details()->save(new OrderDetail($data));
         }
 
         $newOrder->load('details');

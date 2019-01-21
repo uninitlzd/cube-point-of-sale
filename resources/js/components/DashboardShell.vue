@@ -37,7 +37,12 @@
                             </i></li>
                             <li class="list-inline-item">
                                 <router-link to="/cashier">
-                                    <el-select v-model="shop_outlet_id" filterable placeholder="Pilih Cabang" size="small" @change="selectOutletChangeListener">
+                                    <el-select v-model="activeShopOutletId" filterable placeholder="Pilih Cabang" size="small" @change="shopOutletOnChange(activeShopOutletId)">
+                                        <el-option
+                                            :key="0"
+                                            label="Pilih Outlet"
+                                            :value="0">
+                                        </el-option>
                                         <el-option
                                             v-for="outlet in outlets"
                                             :key="outlet.id"
@@ -148,13 +153,14 @@
         name: "DashboardShell",
         created() {
             this.$store.dispatch('outlet/fetchOutlets')
+            this.activeShopOutletId = this.active_shop_outlet_id
         },
         data() {
             return {
                 isCollapsed: true,
                 collapsedClass: 'collapsed',
                 openedClass: 'opened',
-                shop_outlet_id: ''
+                activeShopOutletId: 0
             }
         },
         computed: {
@@ -162,7 +168,8 @@
             ...mapState({
                 cashierView: state => state.menu.cashierView,
                 shop: state => state.shop.shop,
-                outlets: state => state.outlet.outlets
+                outlets: state => state.outlet.outlets,
+                active_shop_outlet_id: state => state.auth.active_shop_outlet_id
             })
         },
         methods: {
@@ -172,11 +179,16 @@
             setCashierView() {
                 this.$store.dispatch('menu/cashierViewActive')
             },
-            selectOutletChangeListener() {
-                this.$emit('outletChanged', this.shop_outlet_id)
+            shopOutletOnChange(val) {
+                this.$store.dispatch('auth/setActiveShopOuletId', val)
             }
         },
-        persist: ['shop_outlet_id']
+        props: {
+            shop_outlet_id: {
+                type: Number,
+                default: 1
+            }
+        }
     }
 </script>
 

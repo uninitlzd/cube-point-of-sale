@@ -6,12 +6,13 @@ const types = {
     INIT_AUTH: 'INIT_AUTH',
     LOGIN: 'LOGIN',
     LOGOUT: 'LOGOUT',
+    SET_ACTIVE_SHOP_OUTLET_ID: 'SET_ACTIVE_SHOP_OUTLET_ID'
 }
 
 const state = {
     logged: false,
     user: null,
-    shop_outlet_id: 0
+    active_shop_outlet_id: 0
 }
 
 const mutations = {
@@ -26,13 +27,18 @@ const mutations = {
     },
 
     [types.INIT_AUTH](state) {
-        console.log(state)
+
+    },
+
+    [types.SET_ACTIVE_SHOP_OUTLET_ID](state, id) {
+        state.active_shop_outlet_id = id
     }
 }
 
 const getters = {
     isLogged: state => state.logged,
     getUser: state => state.user,
+    getActiveShopOutletId: state => state.active_shop_outlet_id
 }
 
 const actions = {
@@ -78,6 +84,10 @@ const actions = {
         deleteState().then(() => {
             router.push({name: 'Login'})
         })
+    },
+
+    setActiveShopOuletId({commit}, id) {
+        commit(types.SET_ACTIVE_SHOP_OUTLET_ID, id)
     }
 }
 
