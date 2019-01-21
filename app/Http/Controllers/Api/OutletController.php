@@ -23,7 +23,12 @@ class OutletController extends Controller
 
     public function index()
     {
-        $outlets = ShopOutlet::where('shop_id', $this->user->shop->id);
+        if ($this->user->isOwner()) {
+            $outlets = ShopOutlet::where('shop_id', $this->user->shop->id);
+        } else {
+            $outlets = ShopOutlet::where('shop_id', $this->user->role()->pivot->shop_id);
+        }
+
         $outlets = QueryBuilder::for($outlets)
                     ->allowedFilters('name', 'address', Filter::exact('id'))
                     ->get();

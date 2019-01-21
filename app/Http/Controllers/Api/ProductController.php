@@ -27,7 +27,11 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::where('shop_id', $this->user->shop->id);
+        if ($this->user->isOwner()) {
+            $products = Product::where('shop_id', $this->user->shop->id);
+        } else {
+            $products = Product::where('shop_id', $this->user->role()->pivot->shop_id);
+        }
 
         $result = QueryBuilder::for($products)
             ->allowedIncludes('stocks')

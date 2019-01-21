@@ -47,4 +47,14 @@ class Role extends Model
     {
         return $this->belongsToMany(User::class, 'user_roles');
     }
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class, 'shop_id', 'id');
+    }
+
+    public function shopOutlet()
+    {
+        return $this->belongsTo(ShopOutlet::class, 'shop_outlet_id', 'id');
+    }
 }

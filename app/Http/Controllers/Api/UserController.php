@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return $this->user;
+        return new UserResource($this->user);
     }
 
     /**

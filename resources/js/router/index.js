@@ -59,7 +59,7 @@ const router = new VueRouter({
             name: 'Dashboard',
             component: Dashboard  ,
             meta: {
-                auth: true
+                auth: true,
             }
         },
         ...category,

@@ -43195,7 +43195,14 @@ var actions = {
 
                             commit(types.LOGIN, data.user);
                             dispatch('shop/setShop', data.user.shop, { root: true });
-                            __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */].push({ name: 'Dashboard' });
+
+                            if (!data.user.is_owner) {
+                                commit(types.SET_ACTIVE_SHOP_OUTLET_ID, data.user.outlet.id);
+                                dispatch('menu/cashierViewActive', {}, { root: true });
+                                __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */].push('/cashier');
+                            } else {
+                                __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */].push({ name: 'Dashboard' });
+                            }
 
                         case 8:
                         case 'end':
@@ -50414,6 +50421,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         },
         active_shop_outlet_id: function active_shop_outlet_id(state) {
             return state.auth.active_shop_outlet_id;
+        },
+        user: function user(state) {
+            return state.auth.user;
         }
     })),
     methods: {
@@ -50582,88 +50592,92 @@ var render = function() {
                           staticClass: "list-inline d-flex align-items-center"
                         },
                         [
-                          _c(
-                            "li",
-                            {
-                              staticClass:
-                                "list-inline-item d-flex text-primary",
-                              staticStyle: { "font-size": "10pt" }
-                            },
-                            [
-                              _c(
-                                "i",
+                          _vm.user.is_owner
+                            ? _c(
+                                "li",
                                 {
                                   staticClass:
-                                    "material-icons mr-1 align-self-center",
-                                  staticStyle: { "padding-left": "20px" }
+                                    "list-inline-item d-flex text-primary",
+                                  staticStyle: { "font-size": "10pt" }
                                 },
                                 [
-                                  _vm._v(
-                                    "\n                            store\n                        "
+                                  _c(
+                                    "i",
+                                    {
+                                      staticClass:
+                                        "material-icons mr-1 align-self-center",
+                                      staticStyle: { "padding-left": "20px" }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                            store\n                        "
+                                      )
+                                    ]
                                   )
                                 ]
                               )
-                            ]
-                          ),
+                            : _vm._e(),
                           _vm._v(" "),
-                          _c(
-                            "li",
-                            { staticClass: "list-inline-item" },
-                            [
-                              _c(
-                                "router-link",
-                                { attrs: { to: "/cashier" } },
+                          _vm.user.is_owner
+                            ? _c(
+                                "li",
+                                { staticClass: "list-inline-item" },
                                 [
                                   _c(
-                                    "el-select",
-                                    {
-                                      attrs: {
-                                        filterable: "",
-                                        placeholder: "Pilih Cabang",
-                                        size: "small"
-                                      },
-                                      on: {
-                                        change: function($event) {
-                                          _vm.shopOutletOnChange(
-                                            _vm.activeShopOutletId
-                                          )
-                                        }
-                                      },
-                                      model: {
-                                        value: _vm.activeShopOutletId,
-                                        callback: function($$v) {
-                                          _vm.activeShopOutletId = $$v
-                                        },
-                                        expression: "activeShopOutletId"
-                                      }
-                                    },
+                                    "router-link",
+                                    { attrs: { to: "/cashier" } },
                                     [
-                                      _c("el-option", {
-                                        key: 0,
-                                        attrs: {
-                                          label: "Pilih Outlet",
-                                          value: 0
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _vm._l(_vm.outlets, function(outlet) {
-                                        return _c("el-option", {
-                                          key: outlet.id,
+                                      _c(
+                                        "el-select",
+                                        {
                                           attrs: {
-                                            label: outlet.name,
-                                            value: outlet.id
+                                            filterable: "",
+                                            placeholder: "Pilih Cabang",
+                                            size: "small"
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              _vm.shopOutletOnChange(
+                                                _vm.activeShopOutletId
+                                              )
+                                            }
+                                          },
+                                          model: {
+                                            value: _vm.activeShopOutletId,
+                                            callback: function($$v) {
+                                              _vm.activeShopOutletId = $$v
+                                            },
+                                            expression: "activeShopOutletId"
                                           }
-                                        })
-                                      })
+                                        },
+                                        [
+                                          _c("el-option", {
+                                            key: 0,
+                                            attrs: {
+                                              label: "Pilih Outlet",
+                                              value: 0
+                                            }
+                                          }),
+                                          _vm._v(" "),
+                                          _vm._l(_vm.outlets, function(outlet) {
+                                            return _c("el-option", {
+                                              key: outlet.id,
+                                              attrs: {
+                                                label: outlet.name,
+                                                value: outlet.id
+                                              }
+                                            })
+                                          })
+                                        ],
+                                        2
+                                      )
                                     ],
-                                    2
+                                    1
                                   )
                                 ],
                                 1
                               )
-                            ],
-                            1
-                          )
+                            : _vm._e()
                         ]
                       )
                     ]),
@@ -50757,270 +50771,274 @@ var render = function() {
         "el-row",
         { staticClass: "flex-fill mx-0 ", attrs: { type: "flex" } },
         [
-          _c(
-            "el-scrollbar",
-            {
-              staticClass: "h-100 scrollbar-component",
-              class: [_vm.isCollapsed ? _vm.collapsedClass : _vm.openedClass],
-              staticStyle: { "min-width": "64px" }
-            },
-            [
-              _c(
-                "nav",
-                { attrs: { id: "main-side-nav" } },
+          _vm.user.is_owner
+            ? _c(
+                "el-scrollbar",
+                {
+                  staticClass: "h-100 scrollbar-component",
+                  class: [
+                    _vm.isCollapsed ? _vm.collapsedClass : _vm.openedClass
+                  ],
+                  staticStyle: { "min-width": "64px" }
+                },
                 [
                   _c(
-                    "el-menu",
-                    {
-                      staticClass: "el-menu-vertical-demo h-100 ",
-                      attrs: {
-                        "default-active": _vm.activeIndex,
-                        collapse: _vm.isCollapsed,
-                        "active-text-color": "#007bff",
-                        router: true
-                      }
-                    },
+                    "nav",
+                    { attrs: { id: "main-side-nav" } },
                     [
-                      _vm.shop != null
-                        ? [
-                            _c(
-                              "el-menu-item",
-                              {
-                                attrs: {
-                                  index: "1",
-                                  route: "/outlet",
-                                  "data-toggle": "tooltip",
-                                  title: "Outlet"
-                                }
-                              },
-                              [
+                      _c(
+                        "el-menu",
+                        {
+                          staticClass: "el-menu-vertical-demo h-100 ",
+                          attrs: {
+                            "default-active": _vm.activeIndex,
+                            collapse: _vm.isCollapsed,
+                            "active-text-color": "#007bff",
+                            router: true
+                          }
+                        },
+                        [
+                          _vm.shop != null
+                            ? [
                                 _c(
-                                  "i",
+                                  "el-menu-item",
                                   {
-                                    staticClass:
-                                      "material-icons mr-2 align-self-center",
-                                    staticStyle: { "padding-left": "20px" }
+                                    attrs: {
+                                      index: "1",
+                                      route: "/outlet",
+                                      "data-toggle": "tooltip",
+                                      title: "Outlet"
+                                    }
                                   },
                                   [
-                                    _vm._v(
-                                      "\n                                store\n                            "
+                                    _c(
+                                      "i",
+                                      {
+                                        staticClass:
+                                          "material-icons mr-2 align-self-center",
+                                        staticStyle: { "padding-left": "20px" }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                store\n                            "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      { staticClass: "align-self-center" },
+                                      [_vm._v("Outlets")]
                                     )
                                   ]
                                 ),
                                 _vm._v(" "),
                                 _c(
-                                  "span",
-                                  { staticClass: "align-self-center" },
-                                  [_vm._v("Outlets")]
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "el-menu-item",
-                              {
-                                attrs: {
-                                  index: "2",
-                                  route: "/category",
-                                  "data-toggle": "tooltip",
-                                  title: "Kategori"
-                                }
-                              },
-                              [
-                                _c(
-                                  "i",
+                                  "el-menu-item",
                                   {
-                                    staticClass:
-                                      "material-icons mr-2 align-self-center",
-                                    staticStyle: { "padding-left": "20px" }
+                                    attrs: {
+                                      index: "2",
+                                      route: "/category",
+                                      "data-toggle": "tooltip",
+                                      title: "Kategori"
+                                    }
                                   },
                                   [
-                                    _vm._v(
-                                      "\n                                category\n                            "
+                                    _c(
+                                      "i",
+                                      {
+                                        staticClass:
+                                          "material-icons mr-2 align-self-center",
+                                        staticStyle: { "padding-left": "20px" }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                category\n                            "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      { staticClass: "align-self-center" },
+                                      [_vm._v("Categories")]
                                     )
                                   ]
                                 ),
                                 _vm._v(" "),
                                 _c(
-                                  "span",
-                                  { staticClass: "align-self-center" },
-                                  [_vm._v("Categories")]
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "el-menu-item",
-                              {
-                                attrs: {
-                                  index: "3",
-                                  route: "/product",
-                                  "data-toggle": "tooltip",
-                                  title: "Produk"
-                                }
-                              },
-                              [
-                                _c(
-                                  "i",
+                                  "el-menu-item",
                                   {
-                                    staticClass:
-                                      "material-icons mr-2 align-self-center",
-                                    staticStyle: { "padding-left": "20px" }
+                                    attrs: {
+                                      index: "3",
+                                      route: "/product",
+                                      "data-toggle": "tooltip",
+                                      title: "Produk"
+                                    }
                                   },
                                   [
-                                    _vm._v(
-                                      "\n                                view_module\n                            "
+                                    _c(
+                                      "i",
+                                      {
+                                        staticClass:
+                                          "material-icons mr-2 align-self-center",
+                                        staticStyle: { "padding-left": "20px" }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                view_module\n                            "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      { staticClass: "align-self-center" },
+                                      [_vm._v("Products")]
                                     )
                                   ]
                                 ),
                                 _vm._v(" "),
                                 _c(
-                                  "span",
-                                  { staticClass: "align-self-center" },
-                                  [_vm._v("Products")]
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "el-menu-item",
-                              { attrs: { index: "4", route: "/order" } },
-                              [
-                                _c(
-                                  "i",
-                                  {
-                                    staticClass:
-                                      "material-icons mr-2 align-self-center",
-                                    staticStyle: { "padding-left": "20px" }
-                                  },
+                                  "el-menu-item",
+                                  { attrs: { index: "4", route: "/order" } },
                                   [
-                                    _vm._v(
-                                      "\n                                receipt\n                            "
+                                    _c(
+                                      "i",
+                                      {
+                                        staticClass:
+                                          "material-icons mr-2 align-self-center",
+                                        staticStyle: { "padding-left": "20px" }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                receipt\n                            "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      { staticClass: "align-self-center" },
+                                      [_vm._v("Orders History")]
                                     )
                                   ]
                                 ),
                                 _vm._v(" "),
                                 _c(
-                                  "span",
-                                  { staticClass: "align-self-center" },
-                                  [_vm._v("Orders History")]
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "el-menu-item",
-                              { attrs: { index: "5", route: "/material" } },
-                              [
-                                _c(
-                                  "i",
-                                  {
-                                    staticClass:
-                                      "material-icons mr-2 align-self-center",
-                                    staticStyle: { "padding-left": "20px" }
-                                  },
+                                  "el-menu-item",
+                                  { attrs: { index: "5", route: "/material" } },
                                   [
-                                    _vm._v(
-                                      "\n                                group_work\n                            "
+                                    _c(
+                                      "i",
+                                      {
+                                        staticClass:
+                                          "material-icons mr-2 align-self-center",
+                                        staticStyle: { "padding-left": "20px" }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                group_work\n                            "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      { staticClass: "align-self-center" },
+                                      [_vm._v("Ingredient")]
                                     )
                                   ]
                                 ),
                                 _vm._v(" "),
                                 _c(
-                                  "span",
-                                  { staticClass: "align-self-center" },
-                                  [_vm._v("Ingredient")]
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "el-menu-item",
-                              { attrs: { index: "7", route: "/employee" } },
-                              [
-                                _c(
-                                  "i",
-                                  {
-                                    staticClass:
-                                      "material-icons mr-2 align-self-center",
-                                    staticStyle: { "padding-left": "20px" }
-                                  },
+                                  "el-menu-item",
+                                  { attrs: { index: "7", route: "/employee" } },
                                   [
-                                    _vm._v(
-                                      "\n                                supervisor_account\n                            "
+                                    _c(
+                                      "i",
+                                      {
+                                        staticClass:
+                                          "material-icons mr-2 align-self-center",
+                                        staticStyle: { "padding-left": "20px" }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                supervisor_account\n                            "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      { staticClass: "align-self-center" },
+                                      [_vm._v("Employee")]
                                     )
                                   ]
                                 ),
                                 _vm._v(" "),
                                 _c(
-                                  "span",
-                                  { staticClass: "align-self-center" },
-                                  [_vm._v("Employee")]
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "el-menu-item",
-                              { attrs: { index: "8", route: "/member" } },
-                              [
-                                _c(
-                                  "i",
-                                  {
-                                    staticClass:
-                                      "material-icons mr-2 align-self-center",
-                                    staticStyle: { "padding-left": "20px" }
-                                  },
+                                  "el-menu-item",
+                                  { attrs: { index: "8", route: "/member" } },
                                   [
-                                    _vm._v(
-                                      "\n                                card_membership\n                            "
+                                    _c(
+                                      "i",
+                                      {
+                                        staticClass:
+                                          "material-icons mr-2 align-self-center",
+                                        staticStyle: { "padding-left": "20px" }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                card_membership\n                            "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      { staticClass: "align-self-center" },
+                                      [_vm._v("Membership")]
                                     )
                                   ]
                                 ),
                                 _vm._v(" "),
                                 _c(
-                                  "span",
-                                  { staticClass: "align-self-center" },
-                                  [_vm._v("Membership")]
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "el-menu-item",
-                              { attrs: { index: "9", route: "/discount" } },
-                              [
-                                _c(
-                                  "i",
-                                  {
-                                    staticClass:
-                                      "material-icons mr-2 align-self-center",
-                                    staticStyle: { "padding-left": "20px" }
-                                  },
+                                  "el-menu-item",
+                                  { attrs: { index: "9", route: "/discount" } },
                                   [
-                                    _vm._v(
-                                      "\n                                local_offer\n                            "
+                                    _c(
+                                      "i",
+                                      {
+                                        staticClass:
+                                          "material-icons mr-2 align-self-center",
+                                        staticStyle: { "padding-left": "20px" }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                local_offer\n                            "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      { staticClass: "align-self-center" },
+                                      [_vm._v("Discount")]
                                     )
                                   ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "span",
-                                  { staticClass: "align-self-center" },
-                                  [_vm._v("Discount")]
                                 )
                               ]
-                            )
-                          ]
-                        : _vm._e()
+                            : _vm._e()
+                        ],
+                        2
+                      )
                     ],
-                    2
+                    1
                   )
-                ],
-                1
+                ]
               )
-            ]
-          ),
+            : _vm._e(),
           _vm._v(" "),
           _vm._t("default")
         ],
@@ -62031,7 +62049,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -62477,7 +62495,7 @@ var titles = [{
                 case 'clear':
                     return this.orders.paid = '';
                 default:
-                    return this.orders.paid += val;
+                    return this.orders.paid += val + '';
             }
         },
         orderCheckout: function orderCheckout() {
@@ -62575,6 +62593,9 @@ var titles = [{
             }
 
             return products;
+        },
+        moneyChange: function moneyChange() {
+            return parseInt(this.orders.paid) - parseInt(this.orderTotal) > 0 ? parseInt(this.orders.paid) - parseInt(this.orderTotal) : 0;
         }
     }),
     watch: {
@@ -62600,7 +62621,7 @@ var render = function() {
       _c(
         "el-col",
         {
-          staticClass: "pr-0 mb-0",
+          staticClass: "pr-0 mb-0 mx-auto",
           staticStyle: { width: "calc(100% - 60px)" },
           attrs: { span: 24 }
         },
@@ -63843,9 +63864,7 @@ var render = function() {
           }
         },
         [
-          _c("h4", [
-            _vm._v("Rp" + _vm._s(_vm.orders.paid - _vm.orders.orderTotal))
-          ]),
+          _c("h4", [_vm._v("Rp" + _vm._s(_vm.moneyChange))]),
           _vm._v(" "),
           _c(
             "div",

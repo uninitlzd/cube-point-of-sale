@@ -53,7 +53,14 @@ const actions = {
 
         commit(types.LOGIN, data.user)
         dispatch('shop/setShop', data.user.shop, {root: true})
-        router.push({name: 'Dashboard'})
+
+        if (!data.user.is_owner) {
+            commit(types.SET_ACTIVE_SHOP_OUTLET_ID, data.user.outlet.id)
+            dispatch('menu/cashierViewActive', {root: true})
+            router.push('/cashier')
+        } else {
+            router.push({name: 'Dashboard'})
+        }
     },
 
     async register({commit, dispatch}, form) {

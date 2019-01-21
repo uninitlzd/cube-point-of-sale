@@ -31,11 +31,11 @@
                     </li>
                     <li class="list-inline-item my-auto" v-else>
                         <ul class="list-inline d-flex align-items-center">
-                            <li class="list-inline-item d-flex text-primary" style="font-size: 10pt;"><i
+                            <li class="list-inline-item d-flex text-primary" style="font-size: 10pt;" v-if="user.is_owner"><i
                                 class="material-icons mr-1 align-self-center" style="padding-left: 20px">
                                 store
                             </i></li>
-                            <li class="list-inline-item">
+                            <li class="list-inline-item" v-if="user.is_owner">
                                 <router-link to="/cashier">
                                     <el-select v-model="activeShopOutletId" filterable placeholder="Pilih Cabang" size="small" @change="shopOutletOnChange(activeShopOutletId)">
                                         <el-option
@@ -77,7 +77,7 @@
         </el-row>
         <el-row type="flex" class="flex-fill mx-0 ">
             <el-scrollbar class="h-100 scrollbar-component" :class="[isCollapsed ? collapsedClass : openedClass]"
-                          style="min-width: 64px">
+                          style="min-width: 64px" v-if="user.is_owner">
                 <nav id="main-side-nav">
                     <el-menu :default-active="activeIndex" class="el-menu-vertical-demo h-100 " :collapse="isCollapsed"
                              active-text-color="#007bff"
@@ -169,7 +169,8 @@
                 cashierView: state => state.menu.cashierView,
                 shop: state => state.shop.shop,
                 outlets: state => state.outlet.outlets,
-                active_shop_outlet_id: state => state.auth.active_shop_outlet_id
+                active_shop_outlet_id: state => state.auth.active_shop_outlet_id,
+                user: state => state.auth.user
             })
         },
         methods: {

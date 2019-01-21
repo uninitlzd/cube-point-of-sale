@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -19,7 +20,13 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = $this->user->shop->categories;
+
+        if ($this->user->isOwner()) {
+            $categories = $this->user->shop->categories;
+        } else {
+            $shop = Shop::find($this->user->role()->pivot->shop_id);
+            $categories = $shop->categories;
+        }
 
         return CategoryResource::collection($categories);
     }

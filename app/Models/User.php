@@ -51,6 +51,11 @@ class User extends Authenticatable implements JWTSubject
             ->withPivot('shop_id','shop_outlet_id');
     }
 
+    public function role()
+    {
+        return $this->roles()->first();
+    }
+
     public function employee()
     {
 

@@ -24,7 +24,12 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $members = $this->user->shop->members;
+        if ($this->user->isOwner()) {
+            $members = $this->user->shop->members;
+        } else {
+            $members = Member::where('shop_id', $this->user->role()->pivot->shop_id)->get();
+        }
+
         return MemberResource::collection($members);
     }
 

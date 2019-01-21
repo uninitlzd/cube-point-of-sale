@@ -1,6 +1,6 @@
 <template xmlns="http://www.w3.org/1999/html">
     <dashboard-shell :shop_outlet_id="shop_outlet_id">
-        <el-col :span="24" class="pr-0 mb-0" style="width: calc(100% - 60px)">
+        <el-col :span="24" class="pr-0 mb-0 mx-auto" style="width: calc(100% - 60px)">
             <div class="w-100 h-100 px-4 pt-4">
                 <el-row>
                     <el-col :span="16">
@@ -262,7 +262,7 @@
                 title="Kembalian"
                 :visible.sync="moneyChangePopup"
                 v-on:closed="emptyOrderNoDialog">
-            <h4>Rp{{ orders.paid - orders.orderTotal }}</h4>
+            <h4>Rp{{ moneyChange }}</h4>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="moneyChangePopup = false; paymentProcessDialog = false">Tutup</el-button>
             </div>
@@ -420,7 +420,7 @@
                     case 'clear':
                         return this.orders.paid = ''
                     default:
-                        return this.orders.paid += val
+                        return this.orders.paid += val + ''
                 }
             },
             orderCheckout() {
@@ -500,6 +500,9 @@
                 }
 
                 return products
+            },
+            moneyChange() {
+                return (parseInt(this.orders.paid) - parseInt(this.orderTotal) > 0) ? parseInt(this.orders.paid) - parseInt(this.orderTotal) : 0
             }
         },
         watch: {
