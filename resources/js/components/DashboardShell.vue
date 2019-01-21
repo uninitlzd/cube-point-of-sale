@@ -113,12 +113,12 @@
                                 </i>
                                 <span class="align-self-center">Ingredient</span>
                             </el-menu-item>
-                            <el-menu-item index="6" route="/report">
+                           <!-- <el-menu-item index="6" route="/report">
                                 <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
                                     bar_chart
                                 </i>
                                 <span class="align-self-center">Insight</span>
-                            </el-menu-item>
+                            </el-menu-item>-->
                             <el-menu-item index="7" route="/employee">
                                 <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
                                     supervisor_account

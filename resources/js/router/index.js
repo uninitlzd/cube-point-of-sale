@@ -81,7 +81,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    console.log(store.state.initialized)
+
 
         getState().then(state => {
             console.log(state)
@@ -116,6 +116,10 @@ router.afterEach((to, from) => {
         case 'cashier.index':
             store.dispatch('menu/cashierViewDeactive')
             break;
+    }
+
+    if (store.getters['menu/cashierView']) {
+        return router.push('/cashier')
     }
 })
 

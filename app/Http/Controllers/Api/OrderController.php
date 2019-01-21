@@ -59,7 +59,7 @@ class OrderController extends Controller
                 : $request->get('customer_type_id'),
             'order_total' => $request->get('order_total'),
             'tax' => $request->get('tax'),
-            'total' => $request->get('order_total') + $request->get('orderTax')
+            'total' => $request->get('order_total') + $request->get('tax')
         ]);
 
         $customerType = CustomerType::find($order->customer_type_id);
