@@ -27,7 +27,7 @@ class IncomeReportingController extends Controller
         if ($user === null) {
             $outlets = $this->user->shop->outlets->pluck('id');
         } else {
-            $outlets = $user->shop->outlets->pluck('id');
+            $outlets = $user->shop->whereHas('outlets')->pluck('id');
         }
 
         $selling = QueryBuilder::for(Order::whereIn('shop_outlet_id', $outlets))

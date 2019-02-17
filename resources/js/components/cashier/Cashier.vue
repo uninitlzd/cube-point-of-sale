@@ -483,7 +483,7 @@
 
                 this.orders.amount = amount
 
-                if (customerType.discount_percentage)
+                if ('discount_percentage' in customerType)
                     subTotal *= 1 - customerType.discount_percentage / 100
 
                 this.orders.orderTotal = subTotal
