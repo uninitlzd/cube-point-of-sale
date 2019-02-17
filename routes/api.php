@@ -21,6 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
 
+Route::get('/test', 'IncomeReportingController@userDailyReport');
+
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('logout', 'AuthController@logout');
 
@@ -77,3 +79,5 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     //Setting
     Route::patch('setting/profile', 'SettingController@updateProfile');
 });
+
+

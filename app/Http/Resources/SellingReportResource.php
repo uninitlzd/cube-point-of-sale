@@ -28,8 +28,8 @@ class SellingReportResource extends ResourceCollection
             }),
             'total_gross_profit'=> $this->when(!is_null($this->totalGrossProfit), $this->totalGrossProfit),
             'total_product_sold'=> $this->when(!is_null($this->totalProductSold), $this->totalProductSold),
-            'most_selling'=> $this->when(!is_null($this->totalGrossProfit), $this->mostSelling),
-            'least_selling'=> $this->when(!is_null($this->leastSelling), $this->leastSelling)
+            'most_selling'=> $this->when(!is_null($this->mostSelling), $this->mostSelling, null),
+            'least_selling'=> $this->when(!is_null($this->leastSelling), $this->leastSelling, null)
         ];
     }
 

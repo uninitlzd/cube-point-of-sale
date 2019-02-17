@@ -11,12 +11,14 @@
 |
 */
 
+use App\Http\Controllers\Api\IncomeReportingController;
+
 Route::get('/', function () {
     return view('main');
 });
 
 Auth::routes();
 
-Route::get('/test', function () {
 
-});
+Route::get('/test', 'Api\IncomeReportingController@userDailyReport');
+

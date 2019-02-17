@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\ReportPerOutletResource;
 use App\Http\Resources\SellingReportResource;
+use App\Mail\DailySellingReport;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\ShopOutlet;
+use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -19,9 +22,13 @@ class IncomeReportingController extends Controller
 {
     use AuthenticatedUser;
 
-    public function sellingReport()
+    public function sellingReport($user = null)
     {
-        $outlets = $this->user->shop->outlets->pluck('id');
+        if ($user === null) {
+            $outlets = $this->user->shop->outlets->pluck('id');
+        } else {
+            $outlets = $user->shop->outlets->pluck('id');
+        }
 
         $selling = QueryBuilder::for(Order::whereIn('shop_outlet_id', $outlets))
             ->join('order_details', 'orders.id', '=', 'order_details.order_id')
@@ -48,15 +55,19 @@ class IncomeReportingController extends Controller
         return $sellingReport;
     }
 
-    public function sellingReportInADate($date)
+    public function sellingReportInADate($date, $user = null)
     {
-        $outlets = $this->user->shop->outlets->pluck('id');
+        if ($user === null) {
+            $outlets = $this->user->shop->outlets->pluck('id');
+        } else {
+            $outlets = $user->shop->outlets->pluck('id');
+        }
 
         $selling = Order::whereIn('shop_outlet_id', $outlets)
             ->join('order_details', 'orders.id', '=', 'order_details.order_id')
             ->join('products', 'products.id', '=', 'order_details.product_id')
             ->select(
-                'product_id',
+                'product_id', 'products.name',
                 DB::raw('
                                     sum(order_details.quantity) as quantity_sum, 
                                     sum(order_details.quantity) * order_details.selling_price as selling_price_sum,
@@ -76,9 +87,9 @@ class IncomeReportingController extends Controller
         return collect($sellingReport)->except('data');
     }
 
-    public function sellingReportSummary()
+    public function sellingReportSummary($user = null)
     {
-        return collect($this->sellingReport())->except('data');
+        return collect($this->sellingReport($user))->except('data');
     }
 
     public function sellingReportPerOutlet()
@@ -126,5 +137,17 @@ class IncomeReportingController extends Controller
         }
 
         return $reports;
+    }
+
+    public function userDailyReport()
+    {
+        $users = User::with(['roles', 'shop'])->whereHas('roles', function ($query) {
+            return $query->where('name', 'owner');
+        })->get();
+
+        $users->map(function ($user)  {
+            $report = $this->sellingReportInADate(Carbon::now(), $user);
+            Mail::to($user)->queue(new DailySellingReport($user, $report));
+        });
     }
 }
