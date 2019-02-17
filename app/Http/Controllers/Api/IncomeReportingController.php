@@ -143,7 +143,7 @@ class IncomeReportingController extends Controller
     {
         $users = User::with(['roles', 'shop'])->whereHas('roles', function ($query) {
             return $query->where('name', 'owner');
-        })->get();
+        })->whereHas('shop')->get();
 
         $users->map(function ($user)  {
             $report = $this->sellingReportInADate(Carbon::now(), $user);
