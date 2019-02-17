@@ -24,7 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call('App\Http\Controllers\Api\IncomeReportingController@userDailyReport')->dailyAt('20:00');
+        $schedule->call('App\Http\Controllers\Api\IncomeReportingController@userDailyReport')
+            ->dailyAt('20:00')
+            ->name('daily-report')
+            ->withoutOverlapping();
     }
 
     /**
