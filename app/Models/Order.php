@@ -39,4 +39,9 @@ class Order extends Model
 
         return $query->whereMonth('orders.created_at', $month);
     }
+
+    public function scopeCreatedInADate(Builder $query, $date)
+    {
+        return $query->whereDate('orders.created_at', $date);
+    }
 }

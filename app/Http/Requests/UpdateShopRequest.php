@@ -26,7 +26,7 @@ class UpdateShopRequest extends FormRequest
         return [
             'name' => 'required',
             'type' => 'required',
-            'orderTax' => ''
+            'tax' => ''
         ];
     }
 }

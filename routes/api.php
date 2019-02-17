@@ -69,8 +69,11 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::resource('order', 'OrderController');
 
     //Selling Report Endpoint
-    Route::get('report/selling/', 'IncomeReportingController@sellingReport');
+    Route::get('report/selling/', 'IncomeReportingController@getReport');
     Route::get('report/selling/summary', 'IncomeReportingController@sellingReportSummary');
     Route::get('report/selling/outlet', 'IncomeReportingController@sellingReportPerOutlet');
     Route::get('report/selling/outlet/summary', 'IncomeReportingController@sellingReportPerOutletSummary');
+
+    //Setting
+    Route::patch('setting/profile', 'SettingController@updateProfile');
 });

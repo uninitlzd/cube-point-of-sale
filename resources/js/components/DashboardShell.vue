@@ -66,7 +66,7 @@
                                 </li>
                             </ul>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>Pengaturan</el-dropdown-item>
+                                <el-dropdown-item @click.native="toSetting">Pengaturan</el-dropdown-item>
                                 <line></line>
                                 <el-dropdown-item divided @click.native="logout">Keluar</el-dropdown-item>
                             </el-dropdown-menu>
@@ -113,17 +113,17 @@
                                 </i>
                                 <span class="align-self-center">Ingredient</span>
                             </el-menu-item>
-                           <!-- <el-menu-item index="6" route="/report">
+                            <el-menu-item index="6" route="/report">
                                 <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
                                     bar_chart
                                 </i>
-                                <span class="align-self-center">Insight</span>
-                            </el-menu-item>-->
+                                <span class="align-self-center">Laporan</span>
+                            </el-menu-item>
                             <el-menu-item index="7" route="/employee">
                                 <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
                                     supervisor_account
                                 </i>
-                                <span class="align-self-center">Employee</span>
+                                <span class="align-self-center">Karyawan</span>
                             </el-menu-item>
                             <el-menu-item index="8" route="/member">
                                 <i class="material-icons mr-2 align-self-center" style="padding-left: 20px">
@@ -182,6 +182,9 @@
             },
             shopOutletOnChange(val) {
                 this.$store.dispatch('auth/setActiveShopOuletId', val)
+            },
+            toSetting() {
+                this.$router.push('/setting')
             }
         },
         props: {

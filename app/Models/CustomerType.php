@@ -12,4 +12,9 @@ class CustomerType extends Model
     {
         return $this->hasMany(Member::class);
     }
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
+    }
 }

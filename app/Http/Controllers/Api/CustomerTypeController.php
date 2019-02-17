@@ -19,9 +19,13 @@ class CustomerTypeController extends Controller
 
     public function index()
     {
-        $types = CustomerType::get();
+        if ($this->user->isOwner()) {
+            $types = CustomerType::where('shop_id', $this->user->shop->id);
+        } else {
+            $types = CustomerType::where('shop_id', $this->user->role()->pivot->shop_id);
+        }
 
-        return CustomerTypeResource::collection($types);
+        return CustomerTypeResource::collection($types->get());
     }
 
     public function show(CustomerType $customerType)

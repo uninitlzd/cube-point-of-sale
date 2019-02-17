@@ -75,14 +75,11 @@
                 form: new Form({
                     name: '',
                     discount_percentage: '',
-                    address: ''
+                    shop_id: ''
                 }),
                 rules: {
                     name: [
                         {required: true, message: 'Please input name', trigger: 'blur'},
-                    ],
-                    address: [
-                        {required: true, message: 'Please input address', trigger: 'blur'},
                     ],
                     discount_percentage: [
                         {required: true, message: 'Please input Discount Percentage', trigger: 'blur'},

@@ -192,11 +192,13 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="">Dibayar</label>
-                    <h6>Rp{{ orders.paid }}</h6>
+                    <el-input placeholder="Dibayar" v-model="orders.paid" type="number">
+                        <template slot="prepend">Rp</template>
+                    </el-input>
                 </div>
                 <div class="col-md-6">
                     <label for="">Total</label>
-                    <h6>Rp{{ orders.total }}</h6>
+                    <h2>Rp{{ orders.total }}</h2>
                 </div>
             </div>
             <hr>

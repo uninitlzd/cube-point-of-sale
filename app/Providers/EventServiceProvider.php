@@ -19,7 +19,8 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         'App\Events\EmployeeRegistered' => [
-            'App\Listeners\SendEmployeeCredential'
+            'App\Listeners\SendEmployeeCredential',
+            'App\Listeners\SetEmployeeDetail'
         ],
         'App\Events\OutletCreated' => [
             'App\Listeners\InitProductsToOutlet' // Take Fresh Created Outlet Object and Sync Products

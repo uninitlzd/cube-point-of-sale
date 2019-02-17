@@ -11,6 +11,7 @@ import employee from './employee'
 import member from './member'
 import discount from './discount'
 import customerType from './customerType'
+import report from './report'
 
 const modules = {
     menu,
@@ -25,7 +26,8 @@ const modules = {
     employee,
     member,
     discount,
-    customerType
+    customerType,
+    report
 }
 
 export default modules

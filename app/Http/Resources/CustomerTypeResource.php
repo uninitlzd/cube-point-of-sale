@@ -16,8 +16,9 @@ class CustomerTypeResource extends Resource
     {
         return [
             'id' => $this->id,
+            'shop_id' => $this->shop_id,
             'name' => $this->name,
-            'discount_percentage' => $this->discount_percentage
+            'discount_percentage' => $this->discount_percentage,
         ];
     }
 }

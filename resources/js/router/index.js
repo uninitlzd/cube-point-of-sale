@@ -19,6 +19,7 @@ import member from "./member";
 import discount from "./discount"
 import customerType from "./customerType"
 import cashier from "./cashier"
+import setting from "./setting"
 
 const router = new VueRouter({
     // mode: 'history',
@@ -73,6 +74,7 @@ const router = new VueRouter({
         ...discount,
         ...customerType,
         ...cashier,
+        ...setting,
         {
             path: '*',
             redirect: '/'

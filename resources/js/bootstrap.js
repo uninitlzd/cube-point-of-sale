@@ -12,6 +12,7 @@ import VueOffline from 'vue-offline'
 import VueChartkick from 'vue-chartkick'
 import Chart from 'chart.js'
 import Bars from 'vuebars'
+import VCharts from 'v-charts'
 import VueGlide from 'vue-glide-js'
 import 'vue-glide-js/dist/vue-glide.css'
 
@@ -24,6 +25,7 @@ Vue.use(VueRouter)
 Vue.use(VueOffline)
 Vue.use(VueChartkick, {adapter: Chart})
 Vue.use(Bars)
+Vue.use(VCharts)
 
 Vue.component('Navbar', Navbar)
 

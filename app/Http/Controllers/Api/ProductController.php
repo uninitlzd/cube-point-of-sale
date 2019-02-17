@@ -35,8 +35,10 @@ class ProductController extends Controller
 
         $result = QueryBuilder::for($products)
             ->allowedIncludes('stocks')
-            ->allowedFilters('name', Filter::custom('discount_id', FiltersDiscountIdOrNull::class), Filter::custom('discounted', FiltersDiscountedProduct::class))
-            ->get();
+            ->allowedFilters('name',
+                Filter::custom('discount_id', FiltersDiscountIdOrNull::class),
+                Filter::custom('discounted', FiltersDiscountedProduct::class)
+            )->get();
 
         return ProductResource::collection($result->load('discount'));
     }
@@ -62,8 +64,6 @@ class ProductController extends Controller
         ]);
 
         $product = $shop->products()->save($product);
-
-        event(new ProductCreated($product));
 
         return new ProductResource($product);
     }

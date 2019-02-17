@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Events\ProductCreated;
 use App\Models\Product;
 
 class ProductObserver
@@ -14,7 +15,7 @@ class ProductObserver
      */
     public function created(Product $product)
     {
-        //
+        event(new ProductCreated($product));
     }
 
     /**

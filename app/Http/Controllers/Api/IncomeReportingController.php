@@ -7,6 +7,8 @@ use App\Http\Resources\SellingReportResource;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\ShopOutlet;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +27,7 @@ class IncomeReportingController extends Controller
             ->join('order_details', 'orders.id', '=', 'order_details.order_id')
             ->join('products', 'products.id', '=', 'order_details.product_id')
             ->select(
-                'product_id',
+                'product_id', 'products.name',
                 DB::raw('
                                     sum(order_details.quantity) as quantity_sum, 
                                     sum(order_details.quantity) * order_details.selling_price as selling_price_sum,
@@ -33,7 +35,7 @@ class IncomeReportingController extends Controller
                                     sum(order_details.quantity) * order_details.selling_price - sum(order_details.quantity) * products.purchase_price as gross_profit')
             )
             ->groupBy('order_details.product_id')
-            ->allowedFilters(Filter::scope('created_in_month'))
+            ->allowedFilters(Filter::scope('created_in_month'), Filter::scope('created_in_a_date'))
             ->allowedSorts('gross_profit', 'quantity_sum')
             ->get();
 
@@ -44,6 +46,34 @@ class IncomeReportingController extends Controller
         $sellingReport->leastSelling($selling->sortBy('quantity_sum')->first());
 
         return $sellingReport;
+    }
+
+    public function sellingReportInADate($date)
+    {
+        $outlets = $this->user->shop->outlets->pluck('id');
+
+        $selling = Order::whereIn('shop_outlet_id', $outlets)
+            ->join('order_details', 'orders.id', '=', 'order_details.order_id')
+            ->join('products', 'products.id', '=', 'order_details.product_id')
+            ->select(
+                'product_id',
+                DB::raw('
+                                    sum(order_details.quantity) as quantity_sum, 
+                                    sum(order_details.quantity) * order_details.selling_price as selling_price_sum,
+                                    sum(order_details.quantity) * products.purchase_price as purchase_price_sum,
+                                    sum(order_details.quantity) * order_details.selling_price - sum(order_details.quantity) * products.purchase_price as gross_profit')
+            )
+            ->groupBy('order_details.product_id')
+            ->whereDate('orders.created_at', $date)
+            ->get();
+
+        $sellingReport = new SellingReportResource($selling);
+        $sellingReport->totalGrossProfit($selling->sum('gross_profit'));
+        $sellingReport->totalProductSold($selling->sum('quantity_sum'));
+        $sellingReport->mostSelling($selling->sortByDesc('quantity_sum')->first());
+        $sellingReport->leastSelling($selling->sortBy('quantity_sum')->first());
+
+        return collect($sellingReport)->except('data');
     }
 
     public function sellingReportSummary()
@@ -80,5 +110,21 @@ class IncomeReportingController extends Controller
         return collect($this->sellingReportPerOutlet())->map(function ($e) {
             return collect($e)->except('orders');
         });
+    }
+
+    public function getReport()
+    {
+        $now = Carbon::now()->firstOfMonth();
+        $end = Carbon::now()->lastOfMonth();
+
+        $reports = collect();
+
+        foreach (CarbonPeriod::create($now, $end)->toArray() as $date) {
+            $reports->push(collect([
+                'date' => $date->format('d M')
+            ])->merge($this->sellingReportInADate($date)));
+        }
+
+        return $reports;
     }
 }

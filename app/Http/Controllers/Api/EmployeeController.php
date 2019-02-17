@@ -39,7 +39,7 @@ class EmployeeController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
+     *ord
      * @param StoreEmployeeRequest $request
      * @return UserResource
      */
@@ -53,7 +53,7 @@ class EmployeeController extends Controller
             'shop_outlet_id' => $request->shop_outlet_id
         ]);
 
-        event(new EmployeeRegistered($employee, $shop, $request->get('password')));
+        event(new EmployeeRegistered($employee, $shop, $request->shop_outlet_id, $request->get('password')));
         return new UserResource($employee);
     }
 

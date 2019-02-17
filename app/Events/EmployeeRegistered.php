@@ -25,12 +25,14 @@ class EmployeeRegistered
      *
      * @param User $employee
      * @param Shop $shop
+     * @param $outletId
      * @param $password
      */
-    public function __construct(User $employee, Shop $shop, $password)
+    public function __construct(User $employee, Shop $shop, $outletId, $password)
     {
         $this->employee = $employee;
         $this->shop = $shop;
+        $this->outletId = $outletId;
         $this->password = $password;
     }
 }
